@@ -1,3 +1,8 @@
 dependencies {
-    compile("org.projectlombok:lombok:1.16.16")
+    compile(
+            "com.alibaba:fastjson:1.2.31",
+            "org.projectlombok:lombok:1.16.16",
+            "org.reflections:reflections:0.9.11",
+            "org.springframework.data:spring-data-redis:1.8.3.RELEASE"
+    )
 }
