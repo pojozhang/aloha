@@ -1,0 +1,28 @@
+import java.nio.charset.StandardCharsets
+
+buildscript {
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+    }
+}
+
+subprojects {
+
+    apply plugin: 'java'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    project.tasks.withType(JavaCompile) {
+        options.encoding = StandardCharsets.UTF_8.name()
+    }
+
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+    }
+
+    dependencies {
+        compile("org.projectlombok:lombok:1.16.16")
+        testCompile "junit:junit:4.12"
+    }
+}
