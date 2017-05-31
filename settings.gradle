@@ -1,3 +1,6 @@
 rootProject.name = "aloha"
 
-include ":event"
+include ":event",
+        ":sample:event",
+        ":sample:event:spring-boot"
+

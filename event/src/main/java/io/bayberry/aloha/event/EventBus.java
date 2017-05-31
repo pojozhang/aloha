@@ -2,9 +2,13 @@ package io.bayberry.aloha.event;
 
 public interface EventBus {
 
-    void register(EventSubscriber listener);
+    void register(Object subscriber);
 
-    void unregister(EventSubscriber listener);
+    void unregister(Object subscriber);
 
-    void post(Event<?> event);
+    void post(Object event);
+
+    void listen();
+
+    String getChannel(Class eventType);
 }

@@ -1,12 +1,11 @@
 import java.nio.charset.StandardCharsets
 
-buildscript {
-    repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
-    }
-}
-
 subprojects {
+    buildscript {
+        repositories {
+            maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+        }
+    }
 
     apply plugin: 'java'
 
