@@ -6,7 +6,7 @@ import io.bayberry.aloha.event.annotation.Subscribe;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public abstract class AbstractEventBus implements EventBus {
+public abstract class AbstractMultiEventBus implements MultiChannelEventBus {
 
     protected Map<String, List<Invocation>> channelInvocationsMapping = Maps.newConcurrentMap();
 

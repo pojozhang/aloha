@@ -1,9 +1,9 @@
 package io.bayberry.aloha.event.support.spring;
 
-import io.bayberry.aloha.event.AbstractEventBus;
+import io.bayberry.aloha.event.AbstractMultiEventBus;
 import org.springframework.context.ApplicationContext;
 
-public abstract class SpringIntegratedEventBus extends AbstractEventBus {
+public abstract class SpringIntegratedEventBus extends AbstractMultiEventBus {
 
     protected final ApplicationContext applicationContext;
 

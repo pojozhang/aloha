@@ -9,6 +9,4 @@ public interface EventBus {
     void post(Object event);
 
     void listen();
-
-    String getChannel(Class eventType);
 }
