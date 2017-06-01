@@ -1,2 +1,2 @@
-# aloha
-## A generic and extensible eventbus on Java platform
+# Aloha
+### A generic and extensible eventbus on Java platform.
