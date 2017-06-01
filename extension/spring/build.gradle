@@ -1,6 +1,10 @@
+ext {
+    springBootVersion = "1.5.3.RELEASE"
+}
+
 dependencies {
-    compile(
-            "org.springframework:spring-context:4.3.8.RELEASE"
+    compileOnly(
+            "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     )
 }
 
@@ -11,5 +15,9 @@ jar {
 subprojects {
     dependencies {
         compile project(":extension:spring")
+        testCompile(
+                "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
+                "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+        )
     }
 }
