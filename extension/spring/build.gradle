@@ -4,6 +4,10 @@ dependencies {
     )
 }
 
+jar {
+    appendix = "spring"
+}
+
 subprojects {
     dependencies {
         compile project(":extension:spring")

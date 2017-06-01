@@ -2,4 +2,8 @@ subprojects {
     dependencies {
         compile project(":core")
     }
+
+    jar {
+        baseName = "$rootProject.name-extension"
+    }
 }
