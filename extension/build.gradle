@@ -1,6 +1,5 @@
 subprojects {
-
     dependencies {
-        compile project(":event")
+        compile project(":core")
     }
 }
