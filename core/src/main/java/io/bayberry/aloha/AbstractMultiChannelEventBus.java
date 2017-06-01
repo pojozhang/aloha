@@ -8,7 +8,7 @@ import java.util.*;
 
 public abstract class AbstractMultiChannelEventBus implements MultiChannelEventBus {
 
-    protected Map<String, List<Invocation>> channelInvocationsMapping = Maps.newConcurrentMap();
+    protected Map<String, List<SubscriberInvocation>> channelInvocationsMapping = Maps.newConcurrentMap();
 
     public void register(Object subscriber) {
         iterateSubscriberMethods(subscriber, this::addToChannelInvocationsMapping);
@@ -29,8 +29,8 @@ public abstract class AbstractMultiChannelEventBus implements MultiChannelEventB
     }
 
     private void addToChannelInvocationsMapping(Object subscriber, Method method, String channel) {
-        Invocation invocation = new Invocation(subscriber, method);
-        List<Invocation> invocations = channelInvocationsMapping.getOrDefault(channel, new ArrayList<>());
+        SubscriberInvocation invocation = new SubscriberInvocation(subscriber, method);
+        List<SubscriberInvocation> invocations = channelInvocationsMapping.getOrDefault(channel, new ArrayList<>());
         invocations.add(invocation);
         channelInvocationsMapping.put(channel, invocations);
     }
