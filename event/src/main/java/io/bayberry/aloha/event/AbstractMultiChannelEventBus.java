@@ -22,7 +22,7 @@ public abstract class AbstractMultiChannelEventBus implements MultiChannelEventB
                     Subscribe subscribe = method.getAnnotation(Subscribe.class);
                     String channel = subscribe.channel();
                     if (channel.length() == 0) {
-                        channel = this.getChannel(method.getParameterTypes()[0]);
+                        channel = this.resolveChannel(method.getParameterTypes()[0]);
                     }
                     callback.call(subscriber, method, channel);
                 });

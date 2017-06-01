@@ -32,7 +32,7 @@ public class RedisEventBus extends SpringMultiChannelEventBus implements MultiCh
 
     @Override
     public void post(Object event) {
-        this.post(this.getChannel(event.getClass()), event);
+        this.post(this.resolveChannel(event.getClass()), event);
     }
 
     @Override
@@ -48,12 +48,12 @@ public class RedisEventBus extends SpringMultiChannelEventBus implements MultiCh
     }
 
     @Override
-    public String getChannel(Class eventType) {
+    public String resolveChannel(Class eventType) {
         return "event:" + eventType.getSimpleName();
     }
 
     @AllArgsConstructor
-    private class RedisEventRunner extends AbstractEventInvoker {
+    private class RedisEventRunner extends AbstractEventInvoker implements Runnable {
 
         private String channel;
 
