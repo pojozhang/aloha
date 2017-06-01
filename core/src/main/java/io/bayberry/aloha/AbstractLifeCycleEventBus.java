@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-public abstract class AbstractLifeCycleEventBus implements EventBus, LifeCycle {
+public abstract class AbstractLifeCycleEventBus extends AbstractEventBus implements LifeCycle {
 
     protected AbstractLifeCycleEventBus() {
         this.onCreate();

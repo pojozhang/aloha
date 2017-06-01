@@ -1,10 +1,6 @@
 package io.bayberry.aloha;
 
-public interface EventBus {
-
-    void register(Object subscriber);
-
-    void unregister(Object subscriber);
+public interface EventBus extends SubscriberRegistry {
 
     void post(Object event);
 

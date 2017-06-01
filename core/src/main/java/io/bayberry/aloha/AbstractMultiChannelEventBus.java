@@ -1,54 +1,33 @@
 package io.bayberry.aloha;
 
-import com.google.common.collect.Maps;
-import io.bayberry.aloha.annotation.Subscribe;
-
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public abstract class AbstractMultiChannelEventBus extends AbstractLifeCycleEventBus implements MultiChannelEventBus {
 
-    protected Map<String, List<SubscriberInvocation>> channelInvocationsMapping = Maps.newConcurrentMap();
+    private MultiChannelSubscriberRegistry registry;
+    private ExecutorService pool;
 
-    public void register(Object subscriber) {
-        iterateSubscriberMethods(subscriber, this::addToChannelInvocationsMapping);
-    }
-
-    private void iterateSubscriberMethods(Object subscriber, SubscriberMethodsIteratorCallback callback) {
-        Method[] methods = subscriber.getClass().getMethods();
-        Arrays.stream(methods)
-                .filter(method -> method.isAnnotationPresent(Subscribe.class))
-                .forEach(method -> {
-                    Subscribe subscribe = method.getAnnotation(Subscribe.class);
-                    String channel = subscribe.channel();
-                    if (channel.length() == 0) {
-                        channel = this.resolveChannel(method.getParameterTypes()[0]);
-                    }
-                    callback.call(subscriber, method, channel);
-                });
-    }
-
-    private void addToChannelInvocationsMapping(Object subscriber, Method method, String channel) {
-        SubscriberInvocation invocation = new SubscriberInvocation(subscriber, method);
-        List<SubscriberInvocation> invocations = channelInvocationsMapping.getOrDefault(channel, new ArrayList<>());
-        invocations.add(invocation);
-        channelInvocationsMapping.put(channel, invocations);
+    @Override
+    protected MultiChannelSubscriberRegistry registry() {
+        if (registry == null) {
+            registry = new DefaultMultiChannelSubscriberRegistry(this);
+        }
+        return registry;
     }
 
     @Override
-    public void unregister(Object subscriber) {
-        channelInvocationsMapping.values().forEach(invocations -> {
-            invocations.forEach(invocation -> {
-                if (invocation.getSubscriber() == subscriber) {
-                    invocations.remove(invocation);
-                }
-            });
-        });
+    public void onStart() {
+        Set<String> channels = registry().getChannels();
+        this.pool = Executors.newFixedThreadPool(channels.size());
+        channels.forEach(channel -> pool.execute(getSubscriberInvoker(channel)));
     }
 
-    @FunctionalInterface
-    private interface SubscriberMethodsIteratorCallback {
-
-        void call(Object subscriber, Method method, String channel);
+    @Override
+    public void onDestroy() {
+        this.pool.shutdown();
     }
+
+    protected abstract MultiChannelSubscriberInvoker getSubscriberInvoker(String channel);
 }

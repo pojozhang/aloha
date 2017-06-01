@@ -2,6 +2,7 @@ package io.bayberry.aloha.ext.spring.redis;
 
 import com.alibaba.fastjson.JSON;
 import io.bayberry.aloha.AbstractSubscriberInvoker;
+import io.bayberry.aloha.MultiChannelSubscriberInvoker;
 import io.bayberry.aloha.ext.spring.SpringMultiChannelEventBus;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
 import lombok.AllArgsConstructor;
@@ -10,18 +11,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 @Slf4j
 public class RedisEventBus extends SpringMultiChannelEventBus {
 
     private static final RedisEventBusSettings DEFAULT_SETTINGS = new RedisEventBusSettings("event:");
     private RedisTemplate<String, String> redisTemplate;
     private RedisEventBusSettings settings;
-    private ExecutorService pool;
 
     public RedisEventBus(ApplicationContext applicationContext) {
         this(applicationContext, DEFAULT_SETTINGS);
@@ -54,28 +49,7 @@ public class RedisEventBus extends SpringMultiChannelEventBus {
     }
 
     @Override
-    public void onStart() {
-        Set<String> channels = super.channelInvocationsMapping.keySet();
-        this.pool = Executors.newFixedThreadPool(channels.size());
-        channels.forEach(channel -> pool.execute(new RedisSubscriberInvoker(channel)));
-    }
-
-    @Override
-    public void onDestroy() {
-        this.pool.shutdown();
-    }
-
-    @AllArgsConstructor
-    private class RedisSubscriberInvoker extends AbstractSubscriberInvoker implements Runnable {
-
-        private String channel;
-
-        @Override
-        public void run() {
-            while (true) {
-                String message = redisTemplate.opsForList().leftPop(channel, 0, TimeUnit.MILLISECONDS);
-                this.invoke(RedisEventBus.this.channelInvocationsMapping.get(channel), message);
-            }
-        }
+    protected MultiChannelSubscriberInvoker getSubscriberInvoker(String channel) {
+        return new RedisSubscriberInvoker(channel, redisTemplate, this.registry());
     }
 }
