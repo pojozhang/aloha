@@ -31,6 +31,7 @@ public class RedisEventBusTest {
     @Before
     public void setUp() {
         this.eventBus = new RedisEventBus(this.applicationContext);
+        this.eventBus.start();
     }
 
     @Test
