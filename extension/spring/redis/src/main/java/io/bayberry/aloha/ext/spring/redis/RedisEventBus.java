@@ -1,11 +1,9 @@
 package io.bayberry.aloha.ext.spring.redis;
 
 import com.alibaba.fastjson.JSON;
-import io.bayberry.aloha.AbstractSubscriberInvoker;
 import io.bayberry.aloha.MultiChannelSubscriberInvoker;
 import io.bayberry.aloha.ext.spring.SpringMultiChannelEventBus;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
