@@ -1,4 +1,4 @@
-package io.bayberry.aloha.event;
+package io.bayberry.aloha;
 
 import com.alibaba.fastjson.JSON;
 

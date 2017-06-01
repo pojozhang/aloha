@@ -1,7 +1,7 @@
 package sample.event.springboot;
 
-import io.bayberry.aloha.event.EventBus;
-import io.bayberry.aloha.event.support.spring.redis.RedisEventBus;
+import io.bayberry.aloha.EventBus;
+import io.bayberry.aloha.support.spring.redis.RedisEventBus;
 import io.bayberry.aloha.event.support.spring.redis.RedisEventBusSettings;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

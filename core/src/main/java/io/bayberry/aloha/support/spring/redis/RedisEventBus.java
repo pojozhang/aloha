@@ -1,9 +1,9 @@
-package io.bayberry.aloha.event.support.spring.redis;
+package io.bayberry.aloha.support.spring.redis;
 
 import com.alibaba.fastjson.JSON;
-import io.bayberry.aloha.event.AbstractEventInvoker;
-import io.bayberry.aloha.event.MultiChannelEventBus;
-import io.bayberry.aloha.event.support.spring.SpringMultiChannelEventBus;
+import io.bayberry.aloha.AbstractEventInvoker;
+import io.bayberry.aloha.MultiChannelEventBus;
+import io.bayberry.aloha.support.spring.SpringMultiChannelEventBus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;

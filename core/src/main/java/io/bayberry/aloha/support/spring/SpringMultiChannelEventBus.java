@@ -1,6 +1,6 @@
-package io.bayberry.aloha.event.support.spring;
+package io.bayberry.aloha.support.spring;
 
-import io.bayberry.aloha.event.AbstractMultiChannelEventBus;
+import io.bayberry.aloha.AbstractMultiChannelEventBus;
 import org.springframework.context.ApplicationContext;
 
 public abstract class SpringMultiChannelEventBus extends AbstractMultiChannelEventBus {
