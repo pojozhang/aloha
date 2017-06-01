@@ -43,13 +43,6 @@ public class RedisEventBus extends SpringMultiChannelEventBus {
     }
 
     @Override
-    public void start() {
-        Set<String> channels = super.channelInvocationsMapping.keySet();
-        this.pool = Executors.newFixedThreadPool(channels.size());
-        channels.forEach(channel -> pool.execute(new RedisEventRunner(channel)));
-    }
-
-    @Override
     public String resolveChannel(Class eventType) {
         return this.settings.getChannelPrefix() + eventType.getSimpleName();
     }
@@ -61,12 +54,19 @@ public class RedisEventBus extends SpringMultiChannelEventBus {
     }
 
     @Override
+    public void onStart() {
+        Set<String> channels = super.channelInvocationsMapping.keySet();
+        this.pool = Executors.newFixedThreadPool(channels.size());
+        channels.forEach(channel -> pool.execute(new RedisSubscriberInvoker(channel)));
+    }
+
+    @Override
     public void onDestroy() {
         this.pool.shutdown();
     }
 
     @AllArgsConstructor
-    private class RedisEventRunner extends AbstractSubscriberInvoker implements Runnable {
+    private class RedisSubscriberInvoker extends AbstractSubscriberInvoker implements Runnable {
 
         private String channel;
 
