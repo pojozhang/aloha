@@ -3,17 +3,17 @@ package io.bayberry.aloha.ext.spring.redis;
 import com.alibaba.fastjson.JSON;
 import io.bayberry.aloha.AbstractEventInvoker;
 import io.bayberry.aloha.MultiChannelEventBus;
+import io.bayberry.aloha.ext.spring.SpringMultiChannelEventBus;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class RedisEventBus extends SpringMultiChannelEventBus implements MultiChannelEventBus {
