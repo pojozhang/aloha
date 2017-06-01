@@ -1,7 +1,7 @@
 package io.bayberry.aloha.ext.spring.redis;
 
 import com.alibaba.fastjson.JSON;
-import io.bayberry.aloha.AbstractEventInvoker;
+import io.bayberry.aloha.AbstractSubscriberInvoker;
 import io.bayberry.aloha.MultiChannelEventBus;
 import io.bayberry.aloha.ext.spring.SpringMultiChannelEventBus;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
@@ -59,7 +59,7 @@ public class RedisEventBus extends SpringMultiChannelEventBus implements MultiCh
     }
 
     @AllArgsConstructor
-    private class RedisEventRunner extends AbstractEventInvoker implements Runnable {
+    private class RedisEventRunner extends AbstractSubscriberInvoker implements Runnable {
 
         private String channel;
 
