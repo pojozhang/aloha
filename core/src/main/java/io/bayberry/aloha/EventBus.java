@@ -8,5 +8,7 @@ public interface EventBus {
 
     void post(Object event);
 
-    void listen();
+    void start();
+
+    void shutdown();
 }

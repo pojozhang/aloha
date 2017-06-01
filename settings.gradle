@@ -2,6 +2,6 @@ rootProject.name = "aloha"
 
 include ":core",
         ":extension",
-        ":extension:spring-data",
-        ":extension:spring-data:redis"
+        ":extension:spring",
+        ":extension:spring:redis"
 

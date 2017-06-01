@@ -1,9 +1,9 @@
-package io.bayberry.aloha.support.spring.redis;
+package io.bayberry.aloha.ext.spring.redis;
 
 import com.alibaba.fastjson.JSON;
 import io.bayberry.aloha.AbstractEventInvoker;
 import io.bayberry.aloha.MultiChannelEventBus;
-import io.bayberry.aloha.support.spring.SpringMultiChannelEventBus;
+import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisEventBus extends SpringMultiChannelEventBus implements MultiChannelEventBus {
 
     private RedisTemplate<String, String> redisTemplate;
+    private ExecutorService pool;
 
     public RedisEventBus(ApplicationContext applicationContext) {
         super(applicationContext);
@@ -41,10 +42,15 @@ public class RedisEventBus extends SpringMultiChannelEventBus implements MultiCh
     }
 
     @Override
-    public void listen() {
+    public void start() {
         Set<String> channels = super.channelInvocationsMapping.keySet();
-        ExecutorService pool = Executors.newFixedThreadPool(channels.size());
+        this.pool = Executors.newFixedThreadPool(channels.size());
         channels.forEach(channel -> pool.execute(new RedisEventRunner(channel)));
+    }
+
+    @Override
+    public void shutdown() {
+        this.pool.shutdown();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package io.bayberry.aloha.support.spring;
+package io.bayberry.aloha.ext.spring;
 
 import io.bayberry.aloha.AbstractMultiChannelEventBus;
 import org.springframework.context.ApplicationContext;

@@ -4,13 +4,17 @@ buildscript {
     }
 }
 
+dependencies {
+    compile(
+            "org.springframework:spring-context:4.3.8.RELEASE"
+    )
+}
+
 subprojects {
 
     apply plugin: "org.springframework.boot"
 
     dependencies {
-        compile(
-                "org.springframework.boot:spring-boot-starter-web"
-        )
+        compile project(":extension:spring")
     }
 }
