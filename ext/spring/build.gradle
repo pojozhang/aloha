@@ -10,6 +10,6 @@ jar {
 
 subprojects {
     dependencies {
-        compile project(":extension:spring")
+        compile project(":ext:spring")
     }
 }

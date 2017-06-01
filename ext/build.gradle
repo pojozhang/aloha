@@ -4,6 +4,6 @@ subprojects {
     }
 
     jar {
-        baseName = "$rootProject.name-extension"
+        baseName = "$rootProject.name-ext"
     }
 }
