@@ -7,5 +7,5 @@ public interface MultiChannelSubscriberRegistry extends SubscriberRegistry {
 
     Set<String> getChannels();
 
-    List<SubscriberInvocation> getInvocations(String channel);
+    List<Subscriber> getSubscribers(String channel);
 }
