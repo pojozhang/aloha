@@ -15,7 +15,7 @@ public abstract class AbstractMultiChannelEventBus extends AbstractEventBus impl
 
     @Override
     protected MultiChannelSubscriberRegistry newRegistryInstance() {
-        return new DefaultMultiChannelSubscriberRegistry(this);
+        return new GenericMultiChannelSubscriberRegistry(this);
     }
 
     @Override

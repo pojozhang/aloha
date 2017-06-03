@@ -18,18 +18,6 @@ public class RedisEventListener extends AbstractContinuedMultiChannelEventListen
 
     @Override
     protected void run() {
-        String message = redisTemplate.opsForList().leftPop(super.channel, 0, TimeUnit.MILLISECONDS);
-        this.notify(this.subscribers, message);
-    }
-
-    @Override
-    public void notify(List<Subscriber> subscribers, Object message) {
-        subscribers.forEach(subscriber -> {
-            try {
-                subscriber.invoke(message);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        super.notifyAll(redisTemplate.opsForList().leftPop(super.channel, 0, TimeUnit.MILLISECONDS));
     }
 }

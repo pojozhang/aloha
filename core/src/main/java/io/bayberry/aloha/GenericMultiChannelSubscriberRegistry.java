@@ -6,12 +6,12 @@ import io.bayberry.aloha.annotation.Subscribe;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class DefaultMultiChannelSubscriberRegistry implements MultiChannelSubscriberRegistry {
+public class GenericMultiChannelSubscriberRegistry implements MultiChannelSubscriberRegistry {
 
     private final Map<String, List<Subscriber>> channelSubscribersMapping = Maps.newConcurrentMap();
     private final MultiChannelEventBus eventBus;
 
-    public DefaultMultiChannelSubscriberRegistry(MultiChannelEventBus eventBus) {
+    public GenericMultiChannelSubscriberRegistry(MultiChannelEventBus eventBus) {
         this.eventBus = eventBus;
     }
 
