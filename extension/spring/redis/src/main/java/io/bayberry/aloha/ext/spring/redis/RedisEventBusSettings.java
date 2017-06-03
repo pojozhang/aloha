@@ -1,15 +1,14 @@
 package io.bayberry.aloha.ext.spring.redis;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class RedisEventBusSettings {
 
     private String channelPrefix;
+
+    public String getChannelPrefix() {
+        return channelPrefix;
+    }
+
+    public void setChannelPrefix(String channelPrefix) {
+        this.channelPrefix = channelPrefix;
+    }
 }

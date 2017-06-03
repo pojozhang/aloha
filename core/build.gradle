@@ -1,7 +1,6 @@
 dependencies {
     compile(
             "com.alibaba:fastjson:1.2.31",
-            "org.projectlombok:lombok:1.16.16",
             "org.reflections:reflections:0.9.11",
     )
 }

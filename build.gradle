@@ -25,7 +25,6 @@ subprojects {
     }
 
     dependencies {
-        compile("org.projectlombok:lombok:1.16.16")
         testCompile "junit:junit:4.12"
     }
 }

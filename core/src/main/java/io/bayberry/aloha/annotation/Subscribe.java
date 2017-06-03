@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface Subscribe {
 
     String channel() default "";
+
+    int threads() default 1;
 }

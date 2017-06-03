@@ -4,30 +4,29 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class AbstractMultiChannelEventBus extends AbstractLifeCycleEventBus implements MultiChannelEventBus {
+public abstract class AbstractMultiChannelEventBus extends AbstractEventBus implements MultiChannelEventBus {
 
-    private MultiChannelSubscriberRegistry registry;
-    private ExecutorService pool;
+    private ExecutorService threadPool;
 
     @Override
-    protected MultiChannelSubscriberRegistry registry() {
-        if (registry == null) {
-            registry = new DefaultMultiChannelSubscriberRegistry(this);
-        }
-        return registry;
+    public MultiChannelSubscriberRegistry getSubscriberRegistry() {
+        return (MultiChannelSubscriberRegistry) super.getSubscriberRegistry();
+    }
+
+    @Override
+    protected MultiChannelSubscriberRegistry newRegistryInstance() {
+        return new DefaultMultiChannelSubscriberRegistry(this);
     }
 
     @Override
     public void onStart() {
-        Set<String> channels = registry().getChannels();
-        this.pool = Executors.newFixedThreadPool(channels.size());
-        channels.forEach(channel -> pool.execute(getSubscriberInvoker(channel)));
+        Set<String> channels = this.getSubscriberRegistry().getChannels();
+        this.threadPool = Executors.newFixedThreadPool(channels.size());
+        channels.forEach(channel -> threadPool.execute(() -> this.getEventListener(channel, ((MultiChannelSubscriberRegistry) super.subscriberRegistry).getSubscribers(channel)).start()));
     }
 
     @Override
     public void onDestroy() {
-        this.pool.shutdown();
+        this.threadPool.shutdown();
     }
-
-    protected abstract MultiChannelSubscriberInvoker getSubscriberInvoker(String channel);
 }

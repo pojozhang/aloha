@@ -3,8 +3,6 @@ package io.bayberry.aloha.ext.spring.redis;
 import io.bayberry.aloha.EventBus;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,10 +46,16 @@ public class RedisEventBusTest {
         }
     }
 
-    @Getter
-    @AllArgsConstructor
     private static class Event {
 
         private String name;
+
+        public Event(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

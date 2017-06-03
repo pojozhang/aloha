@@ -8,7 +8,7 @@ import java.util.*;
 
 public class DefaultMultiChannelSubscriberRegistry implements MultiChannelSubscriberRegistry {
 
-    private final Map<String, List<SubscriberInvocation>> channelInvocationsMapping = Maps.newConcurrentMap();
+    private final Map<String, List<Subscriber>> channelSubscribersMapping = Maps.newConcurrentMap();
     private final MultiChannelEventBus eventBus;
 
     public DefaultMultiChannelSubscriberRegistry(MultiChannelEventBus eventBus) {
@@ -22,10 +22,10 @@ public class DefaultMultiChannelSubscriberRegistry implements MultiChannelSubscr
 
     @Override
     public void unregister(Object subscriber) {
-        channelInvocationsMapping.values().forEach(invocations -> {
-            invocations.forEach(invocation -> {
-                if (invocation.getSubscriber() == subscriber) {
-                    invocations.remove(invocation);
+        channelSubscribersMapping.values().forEach(subscribers -> {
+            subscribers.forEach(sub -> {
+                if (sub.getTarget() == subscriber) {
+                    subscribers.remove(sub);
                 }
             });
         });
@@ -46,22 +46,21 @@ public class DefaultMultiChannelSubscriberRegistry implements MultiChannelSubscr
     }
 
     private void addToChannelInvocationsMapping(Object subscriber, Method method, String channel) {
-        SubscriberInvocation invocation = new SubscriberInvocation(subscriber, method);
-        List<SubscriberInvocation> invocations = channelInvocationsMapping.getOrDefault(channel, new ArrayList<>());
-        invocations.add(invocation);
-        channelInvocationsMapping.put(channel, invocations);
+        AbstractSubscriber sub = new DefaultSubscriber(subscriber, method);
+        List<Subscriber> subscribers = channelSubscribersMapping.getOrDefault(channel, new ArrayList<>());
+        subscribers.add(sub);
+        channelSubscribersMapping.put(channel, subscribers);
     }
 
     @Override
     public Set<String> getChannels() {
-        return this.channelInvocationsMapping.keySet();
+        return this.channelSubscribersMapping.keySet();
     }
 
     @Override
-    public List<SubscriberInvocation> getInvocations(String channel) {
-        return this.channelInvocationsMapping.get(channel);
+    public List<Subscriber> getSubscribers(String channel) {
+        return this.channelSubscribersMapping.get(channel);
     }
-
 
     @FunctionalInterface
     private interface SubscriberMethodsIteratorCallback {
