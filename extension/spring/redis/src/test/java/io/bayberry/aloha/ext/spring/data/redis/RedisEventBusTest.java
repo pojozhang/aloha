@@ -1,8 +1,8 @@
-package io.bayberry.aloha.ext.spring.redis;
+package io.bayberry.aloha.ext.spring.data.redis;
 
 import io.bayberry.aloha.EventBus;
 import io.bayberry.aloha.annotation.Subscribe;
-import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
+import io.bayberry.aloha.ext.spring.data.redis.annotation.RedisSubscriber;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

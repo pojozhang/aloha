@@ -1,4 +1,4 @@
-package io.bayberry.aloha.ext.spring.redis;
+package io.bayberry.aloha.ext.spring.data.redis;
 
 public class RedisEventBusSettingsBuilder {
 

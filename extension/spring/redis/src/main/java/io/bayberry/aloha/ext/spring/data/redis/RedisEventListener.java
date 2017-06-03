@@ -1,4 +1,4 @@
-package io.bayberry.aloha.ext.spring.redis;
+package io.bayberry.aloha.ext.spring.data.redis;
 
 import io.bayberry.aloha.AbstractContinuedMultiChannelEventListener;
 import io.bayberry.aloha.Subscriber;

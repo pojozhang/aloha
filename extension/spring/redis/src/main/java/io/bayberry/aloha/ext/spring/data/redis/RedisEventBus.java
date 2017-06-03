@@ -1,9 +1,9 @@
-package io.bayberry.aloha.ext.spring.redis;
+package io.bayberry.aloha.ext.spring.data.redis;
 
 import com.alibaba.fastjson.JSON;
 import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.ext.spring.SpringMultiChannelEventBus;
-import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
+import io.bayberry.aloha.ext.spring.data.redis.annotation.RedisSubscriber;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
