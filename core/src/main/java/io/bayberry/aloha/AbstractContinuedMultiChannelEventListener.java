@@ -19,5 +19,4 @@ public abstract class AbstractContinuedMultiChannelEventListener extends Abstrac
     }
 
     protected abstract void run();
-
 }
