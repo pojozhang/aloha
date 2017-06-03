@@ -46,7 +46,7 @@ public class DefaultMultiChannelSubscriberRegistry implements MultiChannelSubscr
     }
 
     private void addToChannelInvocationsMapping(Object subscriber, Method method, String channel) {
-        AbstractSubscriber sub = new DefaultSubscriber(subscriber, method);
+        Subscriber sub = new GenericSubscriber(subscriber, method, this.eventBus.getDeserializer());
         List<Subscriber> subscribers = channelSubscribersMapping.getOrDefault(channel, new ArrayList<>());
         subscribers.add(sub);
         channelSubscribersMapping.put(channel, subscribers);

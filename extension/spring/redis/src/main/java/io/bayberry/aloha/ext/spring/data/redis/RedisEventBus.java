@@ -1,6 +1,5 @@
 package io.bayberry.aloha.ext.spring.data.redis;
 
-import com.alibaba.fastjson.JSON;
 import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.ext.spring.SpringMultiChannelEventBus;
 import io.bayberry.aloha.ext.spring.data.redis.annotation.RedisSubscriber;
@@ -32,7 +31,7 @@ public class RedisEventBus extends SpringMultiChannelEventBus {
 
     @Override
     public void post(String channel, Object event) {
-        this.redisTemplate.opsForList().rightPush(channel, JSON.toJSONString(event));
+        this.redisTemplate.opsForList().rightPush(channel, (String) getSerializer().serialize(event));
     }
 
     @Override
