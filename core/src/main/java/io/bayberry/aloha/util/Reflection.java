@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class Reflection {
 
-    public Stream<Method> getMethodsWithAnnotation(Object target, Class<Annotation> annotationType) {
+    public Stream<Method> getMethodsWithAnnotation(Object target, Class<? extends Annotation> annotationType) {
         Method[] methods = target.getClass().getMethods();
         return Arrays.stream(methods)
                 .filter(method -> method.isAnnotationPresent(annotationType));
