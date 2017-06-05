@@ -35,20 +35,29 @@ public class RedisEventBusTest {
     @Test
     public void the_subscriber_should_be_invoked_after_an_event_is_post() {
         this.eventBus.post(new Event("test"));
-        spy(this.subscriber).onEvent(any(Event.class));
+        //spy(this.subscriber).onEvent(any(Event.class));
     }
 
     @RedisSubscriber
-    private static class Subscriber {
+    public static class Subscriber {
 
         @Subscribe
         public void onEvent(Event event) {
+            throw new RuntimeException("1111");
+        }
+
+        @Subscribe
+        public void onEvent2(Event event) {
+            throw new RuntimeException("2222");
         }
     }
 
-    private static class Event {
+    public static class Event {
 
         private String name;
+
+        private Event() {
+        }
 
         public Event(String name) {
             this.name = name;

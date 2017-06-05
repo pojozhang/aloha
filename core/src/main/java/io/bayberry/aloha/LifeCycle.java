@@ -1,10 +1,37 @@
 package io.bayberry.aloha;
 
-public interface LifeCycle {
+public abstract class LifeCycle {
 
-    void onCreate();
+    private Status status = Status.NEW;
 
-    void onStart();
+    protected abstract void onCreate();
 
-    void onDestroy();
+    protected abstract void onStart();
+
+    protected abstract void onDestroy();
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    enum Status {
+        NEW(0),
+        READY(20),
+        RUNNING(80),
+        STOPPED(100);
+
+        private final int progress;
+
+        Status(int progress) {
+            this.progress = progress;
+        }
+
+        public int progress() {
+            return progress;
+        }
+    }
 }

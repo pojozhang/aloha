@@ -1,15 +1,16 @@
 package io.bayberry.aloha.ext.spring.data.redis;
 
-import io.bayberry.aloha.Subscriber;
-import io.bayberry.aloha.ext.spring.SpringMultiChannelEventBus;
+import io.bayberry.aloha.ChannelResolver;
+import io.bayberry.aloha.ListenerRegistry;
+import io.bayberry.aloha.SubscriberRegistry;
+import io.bayberry.aloha.ext.spring.SpringThreadPoolEventBus;
 import io.bayberry.aloha.ext.spring.data.redis.annotation.RedisSubscriber;
+import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import java.util.List;
-
-public class RedisEventBus extends SpringMultiChannelEventBus {
+public class RedisEventBus extends SpringThreadPoolEventBus {
 
     private static final RedisEventBusSettings DEFAULT_SETTINGS = new RedisEventBusSettingsBuilder().channelPrefix("event:").build();
     private RedisTemplate<String, String> redisTemplate;
@@ -25,23 +26,23 @@ public class RedisEventBus extends SpringMultiChannelEventBus {
     }
 
     @Override
-    public void post(Object event) {
-        this.post(this.resolveChannel(event.getClass()), event);
-    }
-
-    @Override
     public void post(String channel, Object event) {
         this.redisTemplate.opsForList().rightPush(channel, (String) getSerializer().serialize(event));
     }
 
     @Override
-    public String resolveChannel(Class eventType) {
-        return this.settings.getChannelPrefix() + eventType.getSimpleName();
+    protected SubscriberRegistry subscriberRegistry() {
+        return null;
     }
 
     @Override
-    public RedisEventListener getEventListener(String channel, List<Subscriber> subscribers) {
-        return new RedisEventListener(redisTemplate, channel, subscribers);
+    protected ListenerRegistry listenerRegistry() {
+        return null;
+    }
+
+    @Override
+    protected ChannelResolver channelResolver() {
+        return new PrefixChannelResolverDecorator(this.settings.getChannelPrefix(), super.channelResolver());
     }
 
     @Override
