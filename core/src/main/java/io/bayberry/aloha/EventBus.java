@@ -3,7 +3,7 @@ package io.bayberry.aloha;
 import io.bayberry.aloha.transport.Deserializer;
 import io.bayberry.aloha.transport.Serializer;
 
-public abstract class EventBus extends LifeCycle {
+public abstract class EventBus extends LifeCycleContext {
 
     private final SubscriberRegistry subscriberRegistry;
     private final ListenerRegistry listenerRegistry;
@@ -47,14 +47,6 @@ public abstract class EventBus extends LifeCycle {
 
     public void unregister(Object subscriber) {
         this.subscriberRegistry.unregister(this.subscriberResolver.resolve(subscriber, this));
-    }
-
-    public final void start() {
-        super.start();
-    }
-
-    public final void shutdown() {
-        super.shutdown();
     }
 
     @Override

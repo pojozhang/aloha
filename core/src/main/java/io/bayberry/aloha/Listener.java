@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class Listener extends LifeCycleManager {
+public abstract class Listener extends LifeCycleContext {
 
     protected final List<Subscriber> subscribers = Lists.newArrayList();
     private final ExecutorService threadPool = Executors.newSingleThreadExecutor();
@@ -28,13 +28,13 @@ public abstract class Listener extends LifeCycleManager {
     }
 
     @Override
-    public final void start() {
+    public void start() {
         super.start();
         this.threadPool.execute(this::onStart);
     }
 
     @Override
-    public final void shutdown() {
+    public void shutdown() {
         if (!this.threadPool.isShutdown()) {
             this.threadPool.shutdown();
         }
