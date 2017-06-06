@@ -41,6 +41,14 @@ public abstract class Listener extends LifeCycleContext {
         super.shutdown();
     }
 
+    @Override
+    protected void onCreate() {
+    }
+
+    @Override
+    protected void onDestroy() {
+    }
+
     public void register(List<Subscriber> subscribers) {
         subscribers.forEach(this::register);
     }
