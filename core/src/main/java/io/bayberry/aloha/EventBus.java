@@ -5,25 +5,12 @@ import io.bayberry.aloha.transport.Serializer;
 
 public abstract class EventBus extends LifeCycleContext {
 
-    private final SubscriberRegistry subscriberRegistry;
-    private final ListenerRegistry listenerRegistry;
-    private final SubscriberResolver subscriberResolver;
-    private final ChannelResolver channelResolver;
+    private SubscriberRegistry subscriberRegistry;
+    private ListenerRegistry listenerRegistry;
+    private SubscriberResolver subscriberResolver;
+    private ChannelResolver channelResolver;
     private Serializer serializer;
     private Deserializer deserializer;
-
-    protected EventBus() {
-        this.subscriberRegistry = this.subscriberRegistry();
-        this.listenerRegistry = this.listenerRegistry();
-        this.subscriberResolver = this.subscriberResolver();
-        this.channelResolver = this.channelResolver();
-        this.serializer = serializer();
-        this.deserializer = deserializer();
-    }
-
-    @Override
-    protected void onCreate() {
-    }
 
     protected abstract SubscriberRegistry subscriberRegistry();
 
@@ -43,7 +30,11 @@ public abstract class EventBus extends LifeCycleContext {
         this.post(this.getChannelResolver().resolve(event.getClass()), event);
     }
 
-    public abstract void post(String channel, Object event);
+    public void post(String channel, Object event) {
+        this.post(channel, (String) getSerializer().serialize(event));
+    }
+
+    public abstract void post(String channel, String message);
 
     public void register(Object subscriber) {
         this.subscriberRegistry.register(this.subscriberResolver.resolve(subscriber, this));
@@ -54,9 +45,20 @@ public abstract class EventBus extends LifeCycleContext {
     }
 
     @Override
+    protected void onCreate() {
+        this.subscriberRegistry = this.subscriberRegistry();
+        this.listenerRegistry = this.listenerRegistry();
+        this.subscriberResolver = this.subscriberResolver();
+        this.channelResolver = this.channelResolver();
+        this.serializer = serializer();
+        this.deserializer = deserializer();
+    }
+
+    @Override
     public void onStart() {
         this.subscriberRegistry.getChannels().forEach(channel -> {
             Listener listener = this.listener(channel);
+            listener.register(this.subscriberRegistry.getSubscribers(channel));
             this.getListenerRegistry().register(listener);
             listener.start();
         });
@@ -67,35 +69,35 @@ public abstract class EventBus extends LifeCycleContext {
         this.getListenerRegistry().getListeners().forEach(Listener::shutdown);
     }
 
-    public ListenerRegistry getListenerRegistry() {
+    public final ListenerRegistry getListenerRegistry() {
         return listenerRegistry;
     }
 
-    public Serializer getSerializer() {
+    public final Serializer getSerializer() {
         return this.serializer;
     }
 
-    public void setSerializer(Serializer serializer) {
+    public final void setSerializer(Serializer serializer) {
         this.serializer = serializer;
     }
 
-    public Deserializer getDeserializer() {
+    public final Deserializer getDeserializer() {
         return this.deserializer;
     }
 
-    public void setDeserializer(Deserializer deserializer) {
+    public final void setDeserializer(Deserializer deserializer) {
         this.deserializer = deserializer;
     }
 
-    public SubscriberRegistry getSubscriberRegistry() {
+    public final SubscriberRegistry getSubscriberRegistry() {
         return subscriberRegistry;
     }
 
-    public SubscriberResolver getSubscriberResolver() {
+    public final SubscriberResolver getSubscriberResolver() {
         return subscriberResolver;
     }
 
-    public ChannelResolver getChannelResolver() {
+    public final ChannelResolver getChannelResolver() {
         return channelResolver;
     }
 }

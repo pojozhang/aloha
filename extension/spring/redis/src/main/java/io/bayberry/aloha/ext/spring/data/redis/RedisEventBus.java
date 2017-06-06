@@ -27,18 +27,15 @@ public class RedisEventBus extends SpringThreadPoolEventBus {
     }
 
     @Override
-    public void post(String channel, Object event) {
-        this.redisTemplate.opsForList().rightPush(channel, (String) getSerializer().serialize(event));
+    public void post(String channel, String message) {
+        this.redisTemplate.opsForList().rightPush(channel, message);
     }
 
     @Override
-    protected SubscriberRegistry subscriberRegistry() {
-        return null;
-    }
-
-    @Override
-    protected ListenerRegistry listenerRegistry() {
-        return null;
+    protected void onCreate() {
+        super.onCreate();
+        this.applicationContext.getBeansWithAnnotation(RedisSubscriber.class).values().forEach(super::register);
+        this.redisTemplate = this.applicationContext.getBean(StringRedisTemplate.class);
     }
 
     @Override
@@ -48,13 +45,6 @@ public class RedisEventBus extends SpringThreadPoolEventBus {
 
     @Override
     protected Listener listener(String channel) {
-        return new RedisListener(channel, redisTemplate);
-    }
-
-    @Override
-    public void onStart() {
-        this.applicationContext.getBeansWithAnnotation(RedisSubscriber.class).values().forEach(super::register);
-        this.redisTemplate = this.applicationContext.getBean(StringRedisTemplate.class);
-        super.onStart();
+        return new RedisListener(channel, redisTemplate, this);
     }
 }

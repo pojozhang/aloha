@@ -4,17 +4,16 @@ import com.google.common.collect.Lists;
 import io.bayberry.aloha.exception.AlohaException;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public abstract class Listener extends LifeCycleContext {
 
     protected final List<Subscriber> subscribers = Lists.newArrayList();
-    private final ExecutorService threadPool = Executors.newSingleThreadExecutor();
     private final String channel;
+    private final EventBus eventBus;
 
-    public Listener(final String channel) {
+    public Listener(final String channel, final EventBus eventBus) {
         this.channel = channel;
+        this.eventBus = eventBus;
     }
 
     public void notifyAll(Object value) {
@@ -25,20 +24,6 @@ public abstract class Listener extends LifeCycleContext {
                 throw new AlohaException(e);
             }
         });
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        this.threadPool.execute(this::onStart);
-    }
-
-    @Override
-    public void shutdown() {
-        if (!this.threadPool.isShutdown()) {
-            this.threadPool.shutdown();
-        }
-        super.shutdown();
     }
 
     @Override
@@ -55,6 +40,7 @@ public abstract class Listener extends LifeCycleContext {
 
     public void register(Subscriber subscriber) {
         this.subscribers.add(subscriber);
+        subscriber.setListener(this);
     }
 
     public void unregister(List<Subscriber> subscribers) {
@@ -65,7 +51,11 @@ public abstract class Listener extends LifeCycleContext {
         this.subscribers.remove(subscriber);
     }
 
-    public String getChannel() {
+    public final String getChannel() {
         return channel;
+    }
+
+    public final EventBus getEventBus() {
+        return eventBus;
     }
 }

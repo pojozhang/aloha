@@ -7,23 +7,32 @@ public abstract class Subscriber {
     private final String channel;
     private final Object target;
     private final Method method;
+    private Listener listener;
 
-    protected Subscriber(final Object target, final Method method, String channel) {
+    protected Subscriber(final Object target, final Method method, final String channel) {
         this.target = target;
         this.method = method;
         this.channel = channel;
     }
 
-    public Object getTarget() {
+    public final Object getTarget() {
         return target;
     }
 
-    public Method getMethod() {
+    public final Method getMethod() {
         return method;
     }
 
-    public String getChannel() {
+    public final String getChannel() {
         return channel;
+    }
+
+    public final void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public final Listener getListener() {
+        return listener;
     }
 
     public abstract void invoke(Object value) throws Exception;
