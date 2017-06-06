@@ -35,5 +35,6 @@ public abstract class Subscriber {
         return listener;
     }
 
+    //TODO deserialize message and call doInvoke()
     public abstract void invoke(Object value) throws Exception;
 }
