@@ -10,7 +10,7 @@ public abstract class AbstractGenericEventBus extends EventBus {
 
     @Override
     protected SubscriberRegistry subscriberRegistry() {
-        return new GenericSubscriberRegistry(this.getChannelResolver());
+        return new GenericSubscriberRegistry();
     }
 
     @Override
