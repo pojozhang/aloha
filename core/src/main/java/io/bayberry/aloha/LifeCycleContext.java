@@ -7,18 +7,24 @@ public abstract class LifeCycleContext {
     public final LifeCycleStatus RUNNING = new RunningLifeCycleStatus(this);
     public final LifeCycleStatus STOPPED = new StoppedLifeCycleStatus(this);
     private LifeCycleStatus status = NEW;
+    private boolean isInitialized = false;
 
     public LifeCycleContext() {
-        this.onCreate();
         this.status = READY;
     }
 
     public void start() {
+        if (!isInitialized) {
+            this.onCreate();
+            isInitialized = true;
+        }
         this.status.start();
+        this.onStart();
     }
 
     public void shutdown() {
         this.status.shutdown();
+        this.onDestroy();
     }
 
     protected abstract void onCreate();
