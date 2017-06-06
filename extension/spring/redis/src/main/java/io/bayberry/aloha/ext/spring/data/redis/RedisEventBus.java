@@ -1,6 +1,7 @@
 package io.bayberry.aloha.ext.spring.data.redis;
 
 import io.bayberry.aloha.ChannelResolver;
+import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.ListenerRegistry;
 import io.bayberry.aloha.SubscriberRegistry;
 import io.bayberry.aloha.ext.spring.SpringThreadPoolEventBus;
@@ -12,7 +13,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 public class RedisEventBus extends SpringThreadPoolEventBus {
 
-    private static final RedisEventBusSettings DEFAULT_SETTINGS = new RedisEventBusSettingsBuilder().channelPrefix("event:").build();
+    private static final RedisEventBusSettings DEFAULT_SETTINGS = new RedisEventBusSettingsBuilder()
+        .channelPrefix("event:").build();
     private RedisTemplate<String, String> redisTemplate;
     private RedisEventBusSettings settings;
 
@@ -43,6 +45,12 @@ public class RedisEventBus extends SpringThreadPoolEventBus {
     @Override
     protected ChannelResolver channelResolver() {
         return new PrefixChannelResolverDecorator(this.settings.getChannelPrefix(), super.channelResolver());
+    }
+
+    @Override
+    protected Listener listener(String channel) {
+        //TODO: return Redis Listener
+        return null;
     }
 
     @Override

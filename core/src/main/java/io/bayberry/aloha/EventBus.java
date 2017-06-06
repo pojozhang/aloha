@@ -21,6 +21,10 @@ public abstract class EventBus extends LifeCycleContext {
         this.deserializer = deserializer();
     }
 
+    @Override
+    protected void onCreate() {
+    }
+
     protected abstract SubscriberRegistry subscriberRegistry();
 
     protected abstract ListenerRegistry listenerRegistry();
