@@ -48,8 +48,7 @@ public class RedisEventBus extends SpringThreadPoolEventBus {
 
     @Override
     protected Listener listener(String channel) {
-        //TODO: return Redis Listener
-        return null;
+        return new RedisListener(channel, redisTemplate);
     }
 
     @Override
