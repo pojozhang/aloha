@@ -1,10 +1,10 @@
 package io.bayberry.aloha.support;
 
 import com.google.common.collect.Maps;
-import io.bayberry.aloha.ChannelResolver;
 import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.SubscriberRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,11 +12,6 @@ import java.util.Set;
 public class GenericSubscriberRegistry implements SubscriberRegistry {
 
     private final Map<String, List<Subscriber>> channelSubscribers = Maps.newConcurrentMap();
-    private final ChannelResolver channelResolver;
-
-    public GenericSubscriberRegistry(final ChannelResolver channelResolver) {
-        this.channelResolver = channelResolver;
-    }
 
     @Override
     public void register(List<Subscriber> subscribers) {
@@ -25,7 +20,9 @@ public class GenericSubscriberRegistry implements SubscriberRegistry {
 
     @Override
     public void register(Subscriber subscriber) {
-
+        List<Subscriber> subscribers = this.channelSubscribers.getOrDefault(subscriber.getChannel(), new ArrayList<>());
+        subscribers.add(subscriber);
+        this.channelSubscribers.put(subscriber.getChannel(), subscribers);
     }
 
     @Override
