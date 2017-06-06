@@ -13,18 +13,17 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 public class RedisEventBus extends SpringThreadPoolEventBus {
 
-    private static final RedisEventBusSettings DEFAULT_SETTINGS = new RedisEventBusSettingsBuilder()
-        .channelPrefix("event:").build();
+    private static final RedisEventBusOptions DEFAULT_SETTINGS = new RedisEventBusOptions("event:");
     private RedisTemplate<String, String> redisTemplate;
-    private RedisEventBusSettings settings;
+    private RedisEventBusOptions options;
 
     public RedisEventBus(ApplicationContext applicationContext) {
         this(applicationContext, DEFAULT_SETTINGS);
     }
 
-    public RedisEventBus(ApplicationContext applicationContext, RedisEventBusSettings settings) {
+    public RedisEventBus(ApplicationContext applicationContext, RedisEventBusOptions options) {
         super(applicationContext);
-        this.settings = settings;
+        this.options = options;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class RedisEventBus extends SpringThreadPoolEventBus {
 
     @Override
     protected ChannelResolver channelResolver() {
-        return new PrefixChannelResolverDecorator(this.settings.getChannelPrefix(), super.channelResolver());
+        return new PrefixChannelResolverDecorator(this.options.getChannelPrefix(), super.channelResolver());
     }
 
     @Override
