@@ -1,8 +1,6 @@
 package io.bayberry.aloha;
 
 import com.google.common.collect.Lists;
-import io.bayberry.aloha.exception.AlohaException;
-
 import java.util.List;
 
 public abstract class Listener extends EventBusContext {
@@ -16,13 +14,7 @@ public abstract class Listener extends EventBusContext {
     }
 
     public void notifyAll(Object value) {
-        this.subscribers.forEach(subscriber -> {
-            try {
-                subscriber.invoke(value);
-            } catch (Exception e) {
-                throw new AlohaException(e);
-            }
-        });
+        this.subscribers.forEach(subscriber -> subscriber.respond(value));
     }
 
     @Override
@@ -50,7 +42,7 @@ public abstract class Listener extends EventBusContext {
         this.subscribers.remove(subscriber);
     }
 
-    public final String getChannel() {
+    public String getChannel() {
         return channel;
     }
 }
