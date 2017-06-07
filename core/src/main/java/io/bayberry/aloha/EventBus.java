@@ -25,7 +25,7 @@ public abstract class EventBus extends LifeCycleContext {
 
     protected abstract Deserializer deserializer();
 
-    protected abstract Listener listener(String channel);
+    protected abstract Listener bindListener(String channel);
 
     protected abstract ExceptionHandler defaultExceptionHandler();
 
@@ -61,7 +61,7 @@ public abstract class EventBus extends LifeCycleContext {
     @Override
     public void onStart() {
         this.subscriberRegistry.getChannels().forEach(channel -> {
-            Listener listener = this.listener(channel);
+            Listener listener = this.bindListener(channel);
             listener.register(this.subscriberRegistry.getSubscribers(channel));
             this.getListenerRegistry().register(listener);
             listener.start();
