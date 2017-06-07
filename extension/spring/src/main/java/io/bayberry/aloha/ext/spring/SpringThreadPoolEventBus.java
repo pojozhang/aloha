@@ -1,9 +1,9 @@
 package io.bayberry.aloha.ext.spring;
 
-import io.bayberry.aloha.support.AbstractGenericEventBus;
+import io.bayberry.aloha.support.GenericEventBus;
 import org.springframework.context.ApplicationContext;
 
-public abstract class SpringThreadPoolEventBus extends AbstractGenericEventBus {
+public abstract class SpringThreadPoolEventBus extends GenericEventBus {
 
     protected final ApplicationContext applicationContext;
 
