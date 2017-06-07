@@ -3,17 +3,21 @@ package io.bayberry.aloha.ext.spring.data.redis;
 import io.bayberry.aloha.EventBus;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.ext.spring.data.redis.annotation.RedisSubscriber;
+import org.awaitility.Duration;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.spy;
+import java.util.concurrent.CountDownLatch;
+
+import static org.awaitility.Awaitility.await;
 
 @SpringBootTest
 @SpringBootApplication
@@ -33,24 +37,31 @@ public class RedisEventBusTest {
     }
 
     @Test
-    public void the_subscriber_should_be_invoked_after_an_event_is_post() throws InterruptedException {
-        this.eventBus.post(new Event("test"));
+    public void the_subscriber_should_be_invoked_after_an_event_is_post() {
+        this.eventBus.post(new Event("name"));
+        this.eventBus.post(new Event("name"));
+        this.eventBus.post(new Event("name"));
 
-        Thread.sleep(100000);
-        //spy(this.subscriber).onEvent(any(Event.class));
+        await().atMost(Duration.FIVE_SECONDS).until(() -> subscriber.countDownLatch.getCount() == 0);
     }
 
     @RedisSubscriber
     public static class Subscriber {
 
-        @Subscribe
-        public void onEvent(Event event) {
-            throw new RuntimeException("1111");
+        public CountDownLatch countDownLatch = new CountDownLatch(6);
+        private Logger log = LoggerFactory.getLogger(Subscriber.class);
+
+        @Subscribe(threads = 3)
+        public void onEvent1(Event event) throws InterruptedException {
+            log.info("onEvent1");
+            countDownLatch.countDown();
+            Thread.sleep(10000);
         }
 
         @Subscribe
         public void onEvent2(Event event) {
-            throw new RuntimeException("2222");
+            log.info("onEvent2");
+            countDownLatch.countDown();
         }
     }
 
