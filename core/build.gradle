@@ -2,6 +2,7 @@ dependencies {
     compile(
             "com.alibaba:fastjson:1.2.31",
             "org.reflections:reflections:0.9.11",
+            "org.slf4j:slf4j-api:1.7.25"
     )
 }
 
