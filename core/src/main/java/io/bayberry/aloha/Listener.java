@@ -5,15 +5,14 @@ import io.bayberry.aloha.exception.AlohaException;
 
 import java.util.List;
 
-public abstract class Listener extends LifeCycleContext {
+public abstract class Listener extends EventBusContext {
 
     protected final List<Subscriber> subscribers = Lists.newArrayList();
     private final String channel;
-    private final EventBus eventBus;
 
     public Listener(final String channel, final EventBus eventBus) {
+        super(eventBus);
         this.channel = channel;
-        this.eventBus = eventBus;
     }
 
     public void notifyAll(Object value) {
@@ -53,9 +52,5 @@ public abstract class Listener extends LifeCycleContext {
 
     public final String getChannel() {
         return channel;
-    }
-
-    public final EventBus getEventBus() {
-        return eventBus;
     }
 }
