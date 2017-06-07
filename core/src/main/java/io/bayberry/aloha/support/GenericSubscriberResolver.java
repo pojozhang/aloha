@@ -24,7 +24,7 @@ public class GenericSubscriberResolver implements SubscriberResolver {
                     } else {
                         channel = eventBus.getChannelResolver().resolve(method.getParameterTypes()[0]);
                     }
-                    return new GenericSubscriber(subscriber, method, channel, GenericSubscriber.Settings.parse(subscribeAnnotation));
+                    return new GenericSubscriber(subscriber, method, channel,subscribeAnnotation.ex, GenericSubscriber.Settings.parse(subscribeAnnotation));
                 }).collect(Collectors.toList());
     }
 }

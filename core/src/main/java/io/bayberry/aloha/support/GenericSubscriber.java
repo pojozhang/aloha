@@ -1,10 +1,9 @@
 package io.bayberry.aloha.support;
 
+import io.bayberry.aloha.ExceptionHandler;
 import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.annotation.Subscribe;
-import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.util.BlockingThreadPoolExecutor;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -14,9 +13,11 @@ public class GenericSubscriber extends Subscriber {
 
     private final ThreadPoolExecutor threadPool;
 
-    protected GenericSubscriber(final Object target, final Method method, final String channel, final Settings settings) {
-        super(target, method, channel);
-        this.threadPool = new BlockingThreadPoolExecutor(settings.getThreads(), settings.getThreads(), 0, TimeUnit.MILLISECONDS);
+    protected GenericSubscriber(final Object target, final Method method, final String channel,
+        final ExceptionHandler exceptionHandler, final Settings settings) {
+        super(target, method, channel, exceptionHandler);
+        this.threadPool = new BlockingThreadPoolExecutor(settings.getThreads(), settings.getThreads(), 0,
+            TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -25,12 +26,13 @@ public class GenericSubscriber extends Subscriber {
             try {
                 this.invokeSubscriberMethodWithArgument(value);
             } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new AlohaException(e);
+                getExceptionHandler().handle(e);
             }
         });
     }
 
-    private void invokeSubscriberMethodWithArgument(Object value) throws InvocationTargetException, IllegalAccessException {
+    private void invokeSubscriberMethodWithArgument(Object value)
+        throws InvocationTargetException, IllegalAccessException {
         if (this.getMethod().getParameterTypes() != null) {
             this.getMethod().invoke(this.getTarget(), value);
         } else {
