@@ -2,8 +2,6 @@ package io.bayberry.aloha.ext.spring.data.redis;
 
 import io.bayberry.aloha.ChannelResolver;
 import io.bayberry.aloha.Listener;
-import io.bayberry.aloha.ListenerRegistry;
-import io.bayberry.aloha.SubscriberRegistry;
 import io.bayberry.aloha.ext.spring.SpringThreadPoolEventBus;
 import io.bayberry.aloha.ext.spring.data.redis.annotation.RedisSubscriber;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
@@ -44,7 +42,7 @@ public class RedisEventBus extends SpringThreadPoolEventBus {
     }
 
     @Override
-    protected Listener listener(String channel) {
+    protected Listener bindListener(String channel) {
         return new RedisListener(channel, redisTemplate, this);
     }
 }
