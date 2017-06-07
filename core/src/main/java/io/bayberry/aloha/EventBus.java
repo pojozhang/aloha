@@ -73,43 +73,43 @@ public abstract class EventBus extends LifeCycleContext {
         this.getListenerRegistry().getListeners().forEach(Listener::shutdown);
     }
 
-    public final ListenerRegistry getListenerRegistry() {
+    public ListenerRegistry getListenerRegistry() {
         return listenerRegistry;
     }
 
-    public final Serializer getSerializer() {
+    public Serializer getSerializer() {
         return this.serializer;
     }
 
-    public final void setSerializer(Serializer serializer) {
+    public void setSerializer(Serializer serializer) {
         this.serializer = serializer;
     }
 
-    public final Deserializer getDeserializer() {
+    public Deserializer getDeserializer() {
         return this.deserializer;
     }
 
-    public final void setDeserializer(Deserializer deserializer) {
+    public void setDeserializer(Deserializer deserializer) {
         this.deserializer = deserializer;
     }
 
-    public final ExceptionHandler getDefaultExceptionHandler() {
+    public ExceptionHandler getDefaultExceptionHandler() {
         return defaultExceptionHandler;
     }
 
-    public final void setDefaultExceptionHandler(ExceptionHandler exceptionHandler) {
+    public void setDefaultExceptionHandler(ExceptionHandler exceptionHandler) {
         this.defaultExceptionHandler = exceptionHandler;
     }
 
-    public final SubscriberRegistry getSubscriberRegistry() {
+    public SubscriberRegistry getSubscriberRegistry() {
         return subscriberRegistry;
     }
 
-    public final SubscriberResolver getSubscriberResolver() {
+    public SubscriberResolver getSubscriberResolver() {
         return subscriberResolver;
     }
 
-    public final ChannelResolver getChannelResolver() {
+    public ChannelResolver getChannelResolver() {
         return channelResolver;
     }
 }
