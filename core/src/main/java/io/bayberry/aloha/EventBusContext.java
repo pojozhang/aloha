@@ -2,13 +2,13 @@ package io.bayberry.aloha;
 
 public abstract class EventBusContext extends LifeCycleContext {
 
-    protected final EventBus eventBus;
+    private final EventBus eventBus;
 
     public EventBusContext(final EventBus eventBus) {
         this.eventBus = eventBus;
     }
 
-    protected final EventBus getEventBus() {
+    public EventBus getEventBus() {
         return eventBus;
     }
 }
