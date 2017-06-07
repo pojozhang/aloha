@@ -6,7 +6,7 @@ import io.bayberry.aloha.transport.JsonDeserializer;
 import io.bayberry.aloha.transport.JsonSerializer;
 import io.bayberry.aloha.transport.Serializer;
 
-public abstract class AbstractGenericEventBus extends EventBus {
+public abstract class GenericEventBus extends EventBus {
 
     @Override
     protected SubscriberRegistry subscriberRegistry() {
@@ -31,6 +31,11 @@ public abstract class AbstractGenericEventBus extends EventBus {
     @Override
     protected Deserializer deserializer() {
         return new JsonDeserializer();
+    }
+
+    @Override
+    protected ExceptionHandler defaultExceptionHandler() {
+        return new LogExceptionHandler();
     }
 
     @Override
