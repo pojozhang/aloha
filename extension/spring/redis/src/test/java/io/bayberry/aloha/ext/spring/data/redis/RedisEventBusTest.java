@@ -36,7 +36,7 @@ public class RedisEventBusTest {
     public void the_subscriber_should_be_invoked_after_an_event_is_post() throws InterruptedException {
         this.eventBus.post(new Event("test"));
 
-        Thread.sleep(10000);
+        Thread.sleep(100000);
         //spy(this.subscriber).onEvent(any(Event.class));
     }
 
@@ -67,6 +67,10 @@ public class RedisEventBusTest {
 
         public String getName() {
             return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 }

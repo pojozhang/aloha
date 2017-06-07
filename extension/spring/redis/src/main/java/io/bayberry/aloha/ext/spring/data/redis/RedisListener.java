@@ -1,8 +1,7 @@
 package io.bayberry.aloha.ext.spring.data.redis;
 
-import io.bayberry.aloha.AsyncListener;
+import io.bayberry.aloha.support.AsyncListener;
 import io.bayberry.aloha.EventBus;
-import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.util.LoopRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -19,9 +18,13 @@ public class RedisListener extends AsyncListener {
 
     @Override
     protected void listen() {
-        new LoopRunner().run(() -> super.notifyAll(redisTemplate.opsForList().leftPop(super.getChannel(), 0, TimeUnit.MILLISECONDS)),
+        new LoopRunner().run(
+                () -> super.notifyAll(redisTemplate.opsForList().leftPop(super.getChannel(), 0, TimeUnit.MILLISECONDS)),
                 exception -> {
-
+                    try {
+                        handleException(exception, null);
+                    } catch (Exception ignored) {
+                    }
                 });
     }
 }

@@ -11,7 +11,7 @@ public abstract class Subscriber {
     private Listener listener;
 
     protected Subscriber(final Object target, final Method method, final String channel,
-        final ExceptionHandler exceptionHandler) {
+                         final ExceptionHandler exceptionHandler) {
         this.target = target;
         this.method = method;
         this.channel = channel;
@@ -42,13 +42,27 @@ public abstract class Subscriber {
         return exceptionHandler == null ? getListener().getEventBus().getDefaultExceptionHandler() : exceptionHandler;
     }
 
-    public void respond(Object value) {
+    public void accept(Object value) throws Exception {
         try {
-            this.invoke();
-        } catch (Throwable throwable) {
-            this.exceptionHandler.handle(throwable);
+            this.invoke(getConvertedEventObject(value));
+        } catch (Exception exception) {
+            this.handleException(exception, value);
         }
     }
 
-    protected abstract void invoke(Object value) throws Exception;
+    protected Object getConvertedEventObject(Object value) {
+        return this.getListener().getEventBus().getDeserializer().deserialize(value, getMethod().getParameterTypes()[0]);
+    }
+
+    protected void handleException(Exception exception, Object value) throws Exception {
+        if (this.getExceptionHandler() != null) {
+            try {
+                this.getExceptionHandler().handle(getChannel(), value, getListener().getEventBus(), exception);
+            } catch (Exception e) {
+                this.getListener().handleException(e, value);
+            }
+        }
+    }
+
+    protected abstract void invoke(Object event) throws Exception;
 }

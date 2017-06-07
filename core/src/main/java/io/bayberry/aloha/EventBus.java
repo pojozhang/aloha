@@ -12,6 +12,7 @@ public abstract class EventBus extends LifeCycleContext {
     private Serializer serializer;
     private Deserializer deserializer;
     private ExceptionHandler defaultExceptionHandler;
+    private ExceptionHandlerProvider exceptionHandlerProvider;
 
     protected abstract SubscriberRegistry subscriberRegistry();
 
@@ -28,6 +29,8 @@ public abstract class EventBus extends LifeCycleContext {
     protected abstract Listener bindListener(String channel);
 
     protected abstract ExceptionHandler defaultExceptionHandler();
+
+    protected abstract ExceptionHandlerProvider exceptionHandlerProvider();
 
     public void post(Object event) {
         this.post(this.getChannelResolver().resolve(event.getClass()), event);
@@ -56,6 +59,7 @@ public abstract class EventBus extends LifeCycleContext {
         this.serializer = this.serializer();
         this.deserializer = this.deserializer();
         this.defaultExceptionHandler = this.defaultExceptionHandler();
+        this.exceptionHandlerProvider = exceptionHandlerProvider();
     }
 
     @Override
@@ -99,6 +103,14 @@ public abstract class EventBus extends LifeCycleContext {
 
     public void setDefaultExceptionHandler(ExceptionHandler exceptionHandler) {
         this.defaultExceptionHandler = exceptionHandler;
+    }
+
+    public ExceptionHandlerProvider getExceptionHandlerProvider() {
+        return exceptionHandlerProvider;
+    }
+
+    public void setExceptionHandlerProvider(ExceptionHandlerProvider exceptionHandlerProvider) {
+        this.exceptionHandlerProvider = exceptionHandlerProvider;
     }
 
     public SubscriberRegistry getSubscriberRegistry() {

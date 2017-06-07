@@ -19,12 +19,12 @@ public class GenericSubscriberResolver implements SubscriberResolver {
                     Subscribe subscribeAnnotation = method.getAnnotation(Subscribe.class);
                     Channel channelAnnotation = method.getAnnotation(Channel.class);
                     String channel;
-                    if (channelAnnotation != null && channelAnnotation.value() != null) {
+                    if (channelAnnotation != null) {
                         channel = channelAnnotation.value();
                     } else {
                         channel = eventBus.getChannelResolver().resolve(method.getParameterTypes()[0]);
                     }
-                    return new GenericSubscriber(subscriber, method, channel,subscribeAnnotation.ex, GenericSubscriber.Settings.parse(subscribeAnnotation));
+                    return new GenericSubscriber(subscriber, method, channel, eventBus.getExceptionHandlerProvider().provide(subscribeAnnotation.exceptionHandler()),GenericSubscriber.Settings.parse(subscribeAnnotation));
                 }).collect(Collectors.toList());
     }
 }

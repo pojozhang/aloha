@@ -39,6 +39,11 @@ public abstract class GenericEventBus extends EventBus {
     }
 
     @Override
+    protected ExceptionHandlerProvider exceptionHandlerProvider() {
+        return new GenericExceptionHandlerProvider();
+    }
+
+    @Override
     protected SubscriberResolver subscriberResolver() {
         return new GenericSubscriberResolver();
     }

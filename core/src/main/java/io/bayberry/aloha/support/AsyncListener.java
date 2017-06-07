@@ -1,4 +1,8 @@
-package io.bayberry.aloha;
+package io.bayberry.aloha.support;
+
+import io.bayberry.aloha.EventBus;
+import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.exception.AlohaException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,7 +17,17 @@ public abstract class AsyncListener extends Listener {
 
     @Override
     protected void onStart() {
-        this.threadPool.execute(this::listen);
+        this.threadPool.execute(() -> {
+            try {
+                this.listen();
+            } catch (Exception exception) {
+                try {
+                    super.handleException(exception, null);
+                } catch (Exception error) {
+                    throw new AlohaException(error);
+                }
+            }
+        });
     }
 
     @Override
