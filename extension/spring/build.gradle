@@ -2,14 +2,16 @@ ext {
     springBootVersion = "1.5.3.RELEASE"
 }
 
-dependencies {
-    compileOnly(
-            "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-    )
-}
-
 jar {
     appendix = "spring"
+}
+
+allprojects {
+    dependencies {
+        compileOnly(
+                "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+        )
+    }
 }
 
 subprojects {
