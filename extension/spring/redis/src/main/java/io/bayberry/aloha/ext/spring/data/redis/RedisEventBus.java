@@ -2,14 +2,14 @@ package io.bayberry.aloha.ext.spring.data.redis;
 
 import io.bayberry.aloha.ChannelResolver;
 import io.bayberry.aloha.Listener;
-import io.bayberry.aloha.ext.spring.SpringThreadPoolEventBus;
+import io.bayberry.aloha.ext.spring.SpringEventBus;
 import io.bayberry.aloha.ext.spring.data.redis.annotation.RedisSubscriber;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-public class RedisEventBus extends SpringThreadPoolEventBus {
+public class RedisEventBus extends SpringEventBus {
 
     private static final RedisEventBusOptions DEFAULT_SETTINGS = new RedisEventBusOptions("event:");
     private RedisTemplate<String, String> redisTemplate;
