@@ -1,16 +1,11 @@
 package io.bayberry.aloha;
 
-import io.bayberry.aloha.transport.Deserializer;
-import io.bayberry.aloha.transport.Serializer;
-
 public abstract class EventBus extends LifeCycleContext {
 
     private SubscriberRegistry subscriberRegistry;
     private ListenerRegistry listenerRegistry;
     private SubscriberResolver subscriberResolver;
     private ChannelResolver channelResolver;
-    private Serializer serializer;
-    private Deserializer deserializer;
     private ExceptionHandler defaultExceptionHandler;
     private ExceptionHandlerProvider exceptionHandlerProvider;
 
@@ -22,10 +17,6 @@ public abstract class EventBus extends LifeCycleContext {
 
     protected abstract SubscriberResolver subscriberResolver();
 
-    protected abstract Serializer serializer();
-
-    protected abstract Deserializer deserializer();
-
     protected abstract Listener bindListener(String channel);
 
     protected abstract ExceptionHandler defaultExceptionHandler();
@@ -36,11 +27,7 @@ public abstract class EventBus extends LifeCycleContext {
         this.post(this.getChannelResolver().resolve(event.getClass()), event);
     }
 
-    public void post(String channel, Object event) {
-        this.post(channel, (String) getSerializer().serialize(event));
-    }
-
-    public abstract void post(String channel, String message);
+    public abstract void post(String channel, Object event);
 
     public void register(Object subscriber) {
         this.subscriberRegistry.register(this.subscriberResolver.resolve(subscriber, this));
@@ -56,8 +43,6 @@ public abstract class EventBus extends LifeCycleContext {
         this.listenerRegistry = this.listenerRegistry();
         this.subscriberResolver = this.subscriberResolver();
         this.channelResolver = this.channelResolver();
-        this.serializer = this.serializer();
-        this.deserializer = this.deserializer();
         this.defaultExceptionHandler = this.defaultExceptionHandler();
         this.exceptionHandlerProvider = exceptionHandlerProvider();
     }
@@ -79,22 +64,6 @@ public abstract class EventBus extends LifeCycleContext {
 
     public ListenerRegistry getListenerRegistry() {
         return listenerRegistry;
-    }
-
-    public Serializer getSerializer() {
-        return this.serializer;
-    }
-
-    public void setSerializer(Serializer serializer) {
-        this.serializer = serializer;
-    }
-
-    public Deserializer getDeserializer() {
-        return this.deserializer;
-    }
-
-    public void setDeserializer(Deserializer deserializer) {
-        this.deserializer = deserializer;
     }
 
     public ExceptionHandler getDefaultExceptionHandler() {
