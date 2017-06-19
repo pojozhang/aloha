@@ -4,11 +4,10 @@ import java.lang.reflect.Method;
 
 public abstract class Subscriber {
 
-    private final String channel;
-    private final Object target;
-    private final Method method;
-    private final ExceptionHandler exceptionHandler;
-    private Listener listener;
+    protected final String channel;
+    protected final Object target;
+    protected final Method method;
+    protected final ExceptionHandler exceptionHandler;
 
     protected Subscriber(final Object target, final Method method, final String channel,
                          final ExceptionHandler exceptionHandler) {
@@ -30,28 +29,8 @@ public abstract class Subscriber {
         return channel;
     }
 
-    public void setListener(Listener listener) {
-        this.listener = listener;
-    }
-
-    public Listener getListener() {
-        return listener;
-    }
-
     public ExceptionHandler getExceptionHandler() {
         return exceptionHandler == null ? getListener().getEventBus().getDefaultExceptionHandler() : exceptionHandler;
-    }
-
-    public void accept(Object value) throws Exception {
-        try {
-            this.invoke(getConvertedEventObject(value));
-        } catch (Exception exception) {
-            this.handleException(exception, value);
-        }
-    }
-
-    protected Object getConvertedEventObject(Object value) {
-        return this.getListener().getEventBus().getDeserializer().deserialize(value, getMethod().getParameterTypes()[0]);
     }
 
     protected void handleException(Exception exception, Object value) throws Exception {
@@ -63,6 +42,10 @@ public abstract class Subscriber {
             }
         }
     }
+
+    public abstract Listener getListener();
+
+    public abstract void accept(Object value) throws Exception;
 
     protected abstract void invoke(Object event) throws Exception;
 }

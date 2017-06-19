@@ -1,13 +1,17 @@
 import java.nio.charset.StandardCharsets
 
-subprojects {
-    buildscript {
-        repositories {
-            maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
-        }
+buildscript {
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
     }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
 
+subprojects {
     apply plugin: 'java'
+    apply plugin: 'com.jfrog.bintray'
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -29,5 +33,16 @@ subprojects {
                 "junit:junit:4.12",
                 "org.awaitility:awaitility:3.0.0"
         )
+    }
+
+    bintray {
+        user = 'pojozhang'
+        key = '3e5a8d552d0a4e387ebdcf57cc4befc368c5da3d'
+        pkg {
+            repo = 'io.barberry'
+            name = 'gradle-project'
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+        }
     }
 }
