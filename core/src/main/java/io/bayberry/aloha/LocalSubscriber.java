@@ -2,12 +2,10 @@ package io.bayberry.aloha;
 
 import java.lang.reflect.Method;
 
-public abstract class LocalSubscriber extends Subscriber {
+public abstract class LocalSubscriber<L extends LocalListener> extends Subscriber<L> {
 
-    private LocalListener listener;
-
-    protected LocalSubscriber(Object target, Method method, String channel, ExceptionHandler exceptionHandler) {
-        super(target, method, channel, exceptionHandler);
+    protected LocalSubscriber(String channel, Object target, Method method, ExceptionHandler exceptionHandler) {
+        super(channel, target, method, exceptionHandler);
     }
 
     @Override
@@ -17,14 +15,5 @@ public abstract class LocalSubscriber extends Subscriber {
         } catch (Exception exception) {
             this.handleException(exception, value);
         }
-    }
-
-    @Override
-    public LocalListener getListener() {
-        return listener;
-    }
-
-    public void setListener(LocalListener listener) {
-        this.listener = listener;
     }
 }

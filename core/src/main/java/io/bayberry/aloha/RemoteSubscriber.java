@@ -2,21 +2,10 @@ package io.bayberry.aloha;
 
 import java.lang.reflect.Method;
 
-public abstract class RemoteSubscriber extends Subscriber {
+public abstract class RemoteSubscriber<L extends RemoteListener> extends Subscriber<L> {
 
-    private RemoteListener listener;
-
-    protected RemoteSubscriber(Object target, Method method, String channel, ExceptionHandler exceptionHandler) {
-        super(target, method, channel, exceptionHandler);
-    }
-
-    @Override
-    public RemoteListener getListener() {
-        return listener;
-    }
-
-    public void setListener(RemoteListener listener) {
-        this.listener = listener;
+    protected RemoteSubscriber(String channel, Object target, Method method, ExceptionHandler exceptionHandler) {
+        super(channel, target, method, exceptionHandler);
     }
 
     @Override
