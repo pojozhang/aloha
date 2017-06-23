@@ -14,5 +14,7 @@ public @interface Subscribe {
 
     int threads() default 1;
 
+    String channel();
+
     Class<? extends ExceptionHandler> exceptionHandler() default RethrowExceptionHandler.class;
 }

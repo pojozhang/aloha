@@ -1,10 +1,6 @@
 package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.*;
-import io.bayberry.aloha.transport.Deserializer;
-import io.bayberry.aloha.transport.JsonDeserializer;
-import io.bayberry.aloha.transport.JsonSerializer;
-import io.bayberry.aloha.transport.Serializer;
 
 public abstract class GenericEventBus extends EventBus {
 
@@ -35,7 +31,7 @@ public abstract class GenericEventBus extends EventBus {
 
     @Override
     protected SubscriberResolver subscriberResolver() {
-        return new GenericSubscriberResolver();
+        return new GenericRemoteSubscriberResolver();
     }
 
     @Override

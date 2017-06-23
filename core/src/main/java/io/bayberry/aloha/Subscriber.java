@@ -2,13 +2,13 @@ package io.bayberry.aloha;
 
 import java.lang.reflect.Method;
 
-public abstract class Subscriber<L extends Listener> {
+public class Subscriber {
 
     protected String channel;
     protected Object target;
     protected Method method;
     protected ExceptionHandler exceptionHandler;
-    protected L listener;
+    protected Listener listener;
 
     protected Subscriber(String channel, Object target, Method method, ExceptionHandler exceptionHandler) {
         this.channel = channel;
@@ -43,15 +43,27 @@ public abstract class Subscriber<L extends Listener> {
         }
     }
 
-    public L getListener() {
+    public Listener getListener() {
         return listener;
     }
 
-    public void setListener(L listener) {
+    public void setListener(Listener listener) {
         this.listener = listener;
     }
 
-    public abstract void accept(Object value) throws Exception;
+    public void accept(Object value) throws Exception {
+        try {
+            this.invoke(value);
+        } catch (Exception exception) {
+            this.handleException(exception, value);
+        }
+    }
 
-    protected abstract void invoke(Object event) throws Exception;
+    protected void invoke(Object event) throws Exception {
+        if (this.getMethod().getParameterTypes() != null) {
+            this.getMethod().invoke(this.getTarget(), event);
+        } else {
+            this.getMethod().invoke(this.getTarget());
+        }
+    }
 }

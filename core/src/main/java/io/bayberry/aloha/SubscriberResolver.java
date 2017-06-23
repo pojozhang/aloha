@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface SubscriberResolver {
 
-    List<Subscriber> resolve(Object subscriber, EventBus eventBus);
+    List<Subscriber> resolve(Object target, EventBus eventBus);
 }

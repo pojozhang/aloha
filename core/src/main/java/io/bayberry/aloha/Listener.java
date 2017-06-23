@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import io.bayberry.aloha.exception.AlohaException;
 
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class Listener extends EventBusContext {
 
@@ -15,10 +16,11 @@ public abstract class Listener extends EventBusContext {
         this.channel = channel;
     }
 
-    public void notifyAll(Object value) {
+    public void notifyAll(Function<Subscriber, Object> function) {
         this.subscribers.forEach(subscriber -> {
+            Object value = function.apply(subscriber);
             try {
-                subscriber.accept(value);
+                subscriber.accept(function.apply(subscriber));
             } catch (Exception exception) {
                 try {
                     handleException(exception, value);

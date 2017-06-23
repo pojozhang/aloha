@@ -45,7 +45,7 @@ public abstract class GenericRemoteEventBus extends RemoteEventBus {
 
     @Override
     protected SubscriberResolver subscriberResolver() {
-        return new GenericSubscriberResolver();
+        return new GenericRemoteSubscriberResolver();
     }
 
     @Override
