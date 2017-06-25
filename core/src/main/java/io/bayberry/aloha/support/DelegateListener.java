@@ -25,8 +25,8 @@ public class DelegateListener implements Listener {
     }
 
     @Override
-    public void notifyAll(Object value) {
-        this.delegate.notifyAll(value);
+    public void notifyAll(Object source) {
+        this.delegate.notifyAll(source);
     }
 
     @Override

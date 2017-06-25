@@ -9,16 +9,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class LocalSpringEventBus extends GenericLocalEventBus {
 
     private final ApplicationContext applicationContext;
-    private final LocalSpringListener localSpringListener;
+    private final SpringEventDispatcher springEventDispatcher;
 
     public LocalSpringEventBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
-        this.localSpringListener = new LocalSpringListener(this);
+        this.springEventDispatcher = new SpringEventDispatcher(this);
     }
 
     @Override
     protected Listener bindListener(String channel) {
-        return localSpringListener;
+        return new LocalSpringListener(channel, this);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
     @Override
     protected void onCreate() {
         super.onCreate();
-        ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(localSpringListener);
         this.applicationContext.getBeansWithAnnotation(SpringSubscriber.class).values().forEach(super::register);
+        ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(springEventDispatcher);
     }
 }

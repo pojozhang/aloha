@@ -14,8 +14,8 @@ public abstract class RemoteListener extends AbstractListener {
     }
 
     @Override
-    public void notifyAll(Object value) {
-        super.notifyAll(value);
+    public void notifyAll(Object source) {
+        super.notifyAll(source);
     }
 
     @Override

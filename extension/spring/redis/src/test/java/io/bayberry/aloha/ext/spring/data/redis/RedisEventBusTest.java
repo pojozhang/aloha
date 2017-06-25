@@ -58,7 +58,6 @@ public class RedisEventBusTest {
                 throw new RuntimeException();
             }
             Thread.sleep(10000);
-
         }
 
         @Subscribe

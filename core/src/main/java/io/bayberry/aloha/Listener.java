@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface Listener extends LifeCycle {
 
-    void notifyAll(Object value);
+    void notifyAll(Object source);
 
     void register(List<Subscriber> subscribers);
 
