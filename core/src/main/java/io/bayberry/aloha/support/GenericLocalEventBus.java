@@ -31,7 +31,7 @@ public abstract class GenericLocalEventBus extends LocalEventBus {
 
     @Override
     protected SubscriberResolver initSubscriberResolver() {
-        return new GenericRemoteSubscriberResolver();
+        return new GenericSubscriberResolver();
     }
 
     @Override

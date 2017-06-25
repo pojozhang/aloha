@@ -8,7 +8,7 @@ import io.bayberry.aloha.util.Reflection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GenericRemoteSubscriberResolver implements SubscriberResolver {
+public class GenericSubscriberResolver implements SubscriberResolver {
 
     @Override
     public List<Subscriber> resolve(Object target, EventBus eventBus) {

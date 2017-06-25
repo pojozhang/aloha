@@ -9,9 +9,8 @@ public class GenericSubscriberOptions {
     public Class<? extends ExceptionHandler> exceptionHandlerType;
 
     public GenericSubscriberOptions(Subscribe subscribe) {
-        GenericSubscriberOptions options = new GenericSubscriberOptions();
-        options.threads = subscribe.threads();
-        options.exceptionHandlerType = subscribe.exceptionHandler();
+        this.threads = subscribe.threads();
+        this.exceptionHandlerType = subscribe.exceptionHandler();
     }
 
     private GenericSubscriberOptions() {
