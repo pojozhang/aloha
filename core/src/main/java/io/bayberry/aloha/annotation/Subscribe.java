@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Subscribe {
 
-    int threads() default 1;
+    int threads() default 0;
 
     String channel() default "";
 

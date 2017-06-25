@@ -39,7 +39,7 @@ public class LocalSpringEventBusTest {
     @Test
     public void the_subscriber_should_be_invoked_after_an_event_is_post() {
         for (int i = 0; i < 6; i++) {
-            this.eventBus.post(new Event("name" + i));
+            new Thread(()->this.eventBus.post(new Event("name" + 3))).start();
         }
 
         await().atMost(Duration.FIVE_SECONDS).until(() -> subscriber.countDownLatch.getCount() == 0);
@@ -51,7 +51,7 @@ public class LocalSpringEventBusTest {
         public CountDownLatch countDownLatch = new CountDownLatch(12);
         private Logger log = LoggerFactory.getLogger(Subscriber.class);
 
-        @Subscribe(threads = 6)
+        @Subscribe(threads = 0)
         public void onEvent1(Event event) throws InterruptedException {
             log.info("onEvent1");
             countDownLatch.countDown();
