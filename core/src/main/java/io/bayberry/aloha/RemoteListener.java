@@ -2,9 +2,9 @@ package io.bayberry.aloha;
 
 import io.bayberry.aloha.transport.Deserializer;
 
-public abstract class RemoteListener extends Listener {
+public abstract class RemoteListener extends AbstractListener {
 
-    public RemoteListener(final String channel, final RemoteEventBus eventBus) {
+    public RemoteListener(String channel, RemoteEventBus eventBus) {
         super(channel, eventBus);
     }
 
@@ -18,8 +18,9 @@ public abstract class RemoteListener extends Listener {
         super.notifyAll(value);
     }
 
-    protected Object getConvertedEventObject(Object value) {
+    @Override
+    protected Object getConvertedEventObject(Object origin, Subscriber subscriber) {
         Deserializer deserializer = getEventBus().getDeserializer();
-        return deserializer == null ? value : deserializer.deserialize(value);
+        return deserializer == null ? origin : deserializer.deserialize(origin, subscriber.getMethod().getParameterTypes()[0]);
     }
 }

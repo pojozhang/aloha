@@ -1,25 +1,24 @@
 package io.bayberry.aloha.support;
 
-import io.bayberry.aloha.EventBus;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.exception.AlohaException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class AsyncListener extends Listener {
+public class AsyncListenerDecorator extends DelegateListener {
 
-    protected final ExecutorService threadPool = Executors.newSingleThreadExecutor();
+    private ExecutorService threadPool = Executors.newSingleThreadExecutor();
 
-    public AsyncListener(final String channel, final EventBus eventBus) {
-        super(channel, eventBus);
+    public AsyncListenerDecorator(Listener delegate) {
+        super(delegate);
     }
 
     @Override
-    protected void onStart() {
+    public void start() {
         this.threadPool.execute(() -> {
             try {
-                this.listen();
+                super.start();
             } catch (Exception exception) {
                 try {
                     super.handleException(exception, null);
@@ -31,9 +30,8 @@ public abstract class AsyncListener extends Listener {
     }
 
     @Override
-    protected void onDestroy() {
+    public void shutdown() {
         this.threadPool.shutdown();
+        super.shutdown();
     }
-
-    protected abstract void listen();
 }

@@ -9,27 +9,27 @@ import io.bayberry.aloha.transport.Serializer;
 public abstract class GenericRemoteEventBus extends RemoteEventBus {
 
     @Override
-    protected SubscriberRegistry subscriberRegistry() {
+    protected SubscriberRegistry initSubscriberRegistry() {
         return new GenericSubscriberRegistry();
     }
 
     @Override
-    protected ListenerRegistry listenerRegistry() {
+    protected ListenerRegistry initListenerRegistry() {
         return new GenericListenerRegistry();
     }
 
     @Override
-    protected ChannelResolver channelResolver() {
+    protected ChannelResolver initChannelResolver() {
         return new GenericChannelResolver();
     }
 
     @Override
-    protected Serializer serializer() {
+    protected Serializer initSerializer() {
         return new JsonSerializer();
     }
 
     @Override
-    protected Deserializer deserializer() {
+    protected Deserializer initDeserializer() {
         return new JsonDeserializer();
     }
 
@@ -44,7 +44,7 @@ public abstract class GenericRemoteEventBus extends RemoteEventBus {
     }
 
     @Override
-    protected SubscriberResolver subscriberResolver() {
+    protected SubscriberResolver initSubscriberResolver() {
         return new GenericRemoteSubscriberResolver();
     }
 

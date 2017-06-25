@@ -1,66 +1,24 @@
 package io.bayberry.aloha;
 
-import com.google.common.collect.Lists;
-import io.bayberry.aloha.exception.AlohaException;
-
 import java.util.List;
-import java.util.function.Function;
 
-public abstract class Listener extends EventBusContext {
+public interface Listener extends LifeCycle {
 
-    protected final List<Subscriber> subscribers = Lists.newArrayList();
-    private final String channel;
+    void notifyAll(Object value);
 
-    public Listener(final String channel, final EventBus eventBus) {
-        super(eventBus);
-        this.channel = channel;
-    }
+    void register(List<Subscriber> subscribers);
 
-    public void notifyAll(Function<Subscriber, Object> function) {
-        this.subscribers.forEach(subscriber -> {
-            Object value = function.apply(subscriber);
-            try {
-                subscriber.accept(function.apply(subscriber));
-            } catch (Exception exception) {
-                try {
-                    handleException(exception, value);
-                } catch (Exception error) {
-                    throw new AlohaException(error);
-                }
-            }
-        });
-    }
+    void register(Subscriber subscriber);
 
-    protected void handleException(Exception exception, Object value) throws Exception {
-        this.getEventBus().getDefaultExceptionHandler().handle(getChannel(), value, getEventBus(), exception);
-    }
+    void unregister(List<Subscriber> subscribers);
 
-    @Override
-    protected void onCreate() {
-    }
+    void unregister(Subscriber subscriber);
 
-    @Override
-    protected void onDestroy() {
-    }
+    String getChannel();
 
-    public void register(List<Subscriber> subscribers) {
-        subscribers.forEach(this::register);
-    }
+    List<Subscriber> getSubscribers();
 
-    public void register(Subscriber subscriber) {
-        this.subscribers.add(subscriber);
-        subscriber.setListener(this);
-    }
+    EventBus getEventBus();
 
-    public void unregister(List<Subscriber> subscribers) {
-        subscribers.forEach(this::unregister);
-    }
-
-    public void unregister(Subscriber subscriber) {
-        this.subscribers.remove(subscriber);
-    }
-
-    public String getChannel() {
-        return channel;
-    }
+    void handleException(Exception exception, Object value) throws Exception;
 }

@@ -18,12 +18,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.concurrent.CountDownLatch;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.*;
 
 @SpringBootTest
 @SpringBootApplication
 @RunWith(SpringRunner.class)
-public class SpringEventBusTest {
+public class LocalSpringEventBusTest {
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -33,7 +32,7 @@ public class SpringEventBusTest {
 
     @Before
     public void setUp() {
-        this.eventBus = new SpringEventBus(this.applicationContext);
+        this.eventBus = new LocalSpringEventBus(this.applicationContext);
         this.eventBus.start();
     }
 

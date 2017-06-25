@@ -9,13 +9,13 @@ public abstract class EventBus extends LifeCycleContext {
     private ExceptionHandler defaultExceptionHandler;
     private ExceptionHandlerProvider exceptionHandlerProvider;
 
-    protected abstract SubscriberRegistry subscriberRegistry();
+    protected abstract SubscriberRegistry initSubscriberRegistry();
 
-    protected abstract ListenerRegistry listenerRegistry();
+    protected abstract ListenerRegistry initListenerRegistry();
 
-    protected abstract ChannelResolver channelResolver();
+    protected abstract SubscriberResolver initSubscriberResolver();
 
-    protected abstract SubscriberResolver subscriberResolver();
+    protected abstract ChannelResolver initChannelResolver();
 
     protected abstract Listener bindListener(String channel);
 
@@ -39,10 +39,10 @@ public abstract class EventBus extends LifeCycleContext {
 
     @Override
     protected void onCreate() {
-        this.subscriberRegistry = this.subscriberRegistry();
-        this.listenerRegistry = this.listenerRegistry();
-        this.subscriberResolver = this.subscriberResolver();
-        this.channelResolver = this.channelResolver();
+        this.subscriberRegistry = this.initSubscriberRegistry();
+        this.listenerRegistry = this.initListenerRegistry();
+        this.subscriberResolver = this.initSubscriberResolver();
+        this.channelResolver = this.initChannelResolver();
         this.defaultExceptionHandler = this.defaultExceptionHandler();
         this.exceptionHandlerProvider = exceptionHandlerProvider();
     }

@@ -32,8 +32,8 @@ public class RedisEventBus extends RemoteSpringEventBus {
     }
 
     @Override
-    protected ChannelResolver channelResolver() {
-        return new PrefixChannelResolverDecorator(this.options.getChannelPrefix(), super.channelResolver());
+    protected ChannelResolver initChannelResolver() {
+        return new PrefixChannelResolverDecorator(this.options.getChannelPrefix(), super.initChannelResolver());
     }
 
     @Override

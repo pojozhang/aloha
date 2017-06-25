@@ -5,19 +5,19 @@ import io.bayberry.aloha.transport.Serializer;
 
 public abstract class RemoteEventBus extends EventBus {
 
-    private Serializer serializer;
-    private Deserializer deserializer;
+    protected Serializer serializer;
+    protected Deserializer deserializer;
 
     @Override
     protected void onCreate() {
         super.onCreate();
-        this.serializer = this.serializer();
-        this.deserializer = this.deserializer();
+        this.serializer = this.initSerializer();
+        this.deserializer = this.initDeserializer();
     }
 
-    protected abstract Serializer serializer();
+    protected abstract Serializer initSerializer();
 
-    protected abstract Deserializer deserializer();
+    protected abstract Deserializer initDeserializer();
 
     public Serializer getSerializer() {
         return serializer;

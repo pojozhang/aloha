@@ -2,20 +2,20 @@ package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.*;
 
-public abstract class GenericEventBus extends EventBus {
+public abstract class GenericLocalEventBus extends LocalEventBus {
 
     @Override
-    protected SubscriberRegistry subscriberRegistry() {
+    protected SubscriberRegistry initSubscriberRegistry() {
         return new GenericSubscriberRegistry();
     }
 
     @Override
-    protected ListenerRegistry listenerRegistry() {
+    protected ListenerRegistry initListenerRegistry() {
         return new GenericListenerRegistry();
     }
 
     @Override
-    protected ChannelResolver channelResolver() {
+    protected ChannelResolver initChannelResolver() {
         return new GenericChannelResolver();
     }
 
@@ -30,7 +30,7 @@ public abstract class GenericEventBus extends EventBus {
     }
 
     @Override
-    protected SubscriberResolver subscriberResolver() {
+    protected SubscriberResolver initSubscriberResolver() {
         return new GenericRemoteSubscriberResolver();
     }
 

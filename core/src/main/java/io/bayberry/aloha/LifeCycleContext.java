@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-public abstract class LifeCycleContext {
+public abstract class LifeCycleContext implements LifeCycle {
 
     public final LifeCycleStatus NEW = new NewLifeCycleStatus(this);
     public final LifeCycleStatus READY = new ReadyLifeCycleStatus(this);
@@ -13,6 +13,7 @@ public abstract class LifeCycleContext {
         this.status = READY;
     }
 
+    @Override
     public void start() {
         if (!isInitialized) {
             this.onCreate();
@@ -22,6 +23,7 @@ public abstract class LifeCycleContext {
         this.onStart();
     }
 
+    @Override
     public void shutdown() {
         this.status.shutdown();
         this.onDestroy();

@@ -1,13 +1,14 @@
 package io.bayberry.aloha.ext.spring.local;
 
-import io.bayberry.aloha.EventBus;
 import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.LocalEventBus;
+import io.bayberry.aloha.LocalListener;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
-public class SpringListener extends Listener implements ApplicationListener {
+public class LocalSpringListener extends LocalListener implements ApplicationListener {
 
-    public SpringListener(EventBus eventBus) {
+    public LocalSpringListener(LocalEventBus eventBus) {
         super(null, eventBus);
     }
 
