@@ -39,8 +39,13 @@ public abstract class GenericRemoteEventBus extends RemoteEventBus {
     }
 
     @Override
-    protected ExceptionHandlerProvider exceptionHandlerProvider() {
-        return new GenericExceptionHandlerProvider();
+    protected ExceptionHandlerFactory initExceptionHandlerFactory() {
+        return new GenericExceptionHandlerFactory();
+    }
+
+    @Override
+    protected ExecutionStrategyFactory initExecutionStrategyFactory() {
+        return new GenericExecutionStrategyFactory();
     }
 
     @Override

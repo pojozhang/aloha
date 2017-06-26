@@ -1,7 +1,7 @@
 package io.bayberry.aloha;
 
 @FunctionalInterface
-public interface ExceptionHandlerProvider {
+public interface ExceptionHandlerFactory {
 
     ExceptionHandler provide(Class<? extends ExceptionHandler> exceptionHandlerType);
 }

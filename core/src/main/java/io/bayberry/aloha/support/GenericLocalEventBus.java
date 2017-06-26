@@ -25,8 +25,13 @@ public abstract class GenericLocalEventBus extends LocalEventBus {
     }
 
     @Override
-    protected ExceptionHandlerProvider exceptionHandlerProvider() {
-        return new GenericExceptionHandlerProvider();
+    protected ExceptionHandlerFactory initExceptionHandlerFactory() {
+        return new GenericExceptionHandlerFactory();
+    }
+
+    @Override
+    protected ExecutionStrategyFactory initExecutionStrategyFactory() {
+        return new GenericExecutionStrategyFactory();
     }
 
     @Override

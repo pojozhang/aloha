@@ -7,7 +7,8 @@ public abstract class EventBus extends LifeCycleContext {
     private SubscriberResolver subscriberResolver;
     private ChannelResolver channelResolver;
     private ExceptionHandler defaultExceptionHandler;
-    private ExceptionHandlerProvider exceptionHandlerProvider;
+    private ExceptionHandlerFactory exceptionHandlerFactory;
+    private ExecutionStrategyFactory executionStrategyFactory;
 
     protected abstract SubscriberRegistry initSubscriberRegistry();
 
@@ -21,7 +22,9 @@ public abstract class EventBus extends LifeCycleContext {
 
     protected abstract ExceptionHandler defaultExceptionHandler();
 
-    protected abstract ExceptionHandlerProvider exceptionHandlerProvider();
+    protected abstract ExceptionHandlerFactory initExceptionHandlerFactory();
+
+    protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
 
     public void post(Object event) {
         this.post(this.getChannelResolver().resolve(event.getClass()), event);
@@ -44,7 +47,8 @@ public abstract class EventBus extends LifeCycleContext {
         this.subscriberResolver = this.initSubscriberResolver();
         this.channelResolver = this.initChannelResolver();
         this.defaultExceptionHandler = this.defaultExceptionHandler();
-        this.exceptionHandlerProvider = exceptionHandlerProvider();
+        this.exceptionHandlerFactory = this.initExceptionHandlerFactory();
+        this.executionStrategyFactory = this.initExecutionStrategyFactory();
     }
 
     @Override
@@ -74,12 +78,20 @@ public abstract class EventBus extends LifeCycleContext {
         this.defaultExceptionHandler = exceptionHandler;
     }
 
-    public ExceptionHandlerProvider getExceptionHandlerProvider() {
-        return exceptionHandlerProvider;
+    public ExceptionHandlerFactory getExceptionHandlerFactory() {
+        return exceptionHandlerFactory;
     }
 
-    public void setExceptionHandlerProvider(ExceptionHandlerProvider exceptionHandlerProvider) {
-        this.exceptionHandlerProvider = exceptionHandlerProvider;
+    public void setExceptionHandlerFactory(ExceptionHandlerFactory exceptionHandlerFactory) {
+        this.exceptionHandlerFactory = exceptionHandlerFactory;
+    }
+
+    public ExecutionStrategyFactory getExecutionStrategyFactory() {
+        return executionStrategyFactory;
+    }
+
+    public void setExecutionStrategyFactory(ExecutionStrategyFactory executionStrategyFactory) {
+        this.executionStrategyFactory = executionStrategyFactory;
     }
 
     public SubscriberRegistry getSubscriberRegistry() {

@@ -20,8 +20,8 @@ public class GenericSubscriberResolver implements SubscriberResolver {
                     channel = eventBus.getChannelResolver().resolve(method.getParameterTypes()[0]);
                 }
                 return new GenericSubscriber(channel, target, method,
-                    eventBus.getExceptionHandlerProvider().provide(subscribe.exceptionHandler()),
-                    new GenericSubscriberOptions(subscribe));
+                    eventBus.getExceptionHandlerFactory().provide(subscribe.exceptionHandler()),
+                    eventBus.getExecutionStrategyFactory().provide(subscribe.executionStrategy()));
             }).collect(Collectors.toList());
     }
 }
