@@ -51,7 +51,7 @@ public class LocalSpringEventBusTest {
         public CountDownLatch countDownLatch = new CountDownLatch(12);
         private Logger log = LoggerFactory.getLogger(Subscriber.class);
 
-        @Subscribe(threads = 0)
+        @Subscribe
         public void onEvent1(Event event) throws InterruptedException {
             log.info("onEvent1");
             countDownLatch.countDown();
