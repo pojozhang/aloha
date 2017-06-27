@@ -1,5 +1,6 @@
 dependencies {
     compile(
+            project(":core"),
             "junit:junit:4.12",
             "org.awaitility:awaitility:3.0.0"
     )
