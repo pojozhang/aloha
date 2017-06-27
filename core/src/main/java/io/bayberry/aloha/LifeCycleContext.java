@@ -11,12 +11,12 @@ public abstract class LifeCycleContext implements LifeCycle {
 
     public LifeCycleContext() {
         this.status = READY;
+        this.onCreate();
     }
 
     @Override
     public void start() {
         if (!isInitialized) {
-            this.onCreate();
             isInitialized = true;
         }
         this.status.start();

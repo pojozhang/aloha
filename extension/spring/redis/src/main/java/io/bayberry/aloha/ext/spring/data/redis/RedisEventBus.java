@@ -26,10 +26,10 @@ public class RedisEventBus extends RemoteSpringEventBus {
     }
 
     @Override
-    protected void onCreate() {
-        super.onCreate();
+    public void onStart() {
         this.applicationContext.getBeansWithAnnotation(RedisSubscriber.class).values().forEach(super::register);
         this.redisTemplate = this.applicationContext.getBean(StringRedisTemplate.class);
+        super.onStart();
     }
 
     @Override

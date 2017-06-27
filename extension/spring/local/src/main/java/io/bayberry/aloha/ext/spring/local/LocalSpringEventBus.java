@@ -32,9 +32,9 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
     }
 
     @Override
-    protected void onCreate() {
-        super.onCreate();
+    public void onStart() {
         this.applicationContext.getBeansWithAnnotation(SpringSubscriber.class).values().forEach(super::register);
         ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(springEventDispatcher);
+        super.onStart();
     }
 }
