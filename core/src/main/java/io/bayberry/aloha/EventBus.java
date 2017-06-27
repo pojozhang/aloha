@@ -8,6 +8,7 @@ public abstract class EventBus extends LifeCycleContext {
     private ChannelResolver channelResolver;
     private ExceptionHandler defaultExceptionHandler;
     private ExceptionHandlerFactory exceptionHandlerFactory;
+    private ExecutionStrategy defaultExecutionStrategy;
     private ExecutionStrategyFactory executionStrategyFactory;
 
     protected abstract SubscriberRegistry initSubscriberRegistry();
@@ -20,9 +21,11 @@ public abstract class EventBus extends LifeCycleContext {
 
     protected abstract Listener bindListener(String channel);
 
-    protected abstract ExceptionHandler defaultExceptionHandler();
+    protected abstract ExceptionHandler initDefaultExceptionHandler();
 
     protected abstract ExceptionHandlerFactory initExceptionHandlerFactory();
+
+    protected abstract ExecutionStrategy initDefaultExecutionStrategy();
 
     protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
 
@@ -46,8 +49,9 @@ public abstract class EventBus extends LifeCycleContext {
         this.listenerRegistry = this.initListenerRegistry();
         this.subscriberResolver = this.initSubscriberResolver();
         this.channelResolver = this.initChannelResolver();
-        this.defaultExceptionHandler = this.defaultExceptionHandler();
+        this.defaultExceptionHandler = this.initDefaultExceptionHandler();
         this.exceptionHandlerFactory = this.initExceptionHandlerFactory();
+        this.defaultExecutionStrategy = this.initDefaultExecutionStrategy();
         this.executionStrategyFactory = this.initExecutionStrategyFactory();
     }
 
@@ -84,6 +88,14 @@ public abstract class EventBus extends LifeCycleContext {
 
     public void setExceptionHandlerFactory(ExceptionHandlerFactory exceptionHandlerFactory) {
         this.exceptionHandlerFactory = exceptionHandlerFactory;
+    }
+
+    public ExecutionStrategy getDefaultExecutionStrategy() {
+        return defaultExecutionStrategy;
+    }
+
+    public void setDefaultExecutionStrategy(ExecutionStrategy defaultExecutionStrategy) {
+        this.defaultExecutionStrategy = defaultExecutionStrategy;
     }
 
     public ExecutionStrategyFactory getExecutionStrategyFactory() {
