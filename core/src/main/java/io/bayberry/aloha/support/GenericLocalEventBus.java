@@ -5,37 +5,42 @@ import io.bayberry.aloha.*;
 public abstract class GenericLocalEventBus extends LocalEventBus {
 
     @Override
-    protected SubscriberRegistry initSubscriberRegistry() {
+    public SubscriberRegistry initSubscriberRegistry() {
         return new GenericSubscriberRegistry();
     }
 
     @Override
-    protected ListenerRegistry initListenerRegistry() {
+    public ListenerRegistry initListenerRegistry() {
         return new GenericListenerRegistry();
     }
 
     @Override
-    protected ChannelResolver initChannelResolver() {
+    public ChannelResolver initChannelResolver() {
         return new GenericChannelResolver();
     }
 
     @Override
-    protected ExceptionHandler defaultExceptionHandler() {
+    public ExceptionHandler initDefaultExceptionHandler() {
         return new LogExceptionHandler();
     }
 
     @Override
-    protected ExceptionHandlerFactory initExceptionHandlerFactory() {
+    public ExceptionHandlerFactory initExceptionHandlerFactory() {
         return new GenericExceptionHandlerFactory();
     }
 
     @Override
-    protected ExecutionStrategyFactory initExecutionStrategyFactory() {
+    public ExecutionStrategy initDefaultExecutionStrategy() {
+        return new GenericExecutionStrategy();
+    }
+
+    @Override
+    public ExecutionStrategyFactory initExecutionStrategyFactory() {
         return new GenericExecutionStrategyFactory();
     }
 
     @Override
-    protected SubscriberResolver initSubscriberResolver() {
+    public SubscriberResolver initSubscriberResolver() {
         return new GenericSubscriberResolver();
     }
 

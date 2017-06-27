@@ -1,5 +1,5 @@
 package io.bayberry.aloha;
 
-public abstract class LocalEventBus extends EventBus {
+public abstract class LocalEventBus extends AbstractEventBus {
 
 }

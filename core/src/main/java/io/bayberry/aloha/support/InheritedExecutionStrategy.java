@@ -1,4 +1,7 @@
-package io.bayberry.aloha;
+package io.bayberry.aloha.support;
+
+import io.bayberry.aloha.ExecutionStrategy;
+import io.bayberry.aloha.Subscriber;
 
 public class InheritedExecutionStrategy implements ExecutionStrategy {
 

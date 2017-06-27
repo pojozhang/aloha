@@ -17,7 +17,7 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
     }
 
     @Override
-    protected Listener bindListener(String channel) {
+    public Listener bindListener(String channel) {
         return new LocalSpringListener(channel, this);
     }
 
