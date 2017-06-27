@@ -1,7 +1,3 @@
-ext {
-    springBootVersion = "1.5.4.RELEASE"
-}
-
 jar {
     appendix = "spring"
 }
@@ -17,9 +13,7 @@ allprojects {
 subprojects {
     dependencies {
         compile project(":extension:spring")
-        testCompile(
-                "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
-                "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
-        )
+        testCompile project(":test")
+        testCompile project(":test:spring")
     }
 }

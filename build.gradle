@@ -28,13 +28,6 @@ subprojects {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
     }
 
-    dependencies {
-        testCompile(
-                "junit:junit:4.12",
-                "org.awaitility:awaitility:3.0.0"
-        )
-    }
-
     bintray {
         user = 'pojozhang'
         key = '3e5a8d552d0a4e387ebdcf57cc4befc368c5da3d'

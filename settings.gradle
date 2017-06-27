@@ -5,6 +5,9 @@ include ":core",
         ":extension:spring",
         ":extension:spring:local",
         ":extension:spring:redis",
-        ":extension:spring:rabbit"
+        ":extension:spring:rabbit",
+        ":test",
+        ":test:spring"
+
 
 
