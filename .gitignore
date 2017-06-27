@@ -1,4 +1,5 @@
 .idea/
 .gradle/
+build/
 extension/spring/redis/data
 *.iml
