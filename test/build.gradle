@@ -5,3 +5,9 @@ dependencies {
             "org.awaitility:awaitility:3.0.0"
     )
 }
+
+subprojects {
+    dependencies {
+        compile project(":test")
+    }
+}

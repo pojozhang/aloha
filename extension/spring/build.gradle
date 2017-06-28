@@ -13,7 +13,6 @@ allprojects {
 subprojects {
     dependencies {
         compile project(":extension:spring")
-        testCompile project(":test")
         testCompile project(":test:spring")
     }
 }
