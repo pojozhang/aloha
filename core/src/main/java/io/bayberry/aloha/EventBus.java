@@ -24,9 +24,9 @@ public interface EventBus extends LifeCycle {
 
     void post(String channel, Object event);
 
-    void register(Object subscriber);
+    void register(Object target);
 
-    void unregister(Object subscriber);
+    void unregister(Object target);
 
     ListenerRegistry getListenerRegistry();
 

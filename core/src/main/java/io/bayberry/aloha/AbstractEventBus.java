@@ -17,13 +17,13 @@ public abstract class AbstractEventBus extends LifeCycleContext implements Event
     }
 
     @Override
-    public void register(Object subscriber) {
-        this.subscriberRegistry.register(this.subscriberResolver.resolve(subscriber, this));
+    public void register(Object target) {
+        this.subscriberRegistry.register(this.subscriberResolver.resolve(target, this));
     }
 
     @Override
-    public void unregister(Object subscriber) {
-        this.subscriberRegistry.unregister(this.subscriberResolver.resolve(subscriber, this));
+    public void unregister(Object target) {
+        this.subscriberRegistry.unregister(this.subscriberResolver.resolve(target, this));
     }
 
     @Override
