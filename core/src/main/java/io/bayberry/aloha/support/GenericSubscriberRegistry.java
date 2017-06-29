@@ -20,9 +20,11 @@ public class GenericSubscriberRegistry implements SubscriberRegistry {
 
     @Override
     public void register(Subscriber subscriber) {
-        List<Subscriber> subscribers = this.channelSubscribers.getOrDefault(subscriber.getChannel(), new ArrayList<>());
-        subscribers.add(subscriber);
-        this.channelSubscribers.put(subscriber.getChannel(), subscribers);
+        subscriber.getChannels().forEach(channel -> {
+            List<Subscriber> subscribers = this.channelSubscribers.getOrDefault(channel, new ArrayList<>());
+            subscribers.add(subscriber);
+            this.channelSubscribers.put(channel, subscribers);
+        });
     }
 
     @Override

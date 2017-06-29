@@ -1,22 +1,21 @@
 package io.bayberry.aloha;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 public interface Subscriber {
 
-    String getChannel();
+    List<String> getChannels();
 
     Object getTarget();
 
     Method getMethod();
 
-    Listener getListener();
+    EventBus getEventBus();
 
     ExceptionHandler getExceptionHandler();
 
     ExecutionStrategy getExecutionStrategy();
 
-    void setListener(Listener listener);
-
-    void accept(Object value) throws Exception;
+    void accept(Listener listener, Object value) throws Exception;
 }

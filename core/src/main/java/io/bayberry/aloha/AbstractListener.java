@@ -19,7 +19,7 @@ public abstract class AbstractListener extends EventBusContext implements Listen
     public void notifyAll(Object source) {
         this.subscribers.forEach(subscriber -> {
             try {
-                subscriber.accept(this.getConvertedEventObject(source, subscriber));
+                subscriber.accept(this, this.getConvertedEventObject(source, subscriber));
             } catch (Exception exception) {
                 try {
                     handleException(exception, source);
@@ -53,7 +53,6 @@ public abstract class AbstractListener extends EventBusContext implements Listen
     @Override
     public void register(Subscriber subscriber) {
         this.subscribers.add(subscriber);
-        subscriber.setListener(this);
     }
 
     @Override

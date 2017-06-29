@@ -3,7 +3,9 @@ package io.bayberry.aloha.test;
 import static org.junit.Assert.assertEquals;
 
 import io.bayberry.aloha.EventBus;
+
 import java.util.concurrent.CountDownLatch;
+
 import org.junit.Test;
 
 public abstract class BaseTestCase {

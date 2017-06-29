@@ -1,6 +1,8 @@
 package io.bayberry.aloha;
 
+import java.util.List;
+
 public interface ChannelResolver {
 
-    String resolve(Class eventType);
+    List<String> resolve(Class eventType);
 }

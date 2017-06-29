@@ -6,6 +6,8 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.PayloadApplicationEvent;
 
+import java.util.List;
+
 public class SpringEventDispatcher implements ApplicationListener {
 
     private EventBus eventBus;
@@ -16,29 +18,32 @@ public class SpringEventDispatcher implements ApplicationListener {
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        String channel;
+        List<String> channels;
         Object source;
         if (event instanceof PayloadApplicationEvent) {
-            channel = resolveChannelFromPayloadApplicationEvent((PayloadApplicationEvent) event);
+            channels = resolveChannelsFromPayloadApplicationEvent((PayloadApplicationEvent) event);
             source = ((PayloadApplicationEvent) event).getPayload();
         } else {
-            channel = resolveChannelFromApplicationEvent(event);
+            channels = resolveChannelsFromApplicationEvent(event);
             source = event.getSource();
         }
-        Listener listener = this.eventBus.getListenerRegistry().getListener(channel);
-        if (listener == null) return;
-        listener.notifyAll(source);
+        if (channels == null) return;
+        channels.forEach(channel -> {
+            Listener listener = this.eventBus.getListenerRegistry().getListener(channel);
+            if (listener == null) return;
+            listener.notifyAll(source);
+        });
     }
 
-    private String resolveChannelFromApplicationEvent(ApplicationEvent event) {
-        return this.resolveChannel(event.getSource().getClass());
+    private List<String> resolveChannelsFromPayloadApplicationEvent(PayloadApplicationEvent event) {
+        return this.resolveChannels(event.getPayload().getClass());
     }
 
-    private String resolveChannelFromPayloadApplicationEvent(PayloadApplicationEvent event) {
-        return this.resolveChannel(event.getPayload().getClass());
+    private List<String> resolveChannelsFromApplicationEvent(ApplicationEvent event) {
+        return this.resolveChannels(event.getSource().getClass());
     }
 
-    private String resolveChannel(Class eventType) {
+    private List<String> resolveChannels(Class eventType) {
         return this.eventBus.getChannelResolver().resolve(eventType);
     }
 }
