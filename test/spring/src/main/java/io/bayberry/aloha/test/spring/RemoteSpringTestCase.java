@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public abstract class BaseRemoteSpringTest extends RemoteTestCase {
+public abstract class RemoteSpringTestCase extends RemoteTestCase {
 
     @Autowired
     protected ApplicationContext applicationContext;

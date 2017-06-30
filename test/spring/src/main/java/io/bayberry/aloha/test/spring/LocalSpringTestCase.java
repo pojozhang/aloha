@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public abstract class BaseLocalSpringTest extends LocalTestCase {
+public abstract class LocalSpringTestCase extends LocalTestCase {
 
     @Autowired
     protected ApplicationContext applicationContext;
