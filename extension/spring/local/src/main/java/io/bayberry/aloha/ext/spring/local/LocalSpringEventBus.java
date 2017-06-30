@@ -10,11 +10,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class LocalSpringEventBus extends GenericLocalEventBus {
 
     private final ApplicationContext applicationContext;
-    private final SpringEventDispatcher springEventDispatcher;
+    private final SpringEventProxy springEventProxy;
 
     public LocalSpringEventBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
-        this.springEventDispatcher = new SpringEventDispatcher(this);
+        this.springEventProxy = new SpringEventProxy(this);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
     @Override
     public void onStart() {
         this.applicationContext.getBeansWithAnnotation(SpringSubscriber.class).values().forEach(super::register);
-        ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(springEventDispatcher);
+        ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(springEventProxy);
         super.onStart();
     }
 }
