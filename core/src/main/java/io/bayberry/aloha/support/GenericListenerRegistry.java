@@ -1,6 +1,7 @@
 package io.bayberry.aloha.support;
 
 import com.google.common.collect.Maps;
+import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.ListenerRegistry;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 
 public class GenericListenerRegistry implements ListenerRegistry {
 
-    private Map<String, Listener> channelListener = Maps.newConcurrentMap();
+    private Map<Channel, Listener> channelListener = Maps.newConcurrentMap();
 
     @Override
     public void register(Listener listener) {
@@ -27,7 +28,7 @@ public class GenericListenerRegistry implements ListenerRegistry {
     }
 
     @Override
-    public Listener getListener(String channel) {
+    public Listener getListener(Channel channel) {
         return channelListener.get(channel);
     }
 }

@@ -1,6 +1,7 @@
 package io.bayberry.aloha.support;
 
 import com.google.common.collect.Maps;
+import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.SubscriberRegistry;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 
 public class GenericSubscriberRegistry implements SubscriberRegistry {
 
-    private final Map<String, List<Subscriber>> channelSubscribers = Maps.newConcurrentMap();
+    private final Map<Channel, List<Subscriber>> channelSubscribers = Maps.newConcurrentMap();
 
     @Override
     public void register(List<Subscriber> subscribers) {
@@ -20,11 +21,10 @@ public class GenericSubscriberRegistry implements SubscriberRegistry {
 
     @Override
     public void register(Subscriber subscriber) {
-        subscriber.getChannels().forEach(channel -> {
-            List<Subscriber> subscribers = this.channelSubscribers.getOrDefault(channel, new ArrayList<>());
-            subscribers.add(subscriber);
-            this.channelSubscribers.put(channel, subscribers);
-        });
+        Channel channel = subscriber.getChannel();
+        List<Subscriber> subscribers = this.channelSubscribers.getOrDefault(channel, new ArrayList<>());
+        subscribers.add(subscriber);
+        this.channelSubscribers.put(channel, subscribers);
     }
 
     @Override
@@ -42,12 +42,12 @@ public class GenericSubscriberRegistry implements SubscriberRegistry {
     }
 
     @Override
-    public Set<String> getChannels() {
+    public Set<Channel> getChannels() {
         return this.channelSubscribers.keySet();
     }
 
     @Override
-    public List<Subscriber> getSubscribers(String channel) {
+    public List<Subscriber> getSubscribers(Channel channel) {
         return this.channelSubscribers.get(channel);
     }
 }

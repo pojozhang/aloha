@@ -1,10 +1,7 @@
 package io.bayberry.aloha.support;
 
+import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.ChannelResolver;
-
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 public class PrefixChannelResolverDecorator implements ChannelResolver {
 
@@ -17,7 +14,7 @@ public class PrefixChannelResolverDecorator implements ChannelResolver {
     }
 
     @Override
-    public List<String> resolve(Class eventType) {
-        return this.delegate.resolve(eventType).stream().map(channel -> this.prefix + channel).collect(toList());
+    public Channel resolve(Class eventType) {
+        return new Channel(this.prefix + this.delegate.resolve(eventType).getName());
     }
 }

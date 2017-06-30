@@ -20,7 +20,7 @@ public abstract class GenericRemoteEventBus extends RemoteEventBus {
 
     @Override
     public ChannelResolver initChannelResolver() {
-        return new SimpleChannelResolver();
+        return new GenericChannelResolver();
     }
 
     @Override

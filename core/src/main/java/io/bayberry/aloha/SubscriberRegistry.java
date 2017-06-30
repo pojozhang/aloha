@@ -13,7 +13,7 @@ public interface SubscriberRegistry {
 
     void unregister(Subscriber subscriber);
 
-    Set<String> getChannels();
+    Set<Channel> getChannels();
 
-    List<Subscriber> getSubscribers(String channel);
+    List<Subscriber> getSubscribers(Channel channel);
 }

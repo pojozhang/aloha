@@ -1,5 +1,6 @@
 package io.bayberry.aloha.ext.spring.local;
 
+import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.ext.spring.local.annotation.SpringSubscriber;
 import io.bayberry.aloha.support.GenericLocalEventBus;
@@ -17,7 +18,7 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
     }
 
     @Override
-    public Listener bindListener(String channel) {
+    public Listener bindListener(Channel channel) {
         return new LocalSpringListener(channel, this);
     }
 
@@ -27,7 +28,7 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
     }
 
     @Override
-    public void post(String channel, Object event) {
+    public void post(Channel channel, Object event) {
         this.applicationContext.publishEvent(event);
     }
 

@@ -7,10 +7,10 @@ import java.util.List;
 
 public abstract class AbstractListener extends EventBusContext implements Listener {
 
-    protected String channel;
+    protected Channel channel;
     protected List<Subscriber> subscribers = Lists.newArrayList();
 
-    public AbstractListener(String channel, EventBus eventBus) {
+    public AbstractListener(Channel channel, EventBus eventBus) {
         super(eventBus);
         this.channel = channel;
     }
@@ -66,7 +66,7 @@ public abstract class AbstractListener extends EventBusContext implements Listen
     }
 
     @Override
-    public String getChannel() {
+    public Channel getChannel() {
         return channel;
     }
 

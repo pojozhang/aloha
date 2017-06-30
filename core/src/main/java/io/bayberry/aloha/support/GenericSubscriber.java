@@ -1,23 +1,26 @@
 package io.bayberry.aloha.support;
 
-import io.bayberry.aloha.*;
+import io.bayberry.aloha.Channel;
+import io.bayberry.aloha.EventBus;
+import io.bayberry.aloha.ExceptionHandler;
+import io.bayberry.aloha.ExecutionStrategy;
+import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.exception.AlohaException;
-
 import java.lang.reflect.Method;
-import java.util.List;
 
 public class GenericSubscriber implements Subscriber {
 
-    private List<String> channels;
+    private Channel channel;
     private Object target;
     private Method method;
     private EventBus eventBus;
     private ExceptionHandler exceptionHandler;
     private ExecutionStrategy executionStrategy;
 
-    protected GenericSubscriber(List<String> channels, Object target, Method method, EventBus eventBus,
-                                ExceptionHandler exceptionHandler, ExecutionStrategy executionStrategy) {
-        this.channels = channels;
+    protected GenericSubscriber(Channel channel, Object target, Method method, EventBus eventBus,
+        ExceptionHandler exceptionHandler, ExecutionStrategy executionStrategy) {
+        this.channel = channel;
         this.target = target;
         this.method = method;
         this.eventBus = eventBus;
@@ -36,8 +39,8 @@ public class GenericSubscriber implements Subscriber {
     }
 
     @Override
-    public List<String> getChannels() {
-        return channels;
+    public Channel getChannel() {
+        return channel;
     }
 
     @Override

@@ -10,5 +10,5 @@ public interface ListenerRegistry {
 
     List<Listener> getListeners();
 
-    Listener getListener(String channel);
+    Listener getListener(Channel channel);
 }

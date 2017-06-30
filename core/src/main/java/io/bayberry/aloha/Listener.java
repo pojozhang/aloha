@@ -14,7 +14,7 @@ public interface Listener extends LifeCycle {
 
     void unregister(Subscriber subscriber);
 
-    String getChannel();
+    Channel getChannel();
 
     List<Subscriber> getSubscribers();
 

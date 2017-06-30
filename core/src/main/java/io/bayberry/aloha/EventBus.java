@@ -10,7 +10,7 @@ public interface EventBus extends LifeCycle {
 
     ChannelResolver initChannelResolver();
 
-    Listener bindListener(String channel);
+    Listener bindListener(Channel channel);
 
     ExceptionHandler initDefaultExceptionHandler();
 
@@ -22,7 +22,7 @@ public interface EventBus extends LifeCycle {
 
     void post(Object event);
 
-    void post(String channel, Object event);
+    void post(Channel channel, Object event);
 
     void register(Object target);
 

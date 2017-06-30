@@ -1,5 +1,6 @@
 package io.bayberry.aloha.ext.spring.data.redis;
 
+import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.ChannelResolver;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.ext.spring.RemoteSpringEventBus;
@@ -38,12 +39,12 @@ public class RedisEventBus extends RemoteSpringEventBus {
     }
 
     @Override
-    public Listener bindListener(String channel) {
+    public Listener bindListener(Channel channel) {
         return new AsyncListenerDecorator(new RedisListener(channel, redisTemplate, this));
     }
 
     @Override
-    public void post(String channel, Object event) {
-        this.redisTemplate.opsForList().rightPush(channel, (String) getSerializer().serialize(event));
+    public void post(Channel channel, Object event) {
+        this.redisTemplate.opsForList().rightPush(channel.getName(), (String) getSerializer().serialize(event));
     }
 }

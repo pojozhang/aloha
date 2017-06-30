@@ -1,5 +1,6 @@
 package io.bayberry.aloha.support;
 
+import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.EventBus;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.Subscriber;
@@ -50,7 +51,7 @@ public class DelegateListener implements Listener {
     }
 
     @Override
-    public String getChannel() {
+    public Channel getChannel() {
         return this.delegate.getChannel();
     }
 

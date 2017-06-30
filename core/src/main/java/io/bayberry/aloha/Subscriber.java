@@ -1,11 +1,10 @@
 package io.bayberry.aloha;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
 public interface Subscriber {
 
-    List<String> getChannels();
+    Channel getChannel();
 
     Object getTarget();
 

@@ -2,7 +2,7 @@ package io.bayberry.aloha;
 
 public abstract class LocalListener extends AbstractListener {
 
-    public LocalListener(String channel, LocalEventBus eventBus) {
+    public LocalListener(Channel channel, LocalEventBus eventBus) {
         super(channel, eventBus);
     }
 
