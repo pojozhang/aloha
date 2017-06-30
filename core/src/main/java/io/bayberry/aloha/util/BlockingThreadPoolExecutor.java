@@ -8,13 +8,15 @@ import java.util.concurrent.TimeUnit;
 
 public class BlockingThreadPoolExecutor extends ThreadPoolExecutor {
 
-    public BlockingThreadPoolExecutor(final int corePoolSize, final int maximumPoolSize, final long keepAliveTime, final TimeUnit unit) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, new LinkedBlockingQueue<>(maximumPoolSize), (runnable, executor) -> {
-            try {
-                executor.getQueue().put(runnable);
-            } catch (InterruptedException e) {
-                throw new AlohaException(e);
-            }
-        });
+    public BlockingThreadPoolExecutor(final int corePoolSize, final int maximumPoolSize, final int maximumQueueSize,
+        final long keepAliveTime, final TimeUnit unit) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, new LinkedBlockingQueue<>(maximumQueueSize),
+            (runnable, executor) -> {
+                try {
+                    executor.getQueue().put(runnable);
+                } catch (InterruptedException e) {
+                    throw new AlohaException(e);
+                }
+            });
     }
 }
