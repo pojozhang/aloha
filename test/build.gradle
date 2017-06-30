@@ -1,3 +1,7 @@
+jar {
+    appendix = "test"
+}
+
 dependencies {
     compile(
             project(":core"),

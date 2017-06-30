@@ -1,18 +1,26 @@
 package io.bayberry.aloha.ext.spring.local;
 
-import io.bayberry.aloha.test.Subscriber;
-import io.bayberry.aloha.test.spring.LocalSpringTestCase;
-import org.junit.Before;
+import io.bayberry.aloha.EventBus;
+import io.bayberry.aloha.test.spring.AsyncEventSpringTestCase;
+import io.bayberry.aloha.test.spring.SyncEventSpringTestCase;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LocalSpringEventBusTest extends LocalSpringTestCase {
+public class LocalSpringEventBusTest {
 
-    @Before
-    public void setUp() {
-        this.subscriber = new Subscriber();
-        this.eventBus = new LocalSpringEventBus(this.applicationContext);
-        this.eventBus.register(subscriber);
-        this.eventBus.start();
+    public static class SyncCase extends SyncEventSpringTestCase {
+
+        @Override
+        protected EventBus initEventBus() {
+            return new LocalSpringEventBus(this.applicationContext);
+        }
+    }
+
+    public static class AsyncCase extends AsyncEventSpringTestCase {
+
+        @Override
+        protected EventBus initEventBus() {
+            return new LocalSpringEventBus(this.applicationContext);
+        }
     }
 }
