@@ -1,11 +1,13 @@
-package io.bayberry.aloha.test;
+package io.bayberry.aloha.test.cases;
 
 import static org.junit.Assert.assertEquals;
 
+import io.bayberry.aloha.test.BaseTest;
+import io.bayberry.aloha.test.SyncEvent;
 import java.util.concurrent.CountDownLatch;
 import org.junit.Test;
 
-public abstract class RemoteTestCase extends BaseTestCase {
+public abstract class AsyncEventTestCase extends BaseTest {
 
     @Test
     public void the_subscriber_should_be_called_synchronously_after_single_event_is_post() {

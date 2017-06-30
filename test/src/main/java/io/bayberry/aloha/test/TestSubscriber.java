@@ -4,7 +4,7 @@ import io.bayberry.aloha.annotation.Subscribe;
 
 import java.util.concurrent.CountDownLatch;
 
-public class Subscriber {
+public class TestSubscriber {
 
     public CountDownLatch countDownLatch;
 
