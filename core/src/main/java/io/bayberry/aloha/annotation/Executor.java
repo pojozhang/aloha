@@ -14,7 +14,7 @@ public @interface Executor {
 
     int maxCount() default 1;
 
-    int queueSize() default 0;
+    int capacity() default 1;
 
     long keepAliveTime() default 30000;
 
