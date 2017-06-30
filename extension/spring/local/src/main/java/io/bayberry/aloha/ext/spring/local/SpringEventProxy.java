@@ -7,11 +7,11 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.PayloadApplicationEvent;
 
-public class SpringEventDispatcher implements ApplicationListener {
+public class SpringEventProxy implements ApplicationListener {
 
     private EventBus eventBus;
 
-    public SpringEventDispatcher(EventBus eventBus) {
+    public SpringEventProxy(EventBus eventBus) {
         this.eventBus = eventBus;
     }
 
