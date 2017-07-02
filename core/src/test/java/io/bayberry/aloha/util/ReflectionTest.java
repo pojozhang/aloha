@@ -29,7 +29,17 @@ public class ReflectionTest {
         assertEquals(0, this.reflection.getMethodsWithAnnotation(SimulationB.class, Annotation.class).count());
     }
 
-    private static class SimulationA {
+    @Test
+    public void get_first_level_interfaces_of_the_class() {
+        assertEquals(1, this.reflection.getAllInterfaces(SimulationA.class).size());
+    }
+
+    @Test
+    public void get_all_interfaces_of_the_class() {
+        assertEquals(2, this.reflection.getAllInterfaces(SimulationB.class).size());
+    }
+
+    private static class SimulationA implements interfaceA {
 
         @Annotation
         public void method1() {
@@ -40,7 +50,7 @@ public class ReflectionTest {
         }
     }
 
-    private static class SimulationB {
+    private static class SimulationB implements interfaceB {
 
         public void method() {
         }
@@ -49,6 +59,14 @@ public class ReflectionTest {
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
     private static @interface Annotation {
+
+    }
+
+    private interface interfaceA {
+
+    }
+
+    private interface interfaceB extends interfaceA {
 
     }
 }
