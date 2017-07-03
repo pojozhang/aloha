@@ -6,6 +6,8 @@ import io.bayberry.aloha.ext.spring.local.annotation.SpringSubscriber;
 import io.bayberry.aloha.support.GenericLocalEventBus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.support.AbstractApplicationContext;
 
 public class LocalSpringEventBus extends GenericLocalEventBus {
 
@@ -37,5 +39,11 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
         this.applicationContext.getBeansWithAnnotation(SpringSubscriber.class).values().forEach(super::register);
         ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(springEventProxy);
         super.onStart();
+    }
+
+    @Override
+    public void onDestroy() {
+        this.applicationContext.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
+        super.onDestroy();
     }
 }

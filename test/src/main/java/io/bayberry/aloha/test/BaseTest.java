@@ -1,6 +1,7 @@
 package io.bayberry.aloha.test;
 
 import io.bayberry.aloha.EventBus;
+import org.junit.After;
 import org.junit.Before;
 
 public abstract class BaseTest {
@@ -16,5 +17,10 @@ public abstract class BaseTest {
         this.eventBus = initEventBus();
         this.eventBus.register(subscriber);
         this.eventBus.start();
+    }
+
+    @After
+    public void tearDown() {
+        this.eventBus.shutdown();
     }
 }
