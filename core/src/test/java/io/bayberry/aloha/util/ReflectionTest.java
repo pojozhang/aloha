@@ -1,14 +1,13 @@
 package io.bayberry.aloha.util;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ReflectionTest {
 
@@ -21,12 +20,12 @@ public class ReflectionTest {
 
     @Test
     public void get_all_methods_stream_of_the_class_with_the_annotation() {
-        assertEquals(2, this.reflection.getMethodsWithAnnotation(SimulationA.class, Annotation.class).count());
+        assertEquals(2, this.reflection.getMethodsWithAnnotation(SimulationA.class, Annotation.class).size());
     }
 
     @Test
     public void get_empty_methods_stream_of_the_class_with_the_annotation() {
-        assertEquals(0, this.reflection.getMethodsWithAnnotation(SimulationB.class, Annotation.class).count());
+        assertEquals(0, this.reflection.getMethodsWithAnnotation(SimulationB.class, Annotation.class).size());
     }
 
     @Test
