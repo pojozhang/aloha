@@ -1,20 +1,20 @@
 package io.bayberry.aloha.ext.spring.local;
 
+import static java.util.stream.Collectors.toList;
+
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.EventBus;
 import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.util.Reflection;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.PayloadApplicationEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-
 public class SpringEventProxy implements ApplicationListener {
 
+    private static final Reflection reflection = new Reflection();
     private EventBus eventBus;
 
     public SpringEventProxy(EventBus eventBus) {
@@ -39,12 +39,15 @@ public class SpringEventProxy implements ApplicationListener {
         });
     }
 
-    //TODO
     private List<Channel> getCandidateChannels(Class eventType) {
         List<Channel> channels = new ArrayList<>();
         channels.add(this.eventBus.getChannelResolver().resolve(eventType));
-        channels.addAll(Arrays.stream(eventType.getInterfaces()).map(this::resolveChannel).collect(toList()));
-        //add all interfaces to channels
+        channels.addAll(reflection.getAllInterfaces(eventType).stream().map(this::resolveChannel).collect(toList()));
+        reflection.getAllSuperClasses(eventType).forEach(superClass -> {
+            channels.add(this.resolveChannel(superClass));
+            channels
+                .addAll(reflection.getAllInterfaces(superClass).stream().map(this::resolveChannel).collect(toList()));
+        });
         return channels;
     }
 

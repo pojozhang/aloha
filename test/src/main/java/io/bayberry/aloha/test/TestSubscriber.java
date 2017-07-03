@@ -3,12 +3,10 @@ package io.bayberry.aloha.test;
 import io.bayberry.aloha.annotation.Executor;
 import io.bayberry.aloha.annotation.Subscribe;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestSubscriber {
 
     public CountDownLatch countDownLatch;
-    private AtomicInteger c = new AtomicInteger(0);
 
     @Subscribe
     public void onSyncEvent(SyncEvent event) {
