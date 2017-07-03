@@ -5,6 +5,7 @@ import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.ListenerRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class GenericListenerRegistry implements ListenerRegistry {
 
     @Override
     public List<Listener> getListeners() {
-        return (List<Listener>) channelListener.values();
+        return new ArrayList<>(channelListener.values());
     }
 
     @Override
