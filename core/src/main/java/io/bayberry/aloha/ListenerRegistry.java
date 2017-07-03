@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface ListenerRegistry {
 
@@ -8,7 +8,7 @@ public interface ListenerRegistry {
 
     void unregister(Listener listener);
 
-    List<Listener> getListeners();
+    Collection<Listener> getListeners();
 
     Listener getListener(Channel channel);
 }
