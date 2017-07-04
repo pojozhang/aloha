@@ -28,10 +28,6 @@ public abstract class AbstractEventBus extends LifeCycleContext implements Event
 
     @Override
     protected void onCreate() {
-        this.setUp();
-    }
-
-    protected void setUp() {
         this.subscriberRegistry = this.initSubscriberRegistry();
         this.listenerRegistry = this.initListenerRegistry();
         this.subscriberResolver = this.initSubscriberResolver();
@@ -44,10 +40,6 @@ public abstract class AbstractEventBus extends LifeCycleContext implements Event
 
     @Override
     public void onStart() {
-        this.startListeners();
-    }
-
-    protected void startListeners() {
         this.subscriberRegistry.getChannels().forEach(channel -> {
             Listener listener = this.bindListener(channel);
             listener.register(this.subscriberRegistry.getSubscribers(channel));
