@@ -11,7 +11,6 @@ public abstract class LifeCycleContext implements LifeCycle {
 
     public LifeCycleContext() {
         this.status = READY;
-        this.onCreate();
     }
 
     @Override

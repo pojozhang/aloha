@@ -42,10 +42,6 @@ public abstract class AbstractListener extends EventBusContext implements Listen
     }
 
     @Override
-    protected void onDestroy() {
-    }
-
-    @Override
     public void register(List<Subscriber> subscribers) {
         subscribers.forEach(this::register);
     }

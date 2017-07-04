@@ -24,6 +24,7 @@ public class RedisEventBus extends RemoteSpringEventBus {
     public RedisEventBus(ApplicationContext applicationContext, RedisEventBusOptions options) {
         super(applicationContext);
         this.options = options;
+        super.onCreate();
     }
 
     @Override
@@ -33,7 +34,6 @@ public class RedisEventBus extends RemoteSpringEventBus {
         super.onStart();
     }
 
-    //TODO fix NPE issue
     @Override
     public ChannelResolver initChannelResolver() {
         return new PrefixChannelResolverDecorator(this.options.getChannelPrefix(), super.initChannelResolver());

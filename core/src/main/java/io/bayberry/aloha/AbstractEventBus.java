@@ -28,6 +28,24 @@ public abstract class AbstractEventBus extends LifeCycleContext implements Event
 
     @Override
     protected void onCreate() {
+        this.setUp();
+    }
+
+    @Override
+    public void onStart() {
+        this.startListeners();
+    }
+
+    protected void startListeners() {
+        this.subscriberRegistry.getChannels().forEach(channel -> {
+            Listener listener = this.bindListener(channel);
+            listener.register(this.subscriberRegistry.getSubscribers(channel));
+            this.getListenerRegistry().register(listener);
+            listener.start();
+        });
+    }
+
+    protected void setUp() {
         this.subscriberRegistry = this.initSubscriberRegistry();
         this.listenerRegistry = this.initListenerRegistry();
         this.subscriberResolver = this.initSubscriberResolver();
@@ -36,16 +54,6 @@ public abstract class AbstractEventBus extends LifeCycleContext implements Event
         this.exceptionHandlerFactory = this.initExceptionHandlerFactory();
         this.defaultExecutionStrategy = this.initDefaultExecutionStrategy();
         this.executionStrategyFactory = this.initExecutionStrategyFactory();
-    }
-
-    @Override
-    public void onStart() {
-        this.subscriberRegistry.getChannels().forEach(channel -> {
-            Listener listener = this.bindListener(channel);
-            listener.register(this.subscriberRegistry.getSubscribers(channel));
-            this.getListenerRegistry().register(listener);
-            listener.start();
-        });
     }
 
     @Override

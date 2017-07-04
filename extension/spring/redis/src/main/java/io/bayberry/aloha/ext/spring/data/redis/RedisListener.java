@@ -16,19 +16,25 @@ public class RedisListener extends RemoteListener {
     public RedisListener(Channel channel, RedisTemplate<String, String> redisTemplate, RemoteEventBus eventBus) {
         super(channel, eventBus);
         this.redisTemplate = redisTemplate;
+        this.onCreate();
     }
 
     @Override
     protected void onStart() {
         new LoopRunner().run(
-            () -> super
-                .notifyAll(redisTemplate.opsForList().leftPop(super.getChannel().getName(), 0, TimeUnit.MILLISECONDS)),
-            exception -> {
-                try {
-                    handleException(exception, null);
-                } catch (Exception error) {
-                    throw new AlohaException(error);
-                }
-            });
+                () -> super
+                        .notifyAll(redisTemplate.opsForList().leftPop(super.getChannel().getName(), 0, TimeUnit.MILLISECONDS)),
+                exception -> {
+                    try {
+                        handleException(exception, null);
+                    } catch (Exception error) {
+                        throw new AlohaException(error);
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        //TODO interrupt redis leftPop()
     }
 }

@@ -17,6 +17,7 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
     public LocalSpringEventBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         this.springEventProxy = new SpringEventProxy(this);
+        this.onCreate();
     }
 
     @Override

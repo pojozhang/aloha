@@ -10,9 +10,9 @@ public abstract class RemoteEventBus extends AbstractEventBus {
 
     @Override
     protected void onCreate() {
-        super.onCreate();
         this.serializer = this.initSerializer();
         this.deserializer = this.initDeserializer();
+        super.onCreate();
     }
 
     protected abstract Serializer initSerializer();

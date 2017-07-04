@@ -4,6 +4,7 @@ import io.bayberry.aloha.ExecutionStrategy;
 import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.annotation.Executor;
 import io.bayberry.aloha.util.BlockingThreadPoolExecutor;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -26,12 +27,11 @@ public class GenericExecutionStrategy implements ExecutionStrategy {
         ThreadPoolExecutor pool = pools.get(subscriber);
         if (pool == null) {
             ThreadPoolExecutor newPool = new BlockingThreadPoolExecutor(executor.minCount(), executor.maxCount(),
-                executor.capacity(), executor.keepAliveTime(), executor.unit());
+                    executor.capacity(), executor.keepAliveTime(), executor.unit());
             pool = pools
-                .putIfAbsent(subscriber, newPool);
+                    .putIfAbsent(subscriber, newPool);
             if (pool == null) {
                 pool = newPool;
-                System.out.println("new pool");
             }
         }
         return pool;
