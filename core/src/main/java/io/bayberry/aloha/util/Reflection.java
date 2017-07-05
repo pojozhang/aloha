@@ -28,7 +28,11 @@ public class Reflection {
     }
 
     public Set<Class> getAllInterfaces(Class targetClass) {
-        Set<Class> interfaces = Arrays.stream(targetClass.getInterfaces()).collect(toSet());
-        return interfaces.stream().map(i -> this.getAllInterfaces(i)).flatMap(Set::stream).collect(toSet());
+        Set<Class> interfaces = new HashSet<>();
+        for (Class aInterface : targetClass.getInterfaces()) {
+            interfaces.add(aInterface);
+            interfaces.addAll(this.getAllInterfaces(aInterface));
+        }
+        return interfaces;
     }
 }
