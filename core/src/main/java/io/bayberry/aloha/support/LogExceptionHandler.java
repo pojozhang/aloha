@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class LogExceptionHandler implements ExceptionHandler {
 
-    private Logger log = LoggerFactory.getLogger(LogExceptionHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(LogExceptionHandler.class);
 
     @Override
     public void handle(Channel channel, Object event, EventBus eventBus, Exception exception) {
