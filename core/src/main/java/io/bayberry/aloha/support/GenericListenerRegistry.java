@@ -14,7 +14,7 @@ public class GenericListenerRegistry implements ListenerRegistry {
 
     @Override
     public void register(Listener listener) {
-        channelListener.put(listener.getChannel(), listener);
+        channelListener.putIfAbsent(listener.getChannel(), listener);
     }
 
     @Override
