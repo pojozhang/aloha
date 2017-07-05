@@ -5,9 +5,8 @@ import io.bayberry.aloha.RemoteEventBus;
 import io.bayberry.aloha.RemoteListener;
 import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.util.LoopRunner;
-import org.springframework.data.redis.core.RedisTemplate;
-
 import java.util.concurrent.TimeUnit;
+import org.springframework.data.redis.core.RedisTemplate;
 
 public class RedisListener extends RemoteListener {
 
@@ -22,8 +21,13 @@ public class RedisListener extends RemoteListener {
     @Override
     protected void onStart() {
         new LoopRunner().run(
-            () -> super
-                .notifyAll(redisTemplate.opsForList().leftPop(super.getChannel().getName(), 0, TimeUnit.MILLISECONDS)),
+            () -> {
+                String message = redisTemplate.opsForList()
+                    .leftPop(super.getChannel().getName(), 3000, TimeUnit.MILLISECONDS);
+                if (message != null) {
+                    super.notifyAll(message);
+                }
+            },
             exception -> {
                 try {
                     handleException(exception, null);
