@@ -14,8 +14,4 @@ public class LocalSpringListener extends LocalListener {
     @Override
     protected void onStart() {
     }
-
-    @Override
-    protected void onDestroy() {
-    }
 }

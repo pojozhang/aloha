@@ -22,19 +22,14 @@ public class RedisListener extends RemoteListener {
     @Override
     protected void onStart() {
         new LoopRunner().run(
-                () -> super
-                        .notifyAll(redisTemplate.opsForList().leftPop(super.getChannel().getName(), 0, TimeUnit.MILLISECONDS)),
-                exception -> {
-                    try {
-                        handleException(exception, null);
-                    } catch (Exception error) {
-                        throw new AlohaException(error);
-                    }
-                });
-    }
-
-    @Override
-    protected void onDestroy() {
-        //TODO interrupt redis leftPop()
+            () -> super
+                .notifyAll(redisTemplate.opsForList().leftPop(super.getChannel().getName(), 0, TimeUnit.MILLISECONDS)),
+            exception -> {
+                try {
+                    handleException(exception, null);
+                } catch (Exception error) {
+                    throw new AlohaException(error);
+                }
+            });
     }
 }
