@@ -11,6 +11,8 @@ buildscript {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
 
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -26,16 +28,5 @@ subprojects {
 
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
-    }
-
-    bintray {
-        user = 'pojozhang'
-        key = '3e5a8d552d0a4e387ebdcf57cc4befc368c5da3d'
-        pkg {
-            repo = 'io.barberry'
-            name = 'gradle-project'
-            licenses = ['Apache-2.0']
-            vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
-        }
     }
 }
