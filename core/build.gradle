@@ -23,6 +23,27 @@ task javadocJar(type: Jar) {
     from javadoc
 }
 
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "Pojo"
+            name "Pojo Zhang"
+            email "pojo.zhang@gmail.com"
+        }
+    }
+
+    scm {
+        url "https://github.com/pojozhang/aloha"
+    }
+}
+
 publishing {
     publications {
         MyPublication(MavenPublication) {
@@ -32,6 +53,13 @@ publishing {
             groupId 'io.bayberry.aloha'
             artifactId 'core'
             version '1.0-alpha'
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'an event bus on Java platform')
+                root.appendNode('name', 'aloha')
+                root.appendNode('url', 'https://github.com/pojozhang/aloha')
+                root.children().last() + pomConfig
+            }
         }
     }
 }
@@ -52,6 +80,13 @@ bintray {
             desc = 'Aloha event bus 1.0-alpha'
             released = new Date()
             vcsTag = '1.0-alpha'
+            gpg {
+                sign = true
+            }
+            mavenCentralSync {
+                sync = true
+
+            }
         }
     }
 }
