@@ -14,7 +14,7 @@ jar {
     appendix = "core"
 }
 
-task sourceJar(type: Jar) {
+task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
@@ -33,8 +33,8 @@ def pomConfig = {
     }
     developers {
         developer {
-            id "Pojo"
-            name "Pojo Zhang"
+            id "pojozhang"
+            name "pojozhang"
             email "pojo.zhang@gmail.com"
         }
     }
@@ -48,15 +48,15 @@ publishing {
     publications {
         MyPublication(MavenPublication) {
             from components.java
-            artifact sourceJar
+            artifact sourcesJar
             artifact javadocJar
-            groupId 'io.bayberry.aloha'
-            artifactId 'core'
+            groupId 'io.bayberry'
+            artifactId 'aloha-core'
             version '1.0-alpha'
             pom.withXml {
                 def root = asNode()
-                root.appendNode('description', 'an event bus on Java platform')
-                root.appendNode('name', 'aloha')
+                root.appendNode('description', 'Aloha is an event bus written in Java')
+                root.appendNode('name', 'aloha-core')
                 root.appendNode('url', 'https://github.com/pojozhang/aloha')
                 root.children().last() + pomConfig
             }
@@ -65,13 +65,13 @@ publishing {
 }
 
 bintray {
-    user = 'pojozhang'
-    key = '3e5a8d552d0a4e387ebdcf57cc4befc368c5da3d'
+    user = System.env.BINTRAY_USER
+    key = System.env.BINTRAY_KEY
     publications = ['MyPublication']
     publish = true
     pkg {
         repo = 'maven'
-        name = 'io.bayberry.aloha'
+        name = 'io.bayberry:aloha-core'
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/pojozhang/aloha.git'
         labels = ['event bus', 'spring']
@@ -85,7 +85,8 @@ bintray {
             }
             mavenCentralSync {
                 sync = true
-
+                user = System.env.OSS_USER
+                password = System.env.OSS_PASSWORD
             }
         }
     }
