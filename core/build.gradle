@@ -1,3 +1,10 @@
+apply from: "$rootDir/bintray.gradle"
+
+ext {
+    description = 'Aloha is an event bus written in Java'
+    artifactId = 'aloha-core'
+}
+
 dependencies {
     compile(
             "com.alibaba:fastjson:1.2.31",
@@ -12,82 +19,4 @@ dependencies {
 
 jar {
     appendix = "core"
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-}
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-def pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
-        }
-    }
-    developers {
-        developer {
-            id "pojozhang"
-            name "pojozhang"
-            email "pojo.zhang@gmail.com"
-        }
-    }
-
-    scm {
-        url "https://github.com/pojozhang/aloha"
-    }
-}
-
-publishing {
-    publications {
-        MyPublication(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-            groupId 'io.bayberry'
-            artifactId 'aloha-core'
-            version '1.0-alpha'
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', 'Aloha is an event bus written in Java')
-                root.appendNode('name', 'aloha-core')
-                root.appendNode('url', 'https://github.com/pojozhang/aloha')
-                root.children().last() + pomConfig
-            }
-        }
-    }
-}
-
-bintray {
-    user = System.env.BINTRAY_USER
-    key = System.env.BINTRAY_KEY
-    publications = ['MyPublication']
-    publish = true
-    pkg {
-        repo = 'maven'
-        name = 'io.bayberry:aloha-core'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/pojozhang/aloha.git'
-        labels = ['event bus', 'spring']
-        version {
-            name = '1.0-alpha'
-            desc = 'Aloha event bus 1.0-alpha'
-            released = new Date()
-            vcsTag = '1.0-alpha'
-            gpg {
-                sign = true
-            }
-            mavenCentralSync {
-                sync = true
-                user = System.env.OSS_USER
-                password = System.env.OSS_PASSWORD
-            }
-        }
-    }
 }

@@ -11,9 +11,6 @@ buildscript {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'java-library'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8

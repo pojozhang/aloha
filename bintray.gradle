@@ -1,0 +1,84 @@
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+project.afterEvaluate {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+
+    def pomConfig = {
+        licenses {
+            license {
+                name "The Apache Software License, Version 2.0"
+                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution "repo"
+            }
+        }
+        developers {
+            developer {
+                id "pojozhang"
+                name "pojozhang"
+                email "pojo.zhang@gmail.com"
+            }
+        }
+        scm {
+            url "https://github.com/pojozhang/aloha"
+        }
+    }
+
+    publishing {
+        publications {
+            MyPublication(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                groupId groupId
+                artifactId project.ext.artifactId
+                version alohaVersion
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('description', project.ext.description)
+                    root.appendNode('name', project.ext.artifactId)
+                    root.appendNode('url', 'https://github.com/pojozhang/aloha')
+                    root.children().last() + pomConfig
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = System.env.BINTRAY_USER
+        key = System.env.BINTRAY_KEY
+        publications = ['MyPublication']
+        publish = true
+        pkg {
+            println project.name
+
+            repo = 'maven'
+            name = "$groupId:$project.ext.artifactId"
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/pojozhang/aloha.git'
+            labels = ['event bus', 'spring']
+            version {
+                name = alohaVersion
+                desc = project.ext.description
+                released = new Date()
+                vcsTag = alohaVersion
+                gpg {
+                    sign = true
+                }
+                mavenCentralSync {
+                    sync = true
+                    user = System.env.OSS_USER
+                    password = System.env.OSS_PASSWORD
+                }
+            }
+        }
+    }
+}
