@@ -1,10 +1,10 @@
-package io.bayberry.aloha.ext.spring.data.redis;
+package io.bayberry.aloha.ext.spring.redis;
 
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.ChannelResolver;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.ext.spring.RemoteSpringEventBus;
-import io.bayberry.aloha.ext.spring.data.redis.annotation.RedisSubscriber;
+import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
 import io.bayberry.aloha.support.AsyncListenerDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
 import org.springframework.context.ApplicationContext;

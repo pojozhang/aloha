@@ -1,4 +1,4 @@
-package io.bayberry.aloha.ext.spring.data.redis.annotation;
+package io.bayberry.aloha.ext.spring.redis.annotation;
 
 import org.springframework.stereotype.Component;
 

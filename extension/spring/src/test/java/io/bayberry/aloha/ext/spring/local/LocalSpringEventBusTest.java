@@ -1,9 +1,8 @@
 package io.bayberry.aloha.ext.spring.local;
 
 import io.bayberry.aloha.EventBus;
-import io.bayberry.aloha.test.spring.AsyncEventSpringTestCase;
-import io.bayberry.aloha.test.spring.SyncEventSpringTestCase;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import static org.junit.Assert.*;
 
 @SpringBootApplication
 public class LocalSpringEventBusTest {

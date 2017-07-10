@@ -1,12 +1,13 @@
-package io.bayberry.aloha.ext.spring.data.redis;
+package io.bayberry.aloha.ext.spring.redis;
 
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.RemoteEventBus;
 import io.bayberry.aloha.RemoteListener;
 import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.util.LoopRunner;
-import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.concurrent.TimeUnit;
 
 public class RedisListener extends RemoteListener {
 

@@ -1,10 +1,7 @@
-package io.bayberry.aloha.ext.spring.data.redis;
+package io.bayberry.aloha.ext.spring.redis;
 
 import io.bayberry.aloha.EventBus;
-import io.bayberry.aloha.test.TestSubscriber;
 import io.bayberry.aloha.test.spring.AsyncEventSpringTestCase;
-import io.bayberry.aloha.test.spring.SyncEventSpringTestCase;
-import org.junit.Before;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication

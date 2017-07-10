@@ -3,9 +3,6 @@ rootProject.name = "aloha"
 include ":core",
         ":extension",
         ":extension:spring",
-        ":extension:spring:local",
-        ":extension:spring:redis",
-        ":extension:spring:rabbit",
         ":test",
         ":test:spring"
 
