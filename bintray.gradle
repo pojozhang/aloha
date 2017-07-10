@@ -38,7 +38,7 @@ project.afterEvaluate {
                 from components.java
                 artifact sourcesJar
                 artifact javadocJar
-                groupId groupId
+                groupId alohaGroupId
                 artifactId project.ext.artifactId
                 version alohaVersion
                 pom.withXml {
@@ -58,10 +58,8 @@ project.afterEvaluate {
         publications = ['MyPublication']
         publish = true
         pkg {
-            println project.name
-
             repo = 'maven'
-            name = "$groupId:$project.ext.artifactId"
+            name = "$alohaGroupId:$project.ext.artifactId"
             licenses = ['Apache-2.0']
             vcsUrl = 'https://github.com/pojozhang/aloha.git'
             labels = ['event bus', 'spring']
