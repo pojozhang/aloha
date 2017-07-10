@@ -18,10 +18,11 @@ public abstract class RemoteListener extends AbstractListener {
         super.notifyAll(source);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Object getConvertedEventObject(Object origin, Subscriber subscriber) {
         Deserializer deserializer = getEventBus().getDeserializer();
         return deserializer == null ? origin
-            : deserializer.deserialize(origin, subscriber.getMethod().getParameterTypes()[0]);
+                : deserializer.deserialize(origin, subscriber.getMethod().getParameterTypes()[0]);
     }
 }
