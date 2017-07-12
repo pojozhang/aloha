@@ -62,7 +62,7 @@ project.afterEvaluate {
             name = "$alohaGroupId:$project.ext.artifactId"
             licenses = ['Apache-2.0']
             vcsUrl = 'https://github.com/pojozhang/aloha.git'
-            labels = ['event bus', 'spring']
+            labels = ['message bus', 'spring']
             version {
                 name = alohaVersion
                 desc = project.ext.description

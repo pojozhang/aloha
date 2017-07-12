@@ -9,13 +9,13 @@ public class TestSubscriber {
     public CountDownLatch countDownLatch;
 
     @Subscribe
-    public void onSyncEvent(SyncEvent event) {
+    public void onSyncMessage(SyncMessage message) {
         countDownLatch.countDown();
     }
 
     @Executor(maxCount = 2)
     @Subscribe
-    public void onAsyncEvent(AsyncEvent event) throws InterruptedException {
+    public void onAsyncMessage(AsyncMessage message) throws InterruptedException {
         Thread.sleep(1000);
         countDownLatch.countDown();
     }

@@ -6,7 +6,7 @@ import io.bayberry.aloha.transport.JsonDeserializer;
 import io.bayberry.aloha.transport.JsonSerializer;
 import io.bayberry.aloha.transport.Serializer;
 
-public abstract class GenericRemoteEventBus extends RemoteEventBus {
+public abstract class GenericRemoteMessageBus extends RemoteMessageBus {
 
     @Override
     public SubscriberRegistry initSubscriberRegistry() {

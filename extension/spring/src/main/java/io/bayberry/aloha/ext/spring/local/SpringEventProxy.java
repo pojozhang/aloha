@@ -1,7 +1,7 @@
 package io.bayberry.aloha.ext.spring.local;
 
 import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.EventBus;
+import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.util.Reflection;
 import org.springframework.context.ApplicationEvent;
@@ -16,10 +16,10 @@ import static java.util.stream.Collectors.toList;
 public class SpringEventProxy implements ApplicationListener {
 
     private static final Reflection reflection = new Reflection();
-    private EventBus eventBus;
+    private MessageBus messageBus;
 
-    public SpringEventProxy(EventBus eventBus) {
-        this.eventBus = eventBus;
+    public SpringEventProxy(MessageBus messageBus) {
+        this.messageBus = messageBus;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SpringEventProxy implements ApplicationListener {
         }
 
         this.getCandidateChannels(source.getClass()).forEach(channel -> {
-            Listener listener = this.eventBus.getListenerRegistry().getListener(channel);
+            Listener listener = this.messageBus.getListenerRegistry().getListener(channel);
             if (listener == null) {
                 return;
             }
@@ -40,11 +40,11 @@ public class SpringEventProxy implements ApplicationListener {
         });
     }
 
-    private List<Channel> getCandidateChannels(Class eventType) {
+    private List<Channel> getCandidateChannels(Class messageType) {
         List<Channel> channels = new ArrayList<>();
-        channels.add(this.eventBus.getChannelResolver().resolve(eventType));
-        channels.addAll(reflection.getAllInterfaces(eventType).stream().map(this::resolveChannel).collect(toList()));
-        reflection.getAllSuperClasses(eventType).forEach(superClass -> {
+        channels.add(this.messageBus.getChannelResolver().resolve(messageType));
+        channels.addAll(reflection.getAllInterfaces(messageType).stream().map(this::resolveChannel).collect(toList()));
+        reflection.getAllSuperClasses(messageType).forEach(superClass -> {
             channels.add(this.resolveChannel(superClass));
             channels
                 .addAll(reflection.getAllInterfaces(superClass).stream().map(this::resolveChannel).collect(toList()));
@@ -53,6 +53,6 @@ public class SpringEventProxy implements ApplicationListener {
     }
 
     private Channel resolveChannel(Class eventType) {
-        return this.eventBus.getChannelResolver().resolve(eventType);
+        return this.messageBus.getChannelResolver().resolve(eventType);
     }
 }

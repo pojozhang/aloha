@@ -10,7 +10,7 @@ public interface Subscriber {
 
     Method getMethod();
 
-    EventBus getEventBus();
+    MessageBus getMessageBus();
 
     ExceptionHandler getExceptionHandler();
 

@@ -6,7 +6,7 @@ import io.bayberry.aloha.ChannelResolver;
 public class GenericChannelResolver implements ChannelResolver {
 
     @Override
-    public Channel resolve(Class eventType) {
-        return new Channel(eventType.getSimpleName());
+    public Channel resolve(Class messageType) {
+        return new Channel(messageType.getSimpleName());
     }
 }

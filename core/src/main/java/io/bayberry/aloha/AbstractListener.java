@@ -5,13 +5,13 @@ import io.bayberry.aloha.exception.AlohaException;
 
 import java.util.List;
 
-public abstract class AbstractListener extends EventBusContext implements Listener {
+public abstract class AbstractListener extends MessageBusContext implements Listener {
 
     protected Channel channel;
     protected List<Subscriber> subscribers = Lists.newArrayList();
 
-    public AbstractListener(Channel channel, EventBus eventBus) {
-        super(eventBus);
+    public AbstractListener(Channel channel, MessageBus messageBus) {
+        super(messageBus);
         this.channel = channel;
     }
 
@@ -19,7 +19,7 @@ public abstract class AbstractListener extends EventBusContext implements Listen
     public void notifyAll(Object source) {
         this.subscribers.forEach(subscriber -> {
             try {
-                subscriber.accept(this, this.getConvertedEventObject(source, subscriber));
+                subscriber.accept(this, this.getConvertedMessage(source, subscriber));
             } catch (Exception exception) {
                 try {
                     handleException(exception, source);
@@ -30,11 +30,11 @@ public abstract class AbstractListener extends EventBusContext implements Listen
         });
     }
 
-    protected abstract Object getConvertedEventObject(Object origin, Subscriber subscriber);
+    protected abstract Object getConvertedMessage(Object origin, Subscriber subscriber);
 
     @Override
     public void handleException(Exception exception, Object value) throws Exception {
-        this.getEventBus().getDefaultExceptionHandler().handle(getChannel(), value, getEventBus(), exception);
+        this.getMessageBus().getDefaultExceptionHandler().handle(getChannel(), value, getMessageBus(), exception);
     }
 
     @Override

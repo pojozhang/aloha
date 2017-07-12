@@ -2,5 +2,5 @@ package io.bayberry.aloha;
 
 public interface ChannelResolver {
 
-    Channel resolve(Class eventType);
+    Channel resolve(Class messageType);
 }

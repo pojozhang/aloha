@@ -18,7 +18,7 @@ public interface Listener extends LifeCycle {
 
     List<Subscriber> getSubscribers();
 
-    EventBus getEventBus();
+    MessageBus getMessageBus();
 
     void handleException(Exception exception, Object value) throws Exception;
 }

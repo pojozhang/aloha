@@ -1,7 +1,7 @@
 apply from: "$rootDir/bintray.gradle"
 
 ext {
-    description = 'Aloha is an event bus written in Java'
+    description = 'Aloha is an message bus written in Java'
     artifactId = 'aloha-core'
 }
 

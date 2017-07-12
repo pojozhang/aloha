@@ -3,18 +3,18 @@ package io.bayberry.aloha.ext.spring.local;
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.ext.spring.local.annotation.SpringSubscriber;
-import io.bayberry.aloha.support.GenericLocalEventBus;
+import io.bayberry.aloha.support.GenericLocalMessageBus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 
-public class LocalSpringEventBus extends GenericLocalEventBus {
+public class LocalSpringMessageBus extends GenericLocalMessageBus {
 
     private final ApplicationContext applicationContext;
     private final SpringEventProxy springEventProxy;
 
-    public LocalSpringEventBus(ApplicationContext applicationContext) {
+    public LocalSpringMessageBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         this.springEventProxy = new SpringEventProxy(this);
         this.onCreate();
@@ -26,13 +26,13 @@ public class LocalSpringEventBus extends GenericLocalEventBus {
     }
 
     @Override
-    public void post(Object event) {
-        this.post(null, event);
+    public void post(Object message) {
+        this.post(null, message);
     }
 
     @Override
-    public void post(Channel channel, Object event) {
-        this.applicationContext.publishEvent(event);
+    public void post(Channel channel, Object message) {
+        this.applicationContext.publishEvent(message);
     }
 
     @Override

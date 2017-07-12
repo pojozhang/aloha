@@ -1,7 +1,7 @@
 package io.bayberry.aloha.ext.spring.redis;
 
 import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.RemoteEventBus;
+import io.bayberry.aloha.RemoteMessageBus;
 import io.bayberry.aloha.RemoteListener;
 import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.util.LoopRunner;
@@ -13,8 +13,8 @@ public class RedisListener extends RemoteListener {
 
     private RedisTemplate<String, String> redisTemplate;
 
-    public RedisListener(Channel channel, RedisTemplate<String, String> redisTemplate, RemoteEventBus eventBus) {
-        super(channel, eventBus);
+    public RedisListener(Channel channel, RedisTemplate<String, String> redisTemplate, RemoteMessageBus messageBus) {
+        super(channel, messageBus);
         this.redisTemplate = redisTemplate;
         this.onCreate();
     }

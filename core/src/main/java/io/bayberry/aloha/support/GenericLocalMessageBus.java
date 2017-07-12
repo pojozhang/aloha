@@ -2,7 +2,7 @@ package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.*;
 
-public abstract class GenericLocalEventBus extends LocalEventBus {
+public abstract class GenericLocalMessageBus extends LocalMessageBus {
 
     @Override
     public SubscriberRegistry initSubscriberRegistry() {

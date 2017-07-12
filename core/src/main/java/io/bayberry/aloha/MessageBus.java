@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-public interface EventBus extends LifeCycle {
+public interface MessageBus extends LifeCycle {
 
     SubscriberRegistry initSubscriberRegistry();
 
@@ -20,9 +20,9 @@ public interface EventBus extends LifeCycle {
 
     ExecutionStrategyFactory initExecutionStrategyFactory();
 
-    void post(Object event);
+    void post(Object message);
 
-    void post(Channel channel, Object event);
+    void post(Channel channel, Object message);
 
     void register(Object target);
 

@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-public abstract class AbstractEventBus extends LifeCycleContext implements EventBus {
+public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private ChannelResolver channelResolver;
     private SubscriberResolver subscriberResolver;
@@ -12,8 +12,8 @@ public abstract class AbstractEventBus extends LifeCycleContext implements Event
     private ExecutionStrategyFactory executionStrategyFactory;
 
     @Override
-    public void post(Object event) {
-        this.post(this.getChannelResolver().resolve(event.getClass()), event);
+    public void post(Object message) {
+        this.post(this.getChannelResolver().resolve(message.getClass()), message);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.EventBus;
+import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.ExceptionHandler;
 import io.bayberry.aloha.ExecutionStrategy;
 import io.bayberry.aloha.Listener;
@@ -14,16 +14,16 @@ public class GenericSubscriber implements Subscriber {
     private Channel channel;
     private Object target;
     private Method method;
-    private EventBus eventBus;
+    private MessageBus messageBus;
     private ExceptionHandler exceptionHandler;
     private ExecutionStrategy executionStrategy;
 
-    protected GenericSubscriber(Channel channel, Object target, Method method, EventBus eventBus,
+    protected GenericSubscriber(Channel channel, Object target, Method method, MessageBus messageBus,
         ExceptionHandler exceptionHandler, ExecutionStrategy executionStrategy) {
         this.channel = channel;
         this.target = target;
         this.method = method;
-        this.eventBus = eventBus;
+        this.messageBus = messageBus;
         this.exceptionHandler = exceptionHandler;
         this.executionStrategy = executionStrategy;
     }
@@ -54,8 +54,8 @@ public class GenericSubscriber implements Subscriber {
     }
 
     @Override
-    public EventBus getEventBus() {
-        return eventBus;
+    public MessageBus getMessageBus() {
+        return messageBus;
     }
 
     @Override
@@ -67,17 +67,17 @@ public class GenericSubscriber implements Subscriber {
         }
     }
 
-    protected void invoke(Listener listener, Object event) throws Exception {
+    protected void invoke(Listener listener, Object message) throws Exception {
         this.executionStrategy.execute(this, () -> {
             try {
                 if (this.getMethod().getParameterTypes() != null) {
-                    this.getMethod().invoke(this.getTarget(), event);
+                    this.getMethod().invoke(this.getTarget(), message);
                 } else {
                     this.getMethod().invoke(this.getTarget());
                 }
             } catch (Exception e) {
                 try {
-                    this.handleException(e, listener, event);
+                    this.handleException(e, listener, message);
                 } catch (Exception error) {
                     throw new AlohaException(error);
                 }
@@ -88,7 +88,7 @@ public class GenericSubscriber implements Subscriber {
     protected void handleException(Exception exception, Listener listener, Object value) throws Exception {
         try {
             if (this.getExceptionHandler() != null) {
-                this.getExceptionHandler().handle(listener.getChannel(), value, listener.getEventBus(), exception);
+                this.getExceptionHandler().handle(listener.getChannel(), value, listener.getMessageBus(), exception);
             } else {
                 listener.handleException(exception, value);
             }

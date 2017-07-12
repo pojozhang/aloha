@@ -3,7 +3,7 @@ package io.bayberry.aloha.ext.spring.redis;
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.ChannelResolver;
 import io.bayberry.aloha.Listener;
-import io.bayberry.aloha.ext.spring.RemoteSpringEventBus;
+import io.bayberry.aloha.ext.spring.RemoteSpringMessageBus;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisSubscriber;
 import io.bayberry.aloha.support.AsyncListenerDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
@@ -11,17 +11,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-public class RedisEventBus extends RemoteSpringEventBus {
+public class RedisMessageBus extends RemoteSpringMessageBus {
 
-    private static final RedisEventBusOptions DEFAULT_SETTINGS = new RedisEventBusOptions("event:");
+    private static final RedisMessageBusOptions DEFAULT_SETTINGS = new RedisMessageBusOptions("mb:");
     private RedisTemplate<String, String> redisTemplate;
-    private RedisEventBusOptions options;
+    private RedisMessageBusOptions options;
 
-    public RedisEventBus(ApplicationContext applicationContext) {
+    public RedisMessageBus(ApplicationContext applicationContext) {
         this(applicationContext, DEFAULT_SETTINGS);
     }
 
-    public RedisEventBus(ApplicationContext applicationContext, RedisEventBusOptions options) {
+    public RedisMessageBus(ApplicationContext applicationContext, RedisMessageBusOptions options) {
         super(applicationContext);
         this.options = options;
         super.onCreate();
@@ -45,7 +45,7 @@ public class RedisEventBus extends RemoteSpringEventBus {
     }
 
     @Override
-    public void post(Channel channel, Object event) {
-        this.redisTemplate.opsForList().rightPush(channel.getName(), (String) getSerializer().serialize(event));
+    public void post(Channel channel, Object message) {
+        this.redisTemplate.opsForList().rightPush(channel.getName(), (String) getSerializer().serialize(message));
     }
 }

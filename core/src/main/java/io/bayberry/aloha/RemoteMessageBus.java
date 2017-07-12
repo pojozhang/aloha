@@ -3,7 +3,7 @@ package io.bayberry.aloha;
 import io.bayberry.aloha.transport.Deserializer;
 import io.bayberry.aloha.transport.Serializer;
 
-public abstract class RemoteEventBus extends AbstractEventBus {
+public abstract class RemoteMessageBus extends AbstractMessageBus {
 
     protected Serializer serializer;
     protected Deserializer deserializer;

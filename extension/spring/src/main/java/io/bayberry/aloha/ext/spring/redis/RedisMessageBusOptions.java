@@ -1,13 +1,13 @@
 package io.bayberry.aloha.ext.spring.redis;
 
-public class RedisEventBusOptions {
+public class RedisMessageBusOptions {
 
     private String channelPrefix;
 
-    public RedisEventBusOptions() {
+    public RedisMessageBusOptions() {
     }
 
-    public RedisEventBusOptions(String channelPrefix) {
+    public RedisMessageBusOptions(String channelPrefix) {
         this.channelPrefix = channelPrefix;
     }
 

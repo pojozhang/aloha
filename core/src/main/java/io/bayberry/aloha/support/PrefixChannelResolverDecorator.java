@@ -14,7 +14,7 @@ public class PrefixChannelResolverDecorator implements ChannelResolver {
     }
 
     @Override
-    public Channel resolve(Class eventType) {
-        return new Channel(this.prefix + this.delegate.resolve(eventType).getName());
+    public Channel resolve(Class messageType) {
+        return new Channel(this.prefix + this.delegate.resolve(messageType).getName());
     }
 }

@@ -1,5 +1,5 @@
 package io.bayberry.aloha.test;
 
-public class Event {
+public class Message {
 
 }

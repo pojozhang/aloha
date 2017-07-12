@@ -2,17 +2,17 @@ package io.bayberry.aloha;
 
 public abstract class LocalListener extends AbstractListener {
 
-    public LocalListener(Channel channel, LocalEventBus eventBus) {
-        super(channel, eventBus);
+    public LocalListener(Channel channel, LocalMessageBus messageBus) {
+        super(channel, messageBus);
     }
 
     @Override
-    public LocalEventBus getEventBus() {
-        return (LocalEventBus) super.getEventBus();
+    public LocalMessageBus getMessageBus() {
+        return (LocalMessageBus) super.getMessageBus();
     }
 
     @Override
-    protected Object getConvertedEventObject(Object origin, Subscriber subscriber) {
+    protected Object getConvertedMessage(Object origin, Subscriber subscriber) {
         return origin;
     }
 }
