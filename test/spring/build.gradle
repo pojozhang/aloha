@@ -1,3 +1,10 @@
+apply from: "$rootDir/bintray.gradle"
+
+ext {
+    description = 'Tests for aloha-spring module'
+    artifactId = 'aloha-spring-test'
+}
+
 dependencies{
     compile(
             "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
