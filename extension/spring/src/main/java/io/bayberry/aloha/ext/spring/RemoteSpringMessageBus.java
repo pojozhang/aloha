@@ -1,5 +1,6 @@
 package io.bayberry.aloha.ext.spring;
 
+import io.bayberry.aloha.SubscriberResolver;
 import io.bayberry.aloha.support.GenericRemoteMessageBus;
 import org.springframework.context.ApplicationContext;
 
@@ -9,5 +10,10 @@ public abstract class RemoteSpringMessageBus extends GenericRemoteMessageBus {
 
     protected RemoteSpringMessageBus(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public SubscriberResolver initSubscriberResolver() {
+        return new SpringSubscriberResolver(applicationContext);
     }
 }
