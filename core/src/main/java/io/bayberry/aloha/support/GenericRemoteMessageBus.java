@@ -2,8 +2,6 @@ package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.*;
 import io.bayberry.aloha.transport.Deserializer;
-import io.bayberry.aloha.transport.JsonDeserializer;
-import io.bayberry.aloha.transport.JsonSerializer;
 import io.bayberry.aloha.transport.Serializer;
 
 public abstract class GenericRemoteMessageBus extends RemoteMessageBus {
@@ -20,7 +18,7 @@ public abstract class GenericRemoteMessageBus extends RemoteMessageBus {
 
     @Override
     public ChannelResolver initChannelResolver() {
-        return new GenericChannelResolver();
+        return new DefaultChannelResolver();
     }
 
     @Override
@@ -40,7 +38,7 @@ public abstract class GenericRemoteMessageBus extends RemoteMessageBus {
 
     @Override
     public ExceptionHandlerFactory initExceptionHandlerFactory() {
-        return new GenericExceptionHandlerFactory();
+        return new DefaultExceptionHandlerFactory();
     }
 
     @Override
