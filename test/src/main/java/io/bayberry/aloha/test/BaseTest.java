@@ -21,6 +21,6 @@ public abstract class BaseTest {
 
     @After
     public void tearDown() {
-        this.messageBus.shutdown();
+        this.messageBus.stop();
     }
 }

@@ -1,9 +1,6 @@
 package io.bayberry.aloha.support;
 
-import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.MessageBus;
-import io.bayberry.aloha.Subscriber;
-import io.bayberry.aloha.SubscriberResolver;
+import io.bayberry.aloha.*;
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.util.Reflection;
 
@@ -11,10 +8,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GenericSubscriberResolver implements SubscriberResolver {
+public class DefaultListenerResolver implements ListenerResolver {
 
     @Override
-    public List<Subscriber> resolve(Object target, MessageBus messageBus) {
+    public List<Listener> resolve(Object target, MessageBus messageBus) {
         return new Reflection().getMethodsWithAnnotation(target.getClass(), Consume.class).stream()
                 .map(method -> {
                     Consume subscribe = method.getAnnotation(Consume.class);

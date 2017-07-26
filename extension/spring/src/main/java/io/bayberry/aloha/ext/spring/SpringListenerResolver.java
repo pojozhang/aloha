@@ -3,7 +3,7 @@ package io.bayberry.aloha.ext.spring;
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.annotation.Consume;
-import io.bayberry.aloha.support.GenericSubscriberResolver;
+import io.bayberry.aloha.support.DefaultListenerResolver;
 import org.springframework.beans.factory.config.BeanExpressionContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanExpressionContextAccessor;
@@ -16,12 +16,12 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Method;
 
-public class SpringSubscriberResolver extends GenericSubscriberResolver {
+public class SpringListenerResolver extends DefaultListenerResolver {
 
     private static final ExpressionParser PARSER = new SpelExpressionParser();
     private ApplicationContext applicationContext;
 
-    public SpringSubscriberResolver(ApplicationContext applicationContext) {
+    public SpringListenerResolver(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 

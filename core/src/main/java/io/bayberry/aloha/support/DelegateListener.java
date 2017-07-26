@@ -1,9 +1,6 @@
 package io.bayberry.aloha.support;
 
-import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.MessageBus;
-import io.bayberry.aloha.Receiver;
-import io.bayberry.aloha.Subscriber;
+import io.bayberry.aloha.*;
 
 import java.util.List;
 
@@ -21,8 +18,8 @@ public class DelegateListener implements Receiver {
     }
 
     @Override
-    public void shutdown() {
-        this.delegate.shutdown();
+    public void stop() {
+        this.delegate.stop();
     }
 
     @Override
@@ -31,23 +28,23 @@ public class DelegateListener implements Receiver {
     }
 
     @Override
-    public void register(List<Subscriber> subscribers) {
-        this.delegate.register(subscribers);
+    public void register(List<Listener> listeners) {
+        this.delegate.register(listeners);
     }
 
     @Override
-    public void register(Subscriber subscriber) {
-        this.delegate.register(subscriber);
+    public void register(Listener listener) {
+        this.delegate.register(listener);
     }
 
     @Override
-    public void unregister(List<Subscriber> subscribers) {
-        this.delegate.unregister(subscribers);
+    public void unregister(List<Listener> listeners) {
+        this.delegate.unregister(listeners);
     }
 
     @Override
-    public void unregister(Subscriber subscriber) {
-        this.delegate.unregister(subscriber);
+    public void unregister(Listener listener) {
+        this.delegate.unregister(listener);
     }
 
     @Override
@@ -56,8 +53,8 @@ public class DelegateListener implements Receiver {
     }
 
     @Override
-    public List<Subscriber> getSubscribers() {
-        return this.delegate.getSubscribers();
+    public List<Listener> getListeners() {
+        return this.delegate.getListeners();
     }
 
     @Override

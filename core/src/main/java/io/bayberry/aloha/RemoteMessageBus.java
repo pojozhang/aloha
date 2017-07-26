@@ -1,5 +1,6 @@
 package io.bayberry.aloha;
 
+import io.bayberry.aloha.support.*;
 import io.bayberry.aloha.transport.Deserializer;
 import io.bayberry.aloha.transport.Serializer;
 
@@ -15,10 +16,6 @@ public abstract class RemoteMessageBus extends AbstractMessageBus {
         super.onCreate();
     }
 
-    protected abstract Serializer initSerializer();
-
-    protected abstract Deserializer initDeserializer();
-
     public Serializer getSerializer() {
         return serializer;
     }
@@ -33,5 +30,58 @@ public abstract class RemoteMessageBus extends AbstractMessageBus {
 
     public void setDeserializer(Deserializer deserializer) {
         this.deserializer = deserializer;
+    }
+
+    protected Serializer initSerializer() {
+        return new JsonSerializer();
+    }
+
+    protected Deserializer initDeserializer() {
+        return new JsonDeserializer();
+    }
+
+    @Override
+    public ListenerRegistry initListenerRegistry() {
+        return new DefaultListenerRegistry();
+    }
+
+    @Override
+    public ReceiverRegistry initReceiverRegistry() {
+        return new DefaultReceiverRegistry();
+    }
+
+    @Override
+    public ChannelResolver initChannelResolver() {
+        return new DefaultChannelResolver();
+    }
+
+    @Override
+    public ExceptionHandler initDefaultExceptionHandler() {
+        return new LogExceptionHandler();
+    }
+
+    @Override
+    public ExceptionHandlerFactory initExceptionHandlerFactory() {
+        return new DefaultExceptionHandlerFactory();
+    }
+
+    @Override
+    public ExecutionStrategy initDefaultExecutionStrategy() {
+        return new GenericExecutionStrategy();
+    }
+
+    @Override
+    public ExecutionStrategyFactory initExecutionStrategyFactory() {
+        return new GenericExecutionStrategyFactory();
+    }
+
+    @Override
+    public ListenerResolver initListenerResolver() {
+        return new DefaultListenerResolver();
+    }
+
+    @Override
+    public void onDestroy() {
+        this.getReceiverRegistry().getReceivers().forEach(Receiver::stop);
     }
 }

@@ -14,7 +14,7 @@ public class RunningLifeCycleStatus extends LifeCycleStatus {
     }
 
     @Override
-    public void shutdown() {
+    public void stop() {
         context.setStatus(context.STOPPED);
     }
 }

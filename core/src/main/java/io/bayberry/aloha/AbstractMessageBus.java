@@ -3,8 +3,8 @@ package io.bayberry.aloha;
 public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private ChannelResolver channelResolver;
-    private SubscriberResolver subscriberResolver;
-    private SubscriberRegistry subscriberRegistry;
+    private ListenerResolver listenerResolver;
+    private ListenerRegistry listenerRegistry;
     private ReceiverRegistry receiverRegistry;
     private ExceptionHandler defaultExceptionHandler;
     private ExceptionHandlerFactory exceptionHandlerFactory;
@@ -23,19 +23,19 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     @Override
     public void register(Object target) {
-        this.subscriberRegistry.register(this.subscriberResolver.resolve(target, this));
+        this.listenerRegistry.register(this.listenerResolver.resolve(target, this));
     }
 
     @Override
     public void unregister(Object target) {
-        this.subscriberRegistry.unregister(this.subscriberResolver.resolve(target, this));
+        this.listenerRegistry.unregister(this.listenerResolver.resolve(target, this));
     }
 
     @Override
     protected void onCreate() {
-        this.subscriberRegistry = this.initSubscriberRegistry();
+        this.listenerRegistry = this.initListenerRegistry();
         this.receiverRegistry = this.initReceiverRegistry();
-        this.subscriberResolver = this.initSubscriberResolver();
+        this.listenerResolver = this.initListenerResolver();
         this.channelResolver = this.initChannelResolver();
         this.defaultExceptionHandler = this.initDefaultExceptionHandler();
         this.exceptionHandlerFactory = this.initExceptionHandlerFactory();
@@ -45,9 +45,9 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     @Override
     public void onStart() {
-        this.subscriberRegistry.getChannels().forEach(channel -> {
+        this.listenerRegistry.getChannels().forEach(channel -> {
             Receiver listener = this.bindListener(channel);
-            listener.register(this.subscriberRegistry.getSubscribers(channel));
+            listener.register(this.listenerRegistry.getListeners(channel));
             this.getReceiverRegistry().register(listener);
             listener.start();
         });
@@ -55,7 +55,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     @Override
     public void onDestroy() {
-        this.getReceiverRegistry().getReceivers().forEach(Receiver::shutdown);
+        this.getReceiverRegistry().getReceivers().forEach(Receiver::stop);
     }
 
     @Override
@@ -104,13 +104,13 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     }
 
     @Override
-    public SubscriberRegistry getSubscriberRegistry() {
-        return subscriberRegistry;
+    public ListenerRegistry getListenerRegistry() {
+        return listenerRegistry;
     }
 
     @Override
-    public SubscriberResolver getSubscriberResolver() {
-        return subscriberResolver;
+    public ListenerResolver getListenerResolver() {
+        return listenerResolver;
     }
 
     @Override

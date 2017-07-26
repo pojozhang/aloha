@@ -6,17 +6,17 @@ public interface Receiver extends LifeCycle {
 
     void notifyAll(Object source);
 
-    void register(List<Subscriber> subscribers);
+    void register(List<Listener> listeners);
 
-    void register(Subscriber subscriber);
+    void register(Listener listener);
 
-    void unregister(List<Subscriber> subscribers);
+    void unregister(List<Listener> listeners);
 
-    void unregister(Subscriber subscriber);
+    void unregister(Listener listener);
 
     Channel getChannel();
 
-    List<Subscriber> getSubscribers();
+    List<Listener> getListeners();
 
     MessageBus getMessageBus();
 

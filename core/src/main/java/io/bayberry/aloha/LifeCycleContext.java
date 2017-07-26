@@ -23,8 +23,8 @@ public abstract class LifeCycleContext implements LifeCycle {
     }
 
     @Override
-    public void shutdown() {
-        this.status.shutdown();
+    public void stop() {
+        this.status.stop();
         this.onDestroy();
     }
 

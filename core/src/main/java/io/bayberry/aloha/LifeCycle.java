@@ -4,5 +4,5 @@ public interface LifeCycle {
 
     void start();
 
-    void shutdown();
+    void stop();
 }

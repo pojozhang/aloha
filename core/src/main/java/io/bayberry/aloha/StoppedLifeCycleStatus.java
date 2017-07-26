@@ -14,7 +14,7 @@ public class StoppedLifeCycleStatus extends LifeCycleStatus {
     }
 
     @Override
-    public void shutdown() {
+    public void stop() {
         throw new AlreadyShutdownException();
     }
 }

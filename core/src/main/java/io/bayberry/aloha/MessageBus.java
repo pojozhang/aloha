@@ -2,11 +2,11 @@ package io.bayberry.aloha;
 
 public interface MessageBus extends LifeCycle {
 
-    SubscriberRegistry initSubscriberRegistry();
+    ListenerRegistry initListenerRegistry();
+
+    ListenerResolver initListenerResolver();
 
     ReceiverRegistry initReceiverRegistry();
-
-    SubscriberResolver initSubscriberResolver();
 
     ChannelResolver initChannelResolver();
 
@@ -50,9 +50,9 @@ public interface MessageBus extends LifeCycle {
 
     void setExecutionStrategyFactory(ExecutionStrategyFactory executionStrategyFactory);
 
-    SubscriberRegistry getSubscriberRegistry();
+    ListenerRegistry getListenerRegistry();
 
-    SubscriberResolver getSubscriberResolver();
+    ListenerResolver getListenerResolver();
 
     ChannelResolver getChannelResolver();
 }

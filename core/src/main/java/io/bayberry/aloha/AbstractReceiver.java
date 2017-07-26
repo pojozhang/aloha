@@ -1,13 +1,14 @@
 package io.bayberry.aloha;
 
 import io.bayberry.aloha.exception.AlohaException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractReceiver extends MessageBusContext implements Receiver {
 
     protected Channel channel;
-    protected List<Subscriber> subscribers = new ArrayList<>();
+    protected List<Listener> listeners = new ArrayList<>();
 
     public AbstractReceiver(Channel channel, MessageBus messageBus) {
         super(messageBus);
@@ -16,9 +17,9 @@ public abstract class AbstractReceiver extends MessageBusContext implements Rece
 
     @Override
     public void notifyAll(Object source) {
-        this.subscribers.forEach(subscriber -> {
+        this.listeners.forEach(listener -> {
             try {
-                subscriber.accept(this, this.getConvertedMessage(source, subscriber));
+                listener.accept(this, this.getConvertedMessage(source, listener));
             } catch (Exception exception) {
                 try {
                     handleException(exception, source);
@@ -29,7 +30,7 @@ public abstract class AbstractReceiver extends MessageBusContext implements Rece
         });
     }
 
-    protected abstract Object getConvertedMessage(Object origin, Subscriber subscriber);
+    protected abstract Object getConvertedMessage(Object origin, Listener listener);
 
     @Override
     public void handleException(Exception exception, Object value) throws Exception {
@@ -45,23 +46,23 @@ public abstract class AbstractReceiver extends MessageBusContext implements Rece
     }
 
     @Override
-    public void register(List<Subscriber> subscribers) {
-        subscribers.forEach(this::register);
+    public void register(List<Listener> listeners) {
+        listeners.forEach(this::register);
     }
 
     @Override
-    public void register(Subscriber subscriber) {
-        this.subscribers.add(subscriber);
+    public void register(Listener listener) {
+        this.listeners.add(listener);
     }
 
     @Override
-    public void unregister(List<Subscriber> subscribers) {
-        subscribers.forEach(this::unregister);
+    public void unregister(List<Listener> listeners) {
+        listeners.forEach(this::unregister);
     }
 
     @Override
-    public void unregister(Subscriber subscriber) {
-        this.subscribers.remove(subscriber);
+    public void unregister(Listener listener) {
+        this.listeners.remove(listener);
     }
 
     @Override
@@ -70,7 +71,7 @@ public abstract class AbstractReceiver extends MessageBusContext implements Rece
     }
 
     @Override
-    public List<Subscriber> getSubscribers() {
-        return subscribers;
+    public List<Listener> getListeners() {
+        return listeners;
     }
 }

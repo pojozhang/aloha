@@ -1,9 +1,7 @@
 package io.bayberry.aloha.ext.spring.redis;
 
-import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.ChannelResolver;
-import io.bayberry.aloha.Receiver;
-import io.bayberry.aloha.ext.spring.RemoteSpringMessageBus;
+import io.bayberry.aloha.*;
+import io.bayberry.aloha.ext.spring.SpringListenerResolver;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisListeners;
 import io.bayberry.aloha.support.AsyncListenerDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
@@ -11,18 +9,19 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-public class RedisMessageBus extends RemoteSpringMessageBus {
+public class RedisMessageBus extends RemoteMessageBus {
 
     private static final RedisMessageBusOptions DEFAULT_SETTINGS = new RedisMessageBusOptions("mb:");
     private RedisTemplate<String, String> redisTemplate;
     private RedisMessageBusOptions options;
+    private ApplicationContext applicationContext;
 
     public RedisMessageBus(ApplicationContext applicationContext) {
         this(applicationContext, DEFAULT_SETTINGS);
     }
 
     public RedisMessageBus(ApplicationContext applicationContext, RedisMessageBusOptions options) {
-        super(applicationContext);
+        this.applicationContext = applicationContext;
         this.options = options;
         super.onCreate();
     }
@@ -42,7 +41,7 @@ public class RedisMessageBus extends RemoteSpringMessageBus {
     @Override
     public Receiver bindListener(Channel channel) {
         return new AsyncListenerDecorator(
-            new RedisReceiver(channel, redisTemplate, this));
+                new RedisReceiver(channel, redisTemplate, this));
     }
 
     @Override
@@ -53,5 +52,10 @@ public class RedisMessageBus extends RemoteSpringMessageBus {
     @Override
     public void publish(Channel channel, Object message) {
         this.redisTemplate.convertAndSend(channel.getName(), getSerializer().serialize(message));
+    }
+
+    @Override
+    public ListenerResolver initListenerResolver() {
+        return new SpringListenerResolver(applicationContext);
     }
 }

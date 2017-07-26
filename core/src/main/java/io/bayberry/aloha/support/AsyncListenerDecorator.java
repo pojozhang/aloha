@@ -32,13 +32,13 @@ public class AsyncListenerDecorator extends DelegateListener {
     }
 
     @Override
-    public void shutdown() {
+    public void stop() {
         this.task.cancel(true);
         this.threadPool.shutdown();
         try {
             this.threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException ignored) {
         }
-        super.shutdown();
+        super.stop();
     }
 }

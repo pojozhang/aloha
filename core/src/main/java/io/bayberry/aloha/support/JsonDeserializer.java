@@ -1,6 +1,7 @@
-package io.bayberry.aloha.transport;
+package io.bayberry.aloha.support;
 
 import com.alibaba.fastjson.JSON;
+import io.bayberry.aloha.transport.Deserializer;
 
 public class JsonDeserializer<T> implements Deserializer<T, String> {
 

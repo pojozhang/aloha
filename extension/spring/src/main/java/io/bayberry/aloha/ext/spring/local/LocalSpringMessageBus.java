@@ -11,8 +11,8 @@ import org.springframework.context.support.AbstractApplicationContext;
 
 public class LocalSpringMessageBus extends LocalMessageBus {
 
-    private final ApplicationContext applicationContext;
-    private final SpringEventProxy springEventProxy;
+    private ApplicationContext applicationContext;
+    private SpringEventProxy springEventProxy;
 
     public LocalSpringMessageBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -50,7 +50,7 @@ public class LocalSpringMessageBus extends LocalMessageBus {
     @Override
     public void onDestroy() {
         this.applicationContext.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME,
-            ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
+                ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
         super.onDestroy();
     }
 }

@@ -20,9 +20,9 @@ public abstract class RemoteReceiver extends AbstractReceiver {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected Object getConvertedMessage(Object origin, Subscriber subscriber) {
+    protected Object getConvertedMessage(Object origin, Listener listener) {
         Deserializer deserializer = getMessageBus().getDeserializer();
         return deserializer == null ? origin
-                : deserializer.deserialize(origin, subscriber.getMethod().getParameterTypes()[0]);
+                : deserializer.deserialize(origin, listener.getMethod().getParameterTypes()[0]);
     }
 }

@@ -12,7 +12,7 @@ public abstract class LocalReceiver extends AbstractReceiver {
     }
 
     @Override
-    protected Object getConvertedMessage(Object origin, Subscriber subscriber) {
+    protected Object getConvertedMessage(Object origin, Listener listener) {
         return origin;
     }
 }
