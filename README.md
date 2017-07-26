@@ -1,10 +1,10 @@
 # Aloha
 #### Aloha provides some generic and extensible interfaces of message bus written in Java. You can simply extend them to implement your own message bus.
 
-Of course, like any other library, we have some built-in message buses included in the extension module, such as aloha-spring module.
+Of course, like any other libraries, some built-in message buses are included in the extension package which are listed below. 
 
 # Aloha Spring
-An aloha extension module to provide easy integration with **spring boot**. For new we provide two kinds of message buses listed below.
+An aloha extension package provides easy integration with **spring boot**. For now we provide two kinds of message buses listed below.
 ## 1. LocalSpringMessageBus
 LocalSpringMessageBus is just a wrapper of Spring's ApplicationEventPublisher. You can easily post a Spring event through the interface.
 ### Usage
@@ -16,7 +16,7 @@ bus.start();
 ```
 
 ## 2. RedisMessageBus
-RedisMessageBus is based on redis template, so make sure that you've imported **spring-boot-starter-data-redis** package to your project.
+RedisMessageBus is based on redis template, so make sure that you've imported **spring-boot-starter-data-redis** lib to your project.
 ### Usage
 ```java
 MessageBus bus = new RedisMessageBus(this.applicationContext);
