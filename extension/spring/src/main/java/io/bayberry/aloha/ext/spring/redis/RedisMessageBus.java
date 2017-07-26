@@ -41,11 +41,17 @@ public class RedisMessageBus extends RemoteSpringMessageBus {
 
     @Override
     public Receiver bindListener(Channel channel) {
-        return new AsyncListenerDecorator(new io.bayberry.aloha.ext.spring.redis.RedisListener(channel, redisTemplate, this));
+        return new AsyncListenerDecorator(
+            new io.bayberry.aloha.ext.spring.redis.RedisListener(channel, redisTemplate, this));
     }
 
     @Override
-    public void post(Channel channel, Object message) {
+    public void produce(Channel channel, Object message) {
         this.redisTemplate.opsForList().rightPush(channel.getName(), (String) getSerializer().serialize(message));
+    }
+
+    @Override
+    public void publish(Channel channel, Object message) {
+        this.redisTemplate.convertAndSend(channel.getName(), getSerializer().serialize(message));
     }
 }
