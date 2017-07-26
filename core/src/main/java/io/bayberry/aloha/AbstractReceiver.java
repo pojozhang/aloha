@@ -1,14 +1,13 @@
 package io.bayberry.aloha;
 
-import com.google.common.collect.Lists;
 import io.bayberry.aloha.exception.AlohaException;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractReceiver extends MessageBusContext implements Receiver {
 
     protected Channel channel;
-    protected List<Subscriber> subscribers = Lists.newArrayList();
+    protected List<Subscriber> subscribers = new ArrayList<>();
 
     public AbstractReceiver(Channel channel, MessageBus messageBus) {
         super(messageBus);
