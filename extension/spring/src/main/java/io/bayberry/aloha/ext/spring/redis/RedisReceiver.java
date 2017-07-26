@@ -9,11 +9,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
 
-public class RedisListener extends RemoteReceiver {
+public class RedisReceiver extends RemoteReceiver {
 
     private RedisTemplate<String, String> redisTemplate;
 
-    public RedisListener(Channel channel, RedisTemplate<String, String> redisTemplate, RemoteMessageBus messageBus) {
+    public RedisReceiver(Channel channel, RedisTemplate<String, String> redisTemplate, RemoteMessageBus messageBus) {
         super(channel, messageBus);
         this.redisTemplate = redisTemplate;
         this.onCreate();
