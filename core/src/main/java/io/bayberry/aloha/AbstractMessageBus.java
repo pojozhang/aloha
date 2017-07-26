@@ -12,8 +12,13 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     private ExecutionStrategyFactory executionStrategyFactory;
 
     @Override
-    public void post(Object message) {
-        this.post(this.getChannelResolver().resolve(message.getClass()), message);
+    public void produce(Object message) {
+        this.produce(this.getChannelResolver().resolve(message.getClass()), message);
+    }
+
+    @Override
+    public void publish(Object message) {
+        this.publish(this.getChannelResolver().resolve(message.getClass()), message);
     }
 
     @Override

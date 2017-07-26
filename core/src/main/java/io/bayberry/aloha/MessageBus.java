@@ -20,9 +20,13 @@ public interface MessageBus extends LifeCycle {
 
     ExecutionStrategyFactory initExecutionStrategyFactory();
 
-    void post(Object message);
+    void produce(Object message);
 
-    void post(Channel channel, Object message);
+    void produce(Channel channel, Object message);
+
+    void publish(Object message);
+
+    void publish(Channel channel, Object message);
 
     void register(Object target);
 

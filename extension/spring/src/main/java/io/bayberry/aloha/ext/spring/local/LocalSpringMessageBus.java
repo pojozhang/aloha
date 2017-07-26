@@ -1,15 +1,15 @@
 package io.bayberry.aloha.ext.spring.local;
 
 import io.bayberry.aloha.Channel;
+import io.bayberry.aloha.LocalMessageBus;
 import io.bayberry.aloha.Receiver;
 import io.bayberry.aloha.ext.spring.local.annotation.SpringSubscriber;
-import io.bayberry.aloha.support.GenericLocalMessageBus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 
-public class LocalSpringMessageBus extends GenericLocalMessageBus {
+public class LocalSpringMessageBus extends LocalMessageBus {
 
     private final ApplicationContext applicationContext;
     private final SpringEventProxy springEventProxy;
@@ -26,13 +26,18 @@ public class LocalSpringMessageBus extends GenericLocalMessageBus {
     }
 
     @Override
-    public void post(Object message) {
-        this.post(null, message);
+    public void produce(Object message) {
+        this.produce(null, message);
     }
 
     @Override
-    public void post(Channel channel, Object message) {
+    public void produce(Channel channel, Object message) {
         this.applicationContext.publishEvent(message);
+    }
+
+    @Override
+    public void publish(Channel channel, Object message) {
+        //TODO not implemented
     }
 
     @Override
@@ -44,7 +49,8 @@ public class LocalSpringMessageBus extends GenericLocalMessageBus {
 
     @Override
     public void onDestroy() {
-        this.applicationContext.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
+        this.applicationContext.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME,
+            ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
         super.onDestroy();
     }
 }
