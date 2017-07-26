@@ -2,7 +2,7 @@ package io.bayberry.aloha.ext.spring;
 
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.MessageBus;
-import io.bayberry.aloha.annotation.Subscribe;
+import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.support.GenericSubscriberResolver;
 import org.springframework.beans.factory.config.BeanExpressionContext;
 import org.springframework.context.ApplicationContext;
@@ -26,7 +26,7 @@ public class SpringSubscriberResolver extends GenericSubscriberResolver {
     }
 
     @Override
-    protected Channel getResolvedChannel(Subscribe subscribe, Method method, MessageBus messageBus) {
+    protected Channel getResolvedChannel(Consume subscribe, Method method, MessageBus messageBus) {
         String channel = subscribe.channel();
         StandardEvaluationContext context = new StandardEvaluationContext();
         context.setBeanResolver(new BeanFactoryResolver(this.applicationContext));

@@ -1,7 +1,7 @@
 package io.bayberry.aloha.ext.spring.local;
 
 import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.Receiver;
 import io.bayberry.aloha.ext.spring.local.annotation.SpringSubscriber;
 import io.bayberry.aloha.support.GenericLocalMessageBus;
 import org.springframework.context.ApplicationContext;
@@ -21,8 +21,8 @@ public class LocalSpringMessageBus extends GenericLocalMessageBus {
     }
 
     @Override
-    public Listener bindListener(Channel channel) {
-        return new LocalSpringListener(channel, this);
+    public Receiver bindListener(Channel channel) {
+        return new LocalSpringReceiver(channel, this);
     }
 
     @Override

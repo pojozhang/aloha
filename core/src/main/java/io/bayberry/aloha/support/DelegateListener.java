@@ -2,16 +2,16 @@ package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.MessageBus;
-import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.Receiver;
 import io.bayberry.aloha.Subscriber;
 
 import java.util.List;
 
-public class DelegateListener implements Listener {
+public class DelegateListener implements Receiver {
 
-    protected Listener delegate;
+    protected Receiver delegate;
 
-    public DelegateListener(Listener delegate) {
+    public DelegateListener(Receiver delegate) {
         this.delegate = delegate;
     }
 

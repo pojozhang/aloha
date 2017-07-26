@@ -4,7 +4,7 @@ import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.ExceptionHandler;
 import io.bayberry.aloha.ExecutionStrategy;
-import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.Receiver;
 import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.exception.AlohaException;
 import java.lang.reflect.Method;
@@ -59,7 +59,7 @@ public class GenericSubscriber implements Subscriber {
     }
 
     @Override
-    public void accept(Listener listener, Object value) throws Exception {
+    public void accept(Receiver listener, Object value) throws Exception {
         try {
             this.invoke(listener, value);
         } catch (Exception exception) {
@@ -67,7 +67,7 @@ public class GenericSubscriber implements Subscriber {
         }
     }
 
-    protected void invoke(Listener listener, Object message) throws Exception {
+    protected void invoke(Receiver listener, Object message) throws Exception {
         this.executionStrategy.execute(this, () -> {
             try {
                 if (this.getMethod().getParameterTypes() != null) {
@@ -85,7 +85,7 @@ public class GenericSubscriber implements Subscriber {
         });
     }
 
-    protected void handleException(Exception exception, Listener listener, Object value) throws Exception {
+    protected void handleException(Exception exception, Receiver listener, Object value) throws Exception {
         try {
             if (this.getExceptionHandler() != null) {
                 this.getExceptionHandler().handle(listener.getChannel(), value, listener.getMessageBus(), exception);

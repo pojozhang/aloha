@@ -1,6 +1,6 @@
 package io.bayberry.aloha.support;
 
-import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.Receiver;
 import io.bayberry.aloha.exception.AlohaException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,7 +12,7 @@ public class AsyncListenerDecorator extends DelegateListener {
     private ExecutorService threadPool = Executors.newSingleThreadExecutor();
     private Future task;
 
-    public AsyncListenerDecorator(Listener delegate) {
+    public AsyncListenerDecorator(Receiver delegate) {
         super(delegate);
     }
 

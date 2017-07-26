@@ -4,13 +4,13 @@ public interface MessageBus extends LifeCycle {
 
     SubscriberRegistry initSubscriberRegistry();
 
-    ListenerRegistry initListenerRegistry();
+    ReceiverRegistry initReceiverRegistry();
 
     SubscriberResolver initSubscriberResolver();
 
     ChannelResolver initChannelResolver();
 
-    Listener bindListener(Channel channel);
+    Receiver bindListener(Channel channel);
 
     ExceptionHandler initDefaultExceptionHandler();
 
@@ -28,7 +28,7 @@ public interface MessageBus extends LifeCycle {
 
     void unregister(Object target);
 
-    ListenerRegistry getListenerRegistry();
+    ReceiverRegistry getReceiverRegistry();
 
     ExceptionHandler getDefaultExceptionHandler();
 

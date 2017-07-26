@@ -16,5 +16,5 @@ public interface Subscriber {
 
     ExecutionStrategy getExecutionStrategy();
 
-    void accept(Listener listener, Object value) throws Exception;
+    void accept(Receiver listener, Object value) throws Exception;
 }

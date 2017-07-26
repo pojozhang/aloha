@@ -5,12 +5,12 @@ import io.bayberry.aloha.exception.AlohaException;
 
 import java.util.List;
 
-public abstract class AbstractListener extends MessageBusContext implements Listener {
+public abstract class AbstractReceiver extends MessageBusContext implements Receiver {
 
     protected Channel channel;
     protected List<Subscriber> subscribers = Lists.newArrayList();
 
-    public AbstractListener(Channel channel, MessageBus messageBus) {
+    public AbstractReceiver(Channel channel, MessageBus messageBus) {
         super(messageBus);
         this.channel = channel;
     }

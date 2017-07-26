@@ -2,7 +2,7 @@ package io.bayberry.aloha;
 
 import java.util.List;
 
-public interface Listener extends LifeCycle {
+public interface Receiver extends LifeCycle {
 
     void notifyAll(Object source);
 

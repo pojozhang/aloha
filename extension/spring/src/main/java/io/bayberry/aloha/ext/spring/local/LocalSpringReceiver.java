@@ -2,11 +2,11 @@ package io.bayberry.aloha.ext.spring.local;
 
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.LocalMessageBus;
-import io.bayberry.aloha.LocalListener;
+import io.bayberry.aloha.LocalReceiver;
 
-public class LocalSpringListener extends LocalListener {
+public class LocalSpringReceiver extends LocalReceiver {
 
-    public LocalSpringListener(Channel channel, LocalMessageBus messageBus) {
+    public LocalSpringReceiver(Channel channel, LocalMessageBus messageBus) {
         super(channel, messageBus);
         this.onCreate();
     }

@@ -4,7 +4,7 @@ import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.Subscriber;
 import io.bayberry.aloha.SubscriberResolver;
-import io.bayberry.aloha.annotation.Subscribe;
+import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.util.Reflection;
 
 import java.lang.reflect.Method;
@@ -15,9 +15,9 @@ public class GenericSubscriberResolver implements SubscriberResolver {
 
     @Override
     public List<Subscriber> resolve(Object target, MessageBus messageBus) {
-        return new Reflection().getMethodsWithAnnotation(target.getClass(), Subscribe.class).stream()
+        return new Reflection().getMethodsWithAnnotation(target.getClass(), Consume.class).stream()
                 .map(method -> {
-                    Subscribe subscribe = method.getAnnotation(Subscribe.class);
+                    Consume subscribe = method.getAnnotation(Consume.class);
                     Channel channel = getResolvedChannel(subscribe, method, messageBus);
                     return new GenericSubscriber(channel, target, method, messageBus,
                             messageBus.getExceptionHandlerFactory().provide(subscribe.exceptionHandler()),
@@ -25,7 +25,7 @@ public class GenericSubscriberResolver implements SubscriberResolver {
                 }).collect(Collectors.toList());
     }
 
-    protected Channel getResolvedChannel(Subscribe subscribe, Method method, MessageBus messageBus) {
+    protected Channel getResolvedChannel(Consume subscribe, Method method, MessageBus messageBus) {
         Channel channel = new Channel(subscribe.channel());
         if (channel.getName() == null || channel.getName().length() == 0) {
             channel = messageBus.getChannelResolver().resolve(method.getParameterTypes()[0]);

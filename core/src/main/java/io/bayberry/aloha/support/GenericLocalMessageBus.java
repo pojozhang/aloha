@@ -10,8 +10,8 @@ public abstract class GenericLocalMessageBus extends LocalMessageBus {
     }
 
     @Override
-    public ListenerRegistry initListenerRegistry() {
-        return new GenericListenerRegistry();
+    public ReceiverRegistry initReceiverRegistry() {
+        return new DefaultReceiverRegistry();
     }
 
     @Override
@@ -46,6 +46,6 @@ public abstract class GenericLocalMessageBus extends LocalMessageBus {
 
     @Override
     public void onDestroy() {
-        this.getListenerRegistry().getListeners().forEach(Listener::shutdown);
+        this.getReceiverRegistry().getReceivers().forEach(Receiver::shutdown);
     }
 }

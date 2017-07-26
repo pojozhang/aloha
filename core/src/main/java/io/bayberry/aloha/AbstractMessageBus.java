@@ -5,7 +5,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     private ChannelResolver channelResolver;
     private SubscriberResolver subscriberResolver;
     private SubscriberRegistry subscriberRegistry;
-    private ListenerRegistry listenerRegistry;
+    private ReceiverRegistry receiverRegistry;
     private ExceptionHandler defaultExceptionHandler;
     private ExceptionHandlerFactory exceptionHandlerFactory;
     private ExecutionStrategy defaultExecutionStrategy;
@@ -29,7 +29,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     @Override
     protected void onCreate() {
         this.subscriberRegistry = this.initSubscriberRegistry();
-        this.listenerRegistry = this.initListenerRegistry();
+        this.receiverRegistry = this.initReceiverRegistry();
         this.subscriberResolver = this.initSubscriberResolver();
         this.channelResolver = this.initChannelResolver();
         this.defaultExceptionHandler = this.initDefaultExceptionHandler();
@@ -41,21 +41,21 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     @Override
     public void onStart() {
         this.subscriberRegistry.getChannels().forEach(channel -> {
-            Listener listener = this.bindListener(channel);
+            Receiver listener = this.bindListener(channel);
             listener.register(this.subscriberRegistry.getSubscribers(channel));
-            this.getListenerRegistry().register(listener);
+            this.getReceiverRegistry().register(listener);
             listener.start();
         });
     }
 
     @Override
     public void onDestroy() {
-        this.getListenerRegistry().getListeners().forEach(Listener::shutdown);
+        this.getReceiverRegistry().getReceivers().forEach(Receiver::shutdown);
     }
 
     @Override
-    public ListenerRegistry getListenerRegistry() {
-        return listenerRegistry;
+    public ReceiverRegistry getReceiverRegistry() {
+        return receiverRegistry;
     }
 
     @Override
