@@ -1,4 +1,4 @@
-# Aloha
+# Aloha  [![Build Status](https://travis-ci.org/pojozhang/aloha.svg?branch=master)](https://travis-ci.org/pojozhang/aloha)
 #### Aloha provides some generic and extensible interfaces of message bus written in Java. You can simply extend them to implement your own message bus.
 
 Of course, like any other libraries, some built-in message buses are included in the extension package which are listed below. 
