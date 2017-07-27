@@ -1,5 +1,9 @@
 package io.bayberry.aloha;
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private ChannelResolver channelResolver;
@@ -10,6 +14,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     private ExceptionHandlerFactory exceptionHandlerFactory;
     private ExecutionStrategy defaultExecutionStrategy;
     private ExecutionStrategyFactory executionStrategyFactory;
+    private Set<? extends Annotation> supportedListenerAnnotations = new HashSet<>();
 
     @Override
     public void produce(Object message) {
@@ -41,6 +46,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         this.exceptionHandlerFactory = this.initExceptionHandlerFactory();
         this.defaultExecutionStrategy = this.initDefaultExecutionStrategy();
         this.executionStrategyFactory = this.initExecutionStrategyFactory();
+        this.initSupportedListenerAnnotations(this.supportedListenerAnnotations);
     }
 
     @Override
@@ -117,4 +123,22 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     public ChannelResolver getChannelResolver() {
         return channelResolver;
     }
+
+    protected abstract ListenerRegistry initListenerRegistry();
+
+    protected abstract ListenerResolver initListenerResolver();
+
+    protected abstract ReceiverRegistry initReceiverRegistry();
+
+    protected abstract ChannelResolver initChannelResolver();
+
+    protected abstract ExceptionHandler initDefaultExceptionHandler();
+
+    protected abstract ExceptionHandlerFactory initExceptionHandlerFactory();
+
+    protected abstract ExecutionStrategy initDefaultExecutionStrategy();
+
+    protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
+
+    protected abstract void initSupportedListenerAnnotations(Set<? extends Annotation> annotations);
 }

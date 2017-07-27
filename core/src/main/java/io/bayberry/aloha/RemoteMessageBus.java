@@ -77,7 +77,7 @@ public abstract class RemoteMessageBus extends AbstractMessageBus {
 
     @Override
     public ListenerResolver initListenerResolver() {
-        return new DefaultListenerResolver();
+        return new ConsumerAnnotationResolver();
     }
 
     @Override

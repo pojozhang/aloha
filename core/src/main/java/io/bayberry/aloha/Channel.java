@@ -19,6 +19,10 @@ public class Channel {
         this.name = name;
     }
 
+    public boolean isResolved() {
+        return name != null && name.trim().length() > 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

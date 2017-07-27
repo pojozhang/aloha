@@ -6,7 +6,6 @@ import io.bayberry.aloha.support.DefaultExceptionHandlerFactory;
 import io.bayberry.aloha.support.GenericExecutionStrategy;
 import io.bayberry.aloha.support.GenericExecutionStrategyFactory;
 import io.bayberry.aloha.support.DefaultListenerRegistry;
-import io.bayberry.aloha.support.DefaultListenerResolver;
 import io.bayberry.aloha.support.LogExceptionHandler;
 
 public abstract class LocalMessageBus extends AbstractMessageBus {
@@ -48,7 +47,7 @@ public abstract class LocalMessageBus extends AbstractMessageBus {
 
     @Override
     public ListenerResolver initListenerResolver() {
-        return new DefaultListenerResolver();
+        return new ConsumerAnnotationResolver();
     }
 
     @Override

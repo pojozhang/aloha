@@ -2,23 +2,7 @@ package io.bayberry.aloha;
 
 public interface MessageBus extends LifeCycle {
 
-    ListenerRegistry initListenerRegistry();
-
-    ListenerResolver initListenerResolver();
-
-    ReceiverRegistry initReceiverRegistry();
-
-    ChannelResolver initChannelResolver();
-
     Receiver bindListener(Channel channel);
-
-    ExceptionHandler initDefaultExceptionHandler();
-
-    ExceptionHandlerFactory initExceptionHandlerFactory();
-
-    ExecutionStrategy initDefaultExecutionStrategy();
-
-    ExecutionStrategyFactory initExecutionStrategyFactory();
 
     void produce(Object message);
 
