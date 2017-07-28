@@ -1,5 +1,8 @@
 package io.bayberry.aloha;
 
+import java.lang.annotation.Annotation;
+import java.util.Set;
+
 public interface MessageBus extends LifeCycle {
 
     Receiver bindListener(Channel channel);
@@ -12,9 +15,9 @@ public interface MessageBus extends LifeCycle {
 
     void publish(Channel channel, Object message);
 
-    void register(Object target);
+    void register(Object container);
 
-    void unregister(Object target);
+    void unregister(Object container);
 
     ReceiverRegistry getReceiverRegistry();
 

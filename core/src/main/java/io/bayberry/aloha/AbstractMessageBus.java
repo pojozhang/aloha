@@ -1,9 +1,5 @@
 package io.bayberry.aloha;
 
-import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.Set;
-
 public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private ChannelResolver channelResolver;
@@ -14,7 +10,6 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     private ExceptionHandlerFactory exceptionHandlerFactory;
     private ExecutionStrategy defaultExecutionStrategy;
     private ExecutionStrategyFactory executionStrategyFactory;
-    private Set<? extends Annotation> supportedListenerAnnotations = new HashSet<>();
 
     @Override
     public void produce(Object message) {
@@ -27,13 +22,13 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     }
 
     @Override
-    public void register(Object target) {
-        this.listenerRegistry.register(this.listenerResolver.resolve(target, this));
+    public void register(Object container) {
+        this.listenerRegistry.register(this.listenerResolver.resolve(container, this));
     }
 
     @Override
-    public void unregister(Object target) {
-        this.listenerRegistry.unregister(this.listenerResolver.resolve(target, this));
+    public void unregister(Object container) {
+        this.listenerRegistry.unregister(this.listenerResolver.resolve(container, this));
     }
 
     @Override
@@ -46,7 +41,6 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         this.exceptionHandlerFactory = this.initExceptionHandlerFactory();
         this.defaultExecutionStrategy = this.initDefaultExecutionStrategy();
         this.executionStrategyFactory = this.initExecutionStrategyFactory();
-        this.initSupportedListenerAnnotations(this.supportedListenerAnnotations);
     }
 
     @Override
@@ -139,6 +133,4 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     protected abstract ExecutionStrategy initDefaultExecutionStrategy();
 
     protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
-
-    protected abstract void initSupportedListenerAnnotations(Set<? extends Annotation> annotations);
 }
