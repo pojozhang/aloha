@@ -4,31 +4,34 @@ import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Receiver;
 import io.bayberry.aloha.ReceiverRegistry;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultReceiverRegistry implements ReceiverRegistry {
 
-    private Map<Channel, Receiver> receivers = new ConcurrentHashMap<>();
+    private Map<Channel, List<Receiver>> receivers = new ConcurrentHashMap<>();
 
     @Override
     public void register(Receiver receiver) {
-        receivers.putIfAbsent(receiver.getChannel(), receiver);
+        List<Receiver> receiverList = this.receivers.getOrDefault(receiver.getChannel(), new ArrayList<>());
+        receiverList.add(receiver);
+        receivers.putIfAbsent(receiver.getChannel(), receiverList);
     }
 
     @Override
     public void unregister(Receiver receiver) {
-        receivers.remove(receiver.getChannel());
+        List<Receiver> receiverList = this.receivers.get(receiver.getChannel());
+        if (receiverList != null) {
+            receiverList.remove(receiver);
+            if (receiverList.size() == 0) {
+                this.receivers.remove(receiver.getChannel());
+            }
+        }
     }
 
     @Override
-    public Collection<Receiver> getReceivers() {
-        return receivers.values();
-    }
-
-    @Override
-    public Receiver getReceiver(Channel channel) {
-        return receivers.get(channel);
+    public List<Receiver> getReceiver(Channel channel) {
+        return receivers.getOrDefault(channel, Collections.EMPTY_LIST);
     }
 }
+
