@@ -6,18 +6,19 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class Reflection {
 
-    public Set<Method> getMethodsWithAnnotation(Class targetClass, Class<? extends Annotation> annotationType) {
+    public static Set<Method> getMethodsWithAnnotation(Class targetClass, Class<? extends Annotation> annotationType) {
         Method[] methods = targetClass.getMethods();
         return Arrays.stream(methods)
-            .filter(method -> method.isAnnotationPresent(annotationType))
-            .collect(toSet());
+                .filter(method -> method.isAnnotationPresent(annotationType))
+                .collect(toSet());
     }
 
-    public Set<Class> getAllSuperClasses(Class targetClass) {
+    public static Set<Class> getAllSuperClasses(Class targetClass) {
         Set<Class> superClasses = new HashSet<>();
         Class superClass = targetClass.getSuperclass();
         while (superClass != null) {
@@ -27,7 +28,7 @@ public class Reflection {
         return superClasses;
     }
 
-    public Set<Class> getAllInterfaces(Class targetClass) {
+    public static Set<Class> getAllInterfaces(Class targetClass) {
         Set<Class> interfaces = new HashSet<>();
         for (Class aInterface : targetClass.getInterfaces()) {
             interfaces.add(aInterface);
@@ -35,4 +36,13 @@ public class Reflection {
         }
         return interfaces;
     }
+
+    public static Optional<Method> getDeclaredMethod(Class targetClass, String name, Class<?>... parameterTypes) {
+        try {
+            return Optional.of(targetClass.getDeclaredMethod(name, parameterTypes));
+        } catch (NoSuchMethodException e) {
+            return Optional.empty();
+        }
+    }
+
 }
