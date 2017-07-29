@@ -32,7 +32,7 @@ public class Reflection {
         Set<Class> interfaces = new HashSet<>();
         for (Class aInterface : targetClass.getInterfaces()) {
             interfaces.add(aInterface);
-            interfaces.addAll(this.getAllInterfaces(aInterface));
+            interfaces.addAll(getAllInterfaces(aInterface));
         }
         return interfaces;
     }
