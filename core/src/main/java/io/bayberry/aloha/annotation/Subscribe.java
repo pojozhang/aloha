@@ -15,7 +15,7 @@ public @interface Subscribe {
 
     String channel() default "";
 
-    Class<? extends AnnotatedListenerResolver> resolver() default SubscriberAnnotationResolver.class;
+    Class<? extends AnnotatedListenerResolver> resolver() default AnnotatedSubscriberResolver.class;
 
     Class<? extends ExecutionStrategy> executionStrategy() default InheritedExecutionStrategy.class;
 
