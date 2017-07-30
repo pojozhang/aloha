@@ -1,9 +1,6 @@
 package io.bayberry.aloha.annotation;
 
-import io.bayberry.aloha.ConsumerAnnotationResolver;
-import io.bayberry.aloha.ExceptionHandler;
-import io.bayberry.aloha.ExecutionStrategy;
-import io.bayberry.aloha.ListenerResolver;
+import io.bayberry.aloha.*;
 import io.bayberry.aloha.support.InheritedExceptionHandler;
 import io.bayberry.aloha.support.InheritedExecutionStrategy;
 
@@ -18,7 +15,7 @@ public @interface Consume {
 
     String channel() default "";
 
-    Class<? extends ListenerResolver> listenerResolver() default ConsumerAnnotationResolver.class;
+    Class<? extends AnnotatedListenerResolver> annotationResolver() default ConsumerAnnotationResolver.class;
 
     Class<? extends ExecutionStrategy> executionStrategy() default InheritedExecutionStrategy.class;
 
