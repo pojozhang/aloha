@@ -1,11 +1,6 @@
 package io.bayberry.aloha;
 
-import java.lang.annotation.Annotation;
-import java.util.Set;
-
 public interface MessageBus extends LifeCycle {
-
-    Receiver bindListener(Channel channel);
 
     void produce(Object message);
 

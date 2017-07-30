@@ -9,29 +9,36 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultReceiverRegistry implements ReceiverRegistry {
 
-    private Map<Channel, List<Receiver>> receivers = new ConcurrentHashMap<>();
+    private Map<Channel, Set<Receiver>> receivers = new ConcurrentHashMap<>();
 
     @Override
     public void register(Receiver receiver) {
-        List<Receiver> receiverList = this.receivers.getOrDefault(receiver.getChannel(), new ArrayList<>());
-        receiverList.add(receiver);
-        receivers.putIfAbsent(receiver.getChannel(), receiverList);
+        Set<Receiver> receiverSet = this.receivers.getOrDefault(receiver.getChannel(), new HashSet<>());
+        receiverSet.add(receiver);
+        receivers.putIfAbsent(receiver.getChannel(), receiverSet);
     }
 
     @Override
     public void unregister(Receiver receiver) {
-        List<Receiver> receiverList = this.receivers.get(receiver.getChannel());
+        Set<Receiver> receiverList = this.receivers.get(receiver.getChannel());
         if (receiverList != null) {
             receiverList.remove(receiver);
-            if (receiverList.size() == 0) {
+            if (receiverList.isEmpty()) {
                 this.receivers.remove(receiver.getChannel());
             }
         }
     }
 
     @Override
-    public List<Receiver> getReceiver(Channel channel) {
-        return receivers.getOrDefault(channel, Collections.EMPTY_LIST);
+    public Set<Receiver> getReceivers(Channel channel) {
+        return receivers.getOrDefault(channel, Collections.EMPTY_SET);
+    }
+
+    @Override
+    public Set<Receiver> getReceivers() {
+        Set<Receiver> allReceivers = new HashSet<>();
+        this.receivers.values().forEach(allReceivers::addAll);
+        return allReceivers;
     }
 }
 

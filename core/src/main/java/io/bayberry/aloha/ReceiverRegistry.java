@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ReceiverRegistry {
 
@@ -8,5 +8,7 @@ public interface ReceiverRegistry {
 
     void unregister(Receiver receiver);
 
-    List<Receiver> getReceiver(Channel channel);
+    Set<Receiver> getReceivers(Channel channel);
+
+    Set<Receiver> getReceivers();
 }

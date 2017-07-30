@@ -1,7 +1,7 @@
 package io.bayberry.aloha.ext.spring.redis;
 
 import io.bayberry.aloha.*;
-import io.bayberry.aloha.ext.spring.SpringListenerResolver;
+import io.bayberry.aloha.ext.spring.SpringChannelResolver;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisListeners;
 import io.bayberry.aloha.support.AsyncListenerDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
@@ -35,13 +35,13 @@ public class RedisMessageBus extends RemoteMessageBus {
 
     @Override
     public ChannelResolver initChannelResolver() {
-        return new PrefixChannelResolverDecorator(this.options.getChannelPrefix(), super.initChannelResolver());
+        return new PrefixChannelResolverDecorator(this.options.getChannelPrefix(), new SpringChannelResolver(applicationContext));
     }
 
     @Override
-    public Receiver bindListener(Channel channel) {
+    protected Receiver bindReceiver(Listener listener) {
         return new AsyncListenerDecorator(
-                new RedisReceiver(channel, redisTemplate, this));
+                new RedisReceiver(listener.getChannel(), redisTemplate, this));
     }
 
     @Override
@@ -52,10 +52,5 @@ public class RedisMessageBus extends RemoteMessageBus {
     @Override
     public void publish(Channel channel, Object message) {
         this.redisTemplate.convertAndSend(channel.getName(), getSerializer().serialize(message));
-    }
-
-    @Override
-    public ListenerResolver initListenerResolver() {
-        return new SpringListenerResolver(applicationContext);
     }
 }

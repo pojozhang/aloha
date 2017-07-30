@@ -6,15 +6,17 @@ import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.Receiver;
 import io.bayberry.aloha.util.Reflection;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.PayloadApplicationEvent;
 
 public class SpringEventProxy implements ApplicationListener {
 
-    private static final Reflection reflection = new Reflection();
     private MessageBus messageBus;
 
     public SpringEventProxy(MessageBus messageBus) {
@@ -31,22 +33,22 @@ public class SpringEventProxy implements ApplicationListener {
         }
 
         this.getCandidateChannels(source.getClass()).forEach(channel -> {
-            Receiver listener = this.messageBus.getReceiverRegistry().getReceiver(channel);
-            if (listener == null) {
+            Set<Receiver> receivers = this.messageBus.getReceiverRegistry().getReceivers(channel);
+            if (receivers == null) {
                 return;
             }
-            listener.notifyAll(source);
+            receivers.forEach(Receiver::notifyAll);
         });
     }
 
     private List<Channel> getCandidateChannels(Class messageType) {
         List<Channel> channels = new ArrayList<>();
         channels.add(this.messageBus.getChannelResolver().resolve(messageType));
-        channels.addAll(reflection.getAllInterfaces(messageType).stream().map(this::resolveChannel).collect(toList()));
-        reflection.getAllSuperClasses(messageType).forEach(superClass -> {
+        channels.addAll(Reflection.getAllInterfaces(messageType).stream().map(this::resolveChannel).collect(toList()));
+        Reflection.getAllSuperClasses(messageType).forEach(superClass -> {
             channels.add(this.resolveChannel(superClass));
             channels
-                .addAll(reflection.getAllInterfaces(superClass).stream().map(this::resolveChannel).collect(toList()));
+                    .addAll(Reflection.getAllInterfaces(superClass).stream().map(this::resolveChannel).collect(toList()));
         });
         return channels;
     }

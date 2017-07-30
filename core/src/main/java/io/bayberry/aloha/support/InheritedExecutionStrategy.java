@@ -1,12 +1,12 @@
 package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.ExecutionStrategy;
-import io.bayberry.aloha.Subscriber;
+import io.bayberry.aloha.Listener;
 
 public class InheritedExecutionStrategy implements ExecutionStrategy {
 
     @Override
-    public void execute(Subscriber subscriber, Runnable runnable) {
-        subscriber.getMessageBus().getDefaultExecutionStrategy().execute(subscriber, runnable);
+    public void execute(Listener listener, Runnable runnable) {
+        listener.getMessageBus().getDefaultExecutionStrategy().execute(listener, runnable);
     }
 }

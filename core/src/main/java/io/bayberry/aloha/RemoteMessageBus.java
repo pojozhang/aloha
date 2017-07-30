@@ -41,28 +41,8 @@ public abstract class RemoteMessageBus extends AbstractMessageBus {
     }
 
     @Override
-    public ListenerRegistry initListenerRegistry() {
-        return new DefaultListenerRegistry();
-    }
-
-    @Override
-    public ReceiverRegistry initReceiverRegistry() {
-        return new DefaultReceiverRegistry();
-    }
-
-    @Override
-    public ChannelResolver initChannelResolver() {
-        return new DefaultChannelResolver();
-    }
-
-    @Override
     public ExceptionHandler initDefaultExceptionHandler() {
         return new LogExceptionHandler();
-    }
-
-    @Override
-    public ExceptionHandlerFactory initExceptionHandlerFactory() {
-        return new DefaultExceptionHandlerFactory();
     }
 
     @Override
@@ -73,11 +53,6 @@ public abstract class RemoteMessageBus extends AbstractMessageBus {
     @Override
     public ExecutionStrategyFactory initExecutionStrategyFactory() {
         return new GenericExecutionStrategyFactory();
-    }
-
-    @Override
-    public ListenerResolver initListenerResolver() {
-        return new ConsumerAnnotationResolver();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package io.bayberry.aloha.ext.spring.local;
 
 import io.bayberry.aloha.Channel;
+import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.LocalMessageBus;
 import io.bayberry.aloha.Receiver;
 import io.bayberry.aloha.ext.spring.local.annotation.SpringSubscriber;
@@ -18,11 +19,6 @@ public class LocalSpringMessageBus extends LocalMessageBus {
         this.applicationContext = applicationContext;
         this.springEventProxy = new SpringEventProxy(this);
         this.onCreate();
-    }
-
-    @Override
-    public Receiver bindListener(Channel channel) {
-        return new LocalSpringReceiver(channel, this);
     }
 
     @Override
@@ -52,5 +48,10 @@ public class LocalSpringMessageBus extends LocalMessageBus {
         this.applicationContext.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME,
                 ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
         super.onDestroy();
+    }
+
+    @Override
+    protected Receiver bindReceiver(Listener listener) {
+        return new LocalSpringReceiver(listener.getChannel(), this);
     }
 }

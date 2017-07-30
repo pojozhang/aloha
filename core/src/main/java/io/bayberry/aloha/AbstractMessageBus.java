@@ -1,5 +1,7 @@
 package io.bayberry.aloha;
 
+import io.bayberry.aloha.support.*;
+
 public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private ChannelResolver channelResolver;
@@ -45,11 +47,10 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     @Override
     public void onStart() {
-        this.listenerRegistry.getChannels().forEach(channel -> {
-            Receiver listener = this.bindListener(channel);
-            listener.register(this.listenerRegistry.getListeners(channel));
-            this.getReceiverRegistry().register(listener);
-            listener.start();
+        this.listenerRegistry.getListeners().forEach(listener -> {
+            Receiver receiver = this.bindReceiver(listener);
+            this.getReceiverRegistry().register(receiver);
+            receiver.start();
         });
     }
 
@@ -118,19 +119,31 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         return channelResolver;
     }
 
-    protected abstract ListenerRegistry initListenerRegistry();
+    protected ListenerRegistry initListenerRegistry() {
+        return new DefaultListenerRegistry();
+    }
 
-    protected abstract ListenerResolver initListenerResolver();
+    protected ListenerResolver initListenerResolver() {
+        return new DefaultListenerResolver();
+    }
 
-    protected abstract ReceiverRegistry initReceiverRegistry();
+    protected ReceiverRegistry initReceiverRegistry() {
+        return new DefaultReceiverRegistry();
+    }
 
-    protected abstract ChannelResolver initChannelResolver();
+    protected ChannelResolver initChannelResolver() {
+        return new DefaultChannelResolver();
+    }
 
     protected abstract ExceptionHandler initDefaultExceptionHandler();
 
-    protected abstract ExceptionHandlerFactory initExceptionHandlerFactory();
+    protected ExceptionHandlerFactory initExceptionHandlerFactory() {
+        return new DefaultExceptionHandlerFactory();
+    }
 
     protected abstract ExecutionStrategy initDefaultExecutionStrategy();
 
     protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
+
+    protected abstract Receiver bindReceiver(Listener listener);
 }

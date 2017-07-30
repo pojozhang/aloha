@@ -6,9 +6,11 @@ public interface Listener {
 
     Channel getChannel();
 
-    Object getTarget();
+    Object getContainer();
 
     Method getMethod();
+
+    Receiver getReceiver();
 
     MessageBus getMessageBus();
 

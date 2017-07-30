@@ -1,8 +1,8 @@
 package io.bayberry.aloha;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ListenerResolver {
 
-    List<Listener> resolve(Object container, MessageBus messageBus);
+    Set<Listener> resolve(Object container, MessageBus messageBus);
 }
