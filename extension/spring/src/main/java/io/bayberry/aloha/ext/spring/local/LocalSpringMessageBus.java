@@ -4,7 +4,7 @@ import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.LocalMessageBus;
 import io.bayberry.aloha.Receiver;
-import io.bayberry.aloha.ext.spring.local.annotation.SpringSubscriber;
+import io.bayberry.aloha.ext.spring.local.annotation.SpringListeners;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ApplicationEventMulticaster;
@@ -38,7 +38,7 @@ public class LocalSpringMessageBus extends LocalMessageBus {
 
     @Override
     public void onStart() {
-        this.applicationContext.getBeansWithAnnotation(SpringSubscriber.class).values().forEach(super::register);
+        this.applicationContext.getBeansWithAnnotation(SpringListeners.class).values().forEach(super::register);
         ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(springEventProxy);
         super.onStart();
     }
