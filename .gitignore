@@ -1,5 +1,5 @@
 .idea/
 .gradle/
 build/
-extension/spring/redis/data
+extension/spring/data/
 *.iml
