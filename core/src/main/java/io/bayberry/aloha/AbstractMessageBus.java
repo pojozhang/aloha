@@ -54,7 +54,8 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         this.getReceiverRegistry().getReceivers().forEach(Receiver::stop);
     }
 
-    protected ReceiverRegistry getReceiverRegistry() {
+    @Override
+    public ReceiverRegistry getReceiverRegistry() {
         return receiverRegistry;
     }
 
@@ -129,7 +130,9 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         return new DefaultChannelResolver();
     }
 
-    protected abstract ExceptionHandler initDefaultExceptionHandler();
+    protected ExceptionHandler initDefaultExceptionHandler() {
+        return new DefaultLogExceptionHandler();
+    }
 
     protected ExceptionHandlerFactory initExceptionHandlerFactory() {
         return new DefaultExceptionHandlerFactory();

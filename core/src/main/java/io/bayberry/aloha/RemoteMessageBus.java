@@ -41,11 +41,6 @@ public abstract class RemoteMessageBus extends AbstractMessageBus {
     }
 
     @Override
-    public ExceptionHandler initDefaultExceptionHandler() {
-        return new LogExceptionHandler();
-    }
-
-    @Override
     public ExecutionStrategy initDefaultExecutionStrategy() {
         return new GenericExecutionStrategy();
     }
@@ -53,10 +48,5 @@ public abstract class RemoteMessageBus extends AbstractMessageBus {
     @Override
     public ExecutionStrategyFactory initExecutionStrategyFactory() {
         return new GenericExecutionStrategyFactory();
-    }
-
-    @Override
-    public void onDestroy() {
-        this.getReceiverRegistry().getReceivers().forEach(Receiver::stop);
     }
 }

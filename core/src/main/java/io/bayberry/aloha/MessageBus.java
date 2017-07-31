@@ -29,4 +29,6 @@ public interface MessageBus extends LifeCycle {
     ListenerResolver getListenerResolver();
 
     ChannelResolver getChannelResolver();
+
+    ReceiverRegistry getReceiverRegistry();
 }
