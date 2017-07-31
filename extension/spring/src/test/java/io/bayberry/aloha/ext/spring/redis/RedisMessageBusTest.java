@@ -1,17 +1,65 @@
 package io.bayberry.aloha.ext.spring.redis;
 
-import io.bayberry.aloha.MessageBus;
-import io.bayberry.aloha.test.spring.AsyncMessageSpringTestCase;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.bayberry.aloha.annotation.Consume;
+import io.bayberry.aloha.ext.spring.BaseSpringTest;
+import io.bayberry.aloha.ext.spring.redis.annotation.RedisListeners;
+import org.awaitility.Duration;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication
-public class RedisMessageBusTest {
+import java.util.concurrent.CountDownLatch;
 
-    public static class AsyncCase extends AsyncMessageSpringTestCase {
+import static org.awaitility.Awaitility.await;
 
-        @Override
-        protected MessageBus initMessageBus() {
-            return new RedisMessageBus(this.applicationContext);
+public class RedisMessageBusTest extends BaseSpringTest {
+
+    @Autowired
+    private ApplicationContext applicationContext;
+    private RedisMessageBus redisMessageBus;
+    private CountDownLatch countDownLatch;
+
+    @Before
+    public void setUp() {
+        redisMessageBus = new RedisMessageBus(applicationContext);
+        redisMessageBus.start();
+    }
+
+    @After
+    public void tearDown() {
+        redisMessageBus.stop();
+    }
+
+    @Test
+    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
+        this.countDownLatch = new CountDownLatch(1);
+        this.redisMessageBus.produce(new RedisMessage());
+        await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
+    }
+
+//    @Test
+//    public void the_subscriber_should_be_called_asynchronously_for_n_times_after_n_messages_are_post() {
+//        final int NUMBER = 6;
+//        this.countDownLatch = new CountDownLatch(NUMBER);
+//        for (int i = 0; i < NUMBER; i++) {
+//            this.redisMessageBus.produce(new AsyncMessage());
+//        }
+//        await().atLeast(Duration.ONE_SECOND).atMost(Duration.FIVE_SECONDS)
+//                .until(() -> this.countDownLatch.getCount() == 0);
+//    }
+
+    @RedisListeners
+    public class RedisConsumers {
+
+        @Consume
+        public void onReceive(RedisMessage message) {
+            countDownLatch.countDown();
         }
+    }
+
+    public class RedisMessage {
+
     }
 }

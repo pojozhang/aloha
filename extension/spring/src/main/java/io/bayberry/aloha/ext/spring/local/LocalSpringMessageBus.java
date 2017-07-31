@@ -1,19 +1,18 @@
 package io.bayberry.aloha.ext.spring.local;
 
-import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.Listener;
-import io.bayberry.aloha.LocalMessageBus;
-import io.bayberry.aloha.Receiver;
+import io.bayberry.aloha.*;
 import io.bayberry.aloha.ext.spring.local.annotation.SpringListeners;
+import io.bayberry.aloha.ext.spring.redis.RedisProduceCommand;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 
-public class LocalSpringMessageBus extends LocalMessageBus {
+public class LocalSpringMessageBus extends LocalMessageBus implements Publisher {
 
     private ApplicationContext applicationContext;
     private SpringEventProxy springEventProxy;
+    private SpringCommand springCommand;
 
     public LocalSpringMessageBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -22,18 +21,13 @@ public class LocalSpringMessageBus extends LocalMessageBus {
     }
 
     @Override
-    public void produce(Object message) {
-        this.produce(null, message);
-    }
-
-    @Override
-    public void produce(Channel channel, Object message) {
-        this.applicationContext.publishEvent(message);
+    public void publish(Object message) {
+        this.publish(null, message);
     }
 
     @Override
     public void publish(Channel channel, Object message) {
-        //TODO not implemented
+        super.post(springCommand, channel, message);
     }
 
     @Override

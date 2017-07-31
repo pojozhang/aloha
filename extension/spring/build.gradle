@@ -15,7 +15,8 @@ dependencies {
             "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
     )
     testCompile(
-            project(":test:spring"),
+            "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
+            "org.springframework.boot:spring-boot-starter-test:$springBootVersion",
             "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
     )
 }

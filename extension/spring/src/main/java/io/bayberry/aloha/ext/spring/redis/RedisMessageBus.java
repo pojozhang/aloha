@@ -40,13 +40,13 @@ public class RedisMessageBus extends RemoteMessageBus implements Publisher, Prod
     @Override
     public ChannelResolver initChannelResolver() {
         return new PrefixChannelResolverDecorator(this.options.getChannelPrefix(),
-            new SpringChannelResolver(applicationContext));
+                new SpringChannelResolver(applicationContext));
     }
 
     @Override
     protected Receiver bindReceiver(Listener listener) {
         return new AsyncListenerDecorator(
-            new RedisReceiver(listener.getChannel(), redisTemplate, this));
+                new RedisReceiver(listener.getChannel(), redisTemplate, this));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class RedisMessageBus extends RemoteMessageBus implements Publisher, Prod
 
     @Override
     public void produce(Channel channel, Object message) {
-        this.post(this.redisProduceCommand, channel, message);
+        super.post(this.redisProduceCommand, channel, message);
     }
 
     @Override

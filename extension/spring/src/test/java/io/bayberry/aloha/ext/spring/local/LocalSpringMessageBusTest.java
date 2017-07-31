@@ -1,26 +1,49 @@
 package io.bayberry.aloha.ext.spring.local;
 
-import io.bayberry.aloha.MessageBus;
-import io.bayberry.aloha.test.spring.AsyncMessageSpringTestCase;
-import io.bayberry.aloha.test.spring.SyncMessageSpringTestCase;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.bayberry.aloha.ext.spring.BaseSpringTest;
+import org.junit.After;
+import org.junit.Before;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication
-public class LocalSpringMessageBusTest {
+public class LocalSpringMessageBusTest extends BaseSpringTest {
 
-    public static class SyncCase extends SyncMessageSpringTestCase {
+    @Autowired
+    private ApplicationContext applicationContext;
+    private LocalSpringMessageBus localSpringMessageBus;
 
-        @Override
-        protected MessageBus initMessageBus() {
-            return new LocalSpringMessageBus(this.applicationContext);
-        }
+    @Before
+    public void setUp() {
+        localSpringMessageBus = new LocalSpringMessageBus(applicationContext);
+        localSpringMessageBus.start();
     }
 
-    public static class AsyncCase extends AsyncMessageSpringTestCase {
-
-        @Override
-        protected MessageBus initMessageBus() {
-            return new LocalSpringMessageBus(this.applicationContext);
-        }
+    @After
+    public void tearDown() {
+        localSpringMessageBus.stop();
     }
+
+//    @Test
+//    public void the_subscriber_should_be_called_synchronously_after_single_message_is_post() {
+//        this.subscriber.countDownLatch = new CountDownLatch(1);
+//        this.messageBus.produce(new SyncMessage());
+//        assertEquals(0, subscriber.countDownLatch.getCount());
+//    }
+//
+//    @Test
+//    public void the_subscriber_should_be_called_synchronously_for_n_times_after_n_messages_are_post() {
+//        final int MESSAGE_NUMBER = 5;
+//        this.subscriber.countDownLatch = new CountDownLatch(MESSAGE_NUMBER);
+//        for (int i = 0; i < MESSAGE_NUMBER; i++) {
+//            this.messageBus.produce(new SyncMessage());
+//        }
+//        assertEquals(0, subscriber.countDownLatch.getCount());
+//    }
+//
+//    @Test
+//    public void the_subscriber_should_be_called_synchronously_if_target_message_is_base_type_of_source_message() {
+//        this.subscriber.countDownLatch = new CountDownLatch(1);
+//        this.messageBus.produce(new SubSyncMessage());
+//        assertEquals(0, subscriber.countDownLatch.getCount());
+//    }
 }
