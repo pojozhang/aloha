@@ -8,12 +8,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.ApplicationContext;
 
 import java.util.concurrent.CountDownLatch;
 
 import static org.awaitility.Awaitility.await;
 
+@SpringBootConfiguration
 public class RedisMessageBusTest extends BaseSpringTest {
 
     @Autowired
