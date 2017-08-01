@@ -1,8 +1,8 @@
 package io.bayberry.aloha.ext.spring.local;
 
 import io.bayberry.aloha.*;
+import io.bayberry.aloha.ext.spring.SpringListenerResolver;
 import io.bayberry.aloha.ext.spring.local.annotation.SpringListeners;
-import io.bayberry.aloha.ext.spring.redis.RedisProduceCommand;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ApplicationEventMulticaster;
@@ -42,6 +42,11 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Publisher 
         this.applicationContext.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME,
                 ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
         super.onDestroy();
+    }
+
+    @Override
+    protected ListenerResolver initListenerResolver() {
+        return new SpringListenerResolver(this.applicationContext);
     }
 
     @Override

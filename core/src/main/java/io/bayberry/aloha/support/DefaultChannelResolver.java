@@ -11,9 +11,4 @@ public class DefaultChannelResolver implements ChannelResolver {
     public Channel resolve(Class messageType) {
         return new Channel(messageType.getSimpleName());
     }
-
-    @Override
-    public Channel resolve(Method listenerMethod) {
-        return null;
-    }
 }

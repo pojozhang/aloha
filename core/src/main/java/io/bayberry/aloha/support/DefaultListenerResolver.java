@@ -35,15 +35,13 @@ public class DefaultListenerResolver implements ListenerResolver {
             listeners.addAll(Arrays.stream(container.getClass().getDeclaredMethods())
                     .filter(method -> method.isAnnotationPresent(annotationClass))
                     .map(method -> {
-                        Channel channel = messageBus.getChannelResolver().resolve(method);
-                        if (!channel.isResolved()) {
-                            throw new AlohaException("Fail to resolve listener: can not resolve channel");
-                        }
                         Annotation annotation = method.getAnnotation(annotationClass);
-                        Method resolverMethod = Reflection.getDeclaredMethod(annotationClass, "resolver").orElseThrow(() -> new AlohaException("Annotation must contains annotationResolver() method"));
+                        Method resolverMethod = Reflection.getDeclaredMethod(annotationClass, "resolver").orElseThrow(() -> new AlohaException("Annotation must contains resolver() method"));
                         try {
                             Class<? extends AnnotatedListenerResolver> resolverClass = (Class<? extends AnnotatedListenerResolver>) resolverMethod.invoke(annotation);
-                            return resolverClass.newInstance().resolve(container, annotation, method, channel, messageBus);
+                            Listener listener = resolverClass.newInstance().resolve(container, annotation, method, messageBus);
+                            this.afterResolveListener(listener);
+                            return listener;
                         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                             throw new AlohaException(e);
                         }
@@ -54,5 +52,8 @@ public class DefaultListenerResolver implements ListenerResolver {
 
     protected Set<Class<? extends Annotation>> getSupportedListenerAnnotations() {
         return SUPPORTED_LISTENER_ANNOTATION_CLASSES;
+    }
+
+    protected void afterResolveListener(Listener listener) {
     }
 }
