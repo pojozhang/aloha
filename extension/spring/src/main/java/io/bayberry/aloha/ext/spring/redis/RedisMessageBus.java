@@ -3,7 +3,7 @@ package io.bayberry.aloha.ext.spring.redis;
 import io.bayberry.aloha.*;
 import io.bayberry.aloha.ext.spring.SpringListenerResolver;
 import io.bayberry.aloha.ext.spring.redis.annotation.RedisListeners;
-import io.bayberry.aloha.support.AsyncListenerDecorator;
+import io.bayberry.aloha.support.AsyncReceiverDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -49,7 +49,7 @@ public class RedisMessageBus extends RemoteMessageBus implements Publisher, Prod
 
     @Override
     protected Receiver bindReceiver(Listener listener) {
-        return new AsyncListenerDecorator(
+        return new AsyncReceiverDecorator(
                 new RedisReceiver(listener.getChannel(), redisTemplate, this));
     }
 

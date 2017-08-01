@@ -7,12 +7,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class AsyncListenerDecorator extends DelegateListener {
+public class AsyncReceiverDecorator extends DelegateReceiver {
 
     private ExecutorService threadPool = Executors.newSingleThreadExecutor();
     private Future task;
 
-    public AsyncListenerDecorator(Receiver delegate) {
+    public AsyncReceiverDecorator(Receiver delegate) {
         super(delegate);
     }
 

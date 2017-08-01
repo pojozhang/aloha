@@ -44,6 +44,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     public void onStart() {
         this.listenerRegistry.getListeners().forEach(listener -> {
             Receiver receiver = this.bindReceiver(listener);
+            receiver.register(listener);
             this.getReceiverRegistry().register(receiver);
             receiver.start();
         });
