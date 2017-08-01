@@ -8,20 +8,20 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.util.concurrent.CountDownLatch;
 
 import static org.awaitility.Awaitility.await;
 
-@SpringBootConfiguration
+@SpringBootApplication
 public class RedisMessageBusTest extends BaseSpringTest {
 
+    private static CountDownLatch countDownLatch;
     @Autowired
     private ApplicationContext applicationContext;
     private RedisMessageBus redisMessageBus;
-    private CountDownLatch countDownLatch;
 
     @Before
     public void setUp() {
@@ -53,7 +53,7 @@ public class RedisMessageBusTest extends BaseSpringTest {
 //    }
 
     @RedisListeners
-    public class RedisConsumers {
+    public static class RedisConsumers {
 
         @Consume
         public void onReceive(RedisMessage message) {
