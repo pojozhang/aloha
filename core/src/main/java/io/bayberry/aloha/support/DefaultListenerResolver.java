@@ -36,7 +36,7 @@ public class DefaultListenerResolver implements ListenerResolver {
                     .filter(method -> method.isAnnotationPresent(annotationClass))
                     .map(method -> {
                         Annotation annotation = method.getAnnotation(annotationClass);
-                        Method resolverMethod = Reflection.getDeclaredMethod(annotationClass, "resolver").orElseThrow(() -> new AlohaException("Annotation must contains resolver() method"));
+                        Method resolverMethod = Reflection.getDeclaredMethod(annotationClass, "annotationResolver").orElseThrow(() -> new AlohaException("Annotation must contains annotationResolver() method"));
                         try {
                             Class<? extends AnnotatedListenerResolver> resolverClass = (Class<? extends AnnotatedListenerResolver>) resolverMethod.invoke(annotation);
                             Listener listener = resolverClass.newInstance().resolve(container, annotation, method, messageBus);
