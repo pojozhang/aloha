@@ -61,7 +61,7 @@ public class RedisMessageBusTest extends BaseSpringTest {
         }
     }
 
-    public class RedisMessage {
+    public static class RedisMessage {
 
     }
 }
