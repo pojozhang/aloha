@@ -2,7 +2,8 @@ rootProject.name = "aloha"
 
 include ":core",
         ":extension",
-        ":extension:spring"
+        ":extension:spring",
+        ":extension:mqtt"
 
 
 

@@ -1,0 +1,16 @@
+apply from: "$rootDir/bintray.gradle"
+
+ext {
+    description = 'An aloha extension module with mqtt'
+    artifactId = 'aloha-mqtt'
+}
+
+jar {
+    appendix = "mqtt"
+}
+
+dependencies {
+    compile(
+            "org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.1"
+    )
+}
