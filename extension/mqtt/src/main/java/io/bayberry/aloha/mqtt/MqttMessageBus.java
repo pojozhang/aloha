@@ -1,4 +1,4 @@
-package io.bayberry.aloha.ext.mqtt;
+package io.bayberry.aloha.mqtt;
 
 import io.bayberry.aloha.*;
 

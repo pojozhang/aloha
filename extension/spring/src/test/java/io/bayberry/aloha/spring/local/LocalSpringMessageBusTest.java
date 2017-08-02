@@ -1,12 +1,9 @@
-package io.bayberry.aloha.ext.spring.local;
+package io.bayberry.aloha.spring.local;
 
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Executor;
-import io.bayberry.aloha.ext.spring.BaseSpringTest;
-import io.bayberry.aloha.ext.spring.local.annotation.SpringEventListeners;
-import io.bayberry.aloha.ext.spring.redis.RedisMessageBusTest;
-import io.bayberry.aloha.ext.spring.redis.annotation.RedisListeners;
-import org.awaitility.Duration;
+import io.bayberry.aloha.spring.BaseSpringTest;
+import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

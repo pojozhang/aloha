@@ -1,4 +1,4 @@
-package io.bayberry.aloha.ext.spring.local;
+package io.bayberry.aloha.spring.local;
 
 import static java.util.stream.Collectors.toList;
 

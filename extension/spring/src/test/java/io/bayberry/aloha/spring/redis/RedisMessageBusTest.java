@@ -1,9 +1,9 @@
-package io.bayberry.aloha.ext.spring.redis;
+package io.bayberry.aloha.spring.redis;
 
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Executor;
-import io.bayberry.aloha.ext.spring.BaseSpringTest;
-import io.bayberry.aloha.ext.spring.redis.annotation.RedisListeners;
+import io.bayberry.aloha.spring.BaseSpringTest;
+import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
