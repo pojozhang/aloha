@@ -42,11 +42,11 @@ public abstract class RemoteMessageBus extends AbstractMessageBus {
 
     @Override
     public ExecutionStrategy initDefaultExecutionStrategy() {
-        return new GenericExecutionStrategy();
+        return new DefaultExecutionStrategy();
     }
 
     @Override
     public ExecutionStrategyFactory initExecutionStrategyFactory() {
-        return new GenericExecutionStrategyFactory();
+        return new DefaultExecutionStrategyFactory();
     }
 }

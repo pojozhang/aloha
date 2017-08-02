@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class GenericExecutionStrategy implements ExecutionStrategy {
+public class DefaultExecutionStrategy implements ExecutionStrategy {
 
     private Map<Listener, ThreadPoolExecutor> pools = new ConcurrentHashMap<>();
 
