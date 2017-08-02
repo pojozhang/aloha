@@ -2,7 +2,7 @@ package io.bayberry.aloha.ext.spring.local;
 
 import io.bayberry.aloha.*;
 import io.bayberry.aloha.ext.spring.SpringListenerResolver;
-import io.bayberry.aloha.ext.spring.local.annotation.SpringListeners;
+import io.bayberry.aloha.ext.spring.local.annotation.SpringEventListeners;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ApplicationEventMulticaster;
@@ -32,8 +32,9 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Publisher 
 
     @Override
     public void onStart() {
-        this.applicationContext.getBeansWithAnnotation(SpringListeners.class).values().forEach(super::register);
+        this.applicationContext.getBeansWithAnnotation(SpringEventListeners.class).values().forEach(super::register);
         ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(springEventProxy);
+        this.springCommand = new SpringCommand(this.applicationContext);
         super.onStart();
     }
 

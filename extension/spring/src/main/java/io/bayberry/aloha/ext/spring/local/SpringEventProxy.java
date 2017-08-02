@@ -37,7 +37,7 @@ public class SpringEventProxy implements ApplicationListener {
             if (receivers == null) {
                 return;
             }
-            receivers.forEach(Receiver::notifyAll);
+            receivers.forEach(receiver -> receiver.notifyAll(source));
         });
     }
 
