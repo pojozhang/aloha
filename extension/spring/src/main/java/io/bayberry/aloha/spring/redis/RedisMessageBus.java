@@ -15,8 +15,8 @@ public class RedisMessageBus extends RemoteMessageBus implements Publisher, Prod
     private RedisTemplate<String, String> redisTemplate;
     private RedisMessageBusOptions options;
     private ApplicationContext applicationContext;
-    private RedisProduceCommand redisProduceCommand;
-    private RedisPublishCommand redisPublishCommand;
+    private ProduceCommand produceCommand;
+    private PublishCommand publishCommand;
 
     public RedisMessageBus(ApplicationContext applicationContext) {
         this(applicationContext, DEFAULT_SETTINGS);
@@ -32,8 +32,8 @@ public class RedisMessageBus extends RemoteMessageBus implements Publisher, Prod
     public void onStart() {
         this.applicationContext.getBeansWithAnnotation(RedisListeners.class).values().forEach(super::register);
         this.redisTemplate = this.applicationContext.getBean(StringRedisTemplate.class);
-        this.redisProduceCommand = new RedisProduceCommand(this.redisTemplate, this);
-        this.redisPublishCommand = new RedisPublishCommand(this.redisTemplate, this);
+        this.produceCommand = new ProduceCommand();
+        this.publishCommand = new PublishCommand();
         super.onStart();
     }
 
@@ -60,7 +60,7 @@ public class RedisMessageBus extends RemoteMessageBus implements Publisher, Prod
 
     @Override
     public void produce(Channel channel, Object message) {
-        super.post(this.redisProduceCommand, channel, message);
+        super.post(this.produceCommand, channel, message);
     }
 
     @Override
@@ -70,6 +70,23 @@ public class RedisMessageBus extends RemoteMessageBus implements Publisher, Prod
 
     @Override
     public void publish(Channel channel, Object message) {
-        this.post(this.redisPublishCommand, channel, message);
+        this.post(this.publishCommand, channel, message);
+    }
+
+    private class ProduceCommand implements Command {
+
+        @Override
+        public void execute(Channel channel, Object message) {
+            RedisMessageBus.this.redisTemplate.opsForList()
+                    .rightPush(channel.getName(), (String) RedisMessageBus.this.getSerializer().serialize(message));
+        }
+    }
+
+    public class PublishCommand implements Command {
+
+        @Override
+        public void execute(Channel channel, Object message) {
+            RedisMessageBus.this.redisTemplate.convertAndSend(channel.getName(), RedisMessageBus.this.getSerializer().serialize(message));
+        }
     }
 }
