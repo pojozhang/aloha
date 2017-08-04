@@ -1,4 +1,7 @@
-# Aloha  [![Build Status](https://travis-ci.org/pojozhang/aloha.svg?branch=master)](https://travis-ci.org/pojozhang/aloha)
+# Aloha  
+[![Build Status](https://travis-ci.org/pojozhang/aloha.svg?branch=master)](https://travis-ci.org/pojozhang/aloha)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.bayberry/aloha-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.bayberry/aloha-core)
+
 #### Aloha is a message bus facade written in Java. You can simply extend it to implement your own facade.
 
 Of course, like any other libraries, some built-in message bus facade are included in the extension package which are listed below. 
