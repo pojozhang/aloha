@@ -12,7 +12,7 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Publisher 
 
     private ApplicationContext applicationContext;
     private SpringEventProxy springEventProxy;
-    private SpringCommand springCommand;
+    private PublishCommand publishCommand;
 
     public LocalSpringMessageBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -27,14 +27,14 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Publisher 
 
     @Override
     public void publish(Channel channel, Object message) {
-        super.post(springCommand, channel, message);
+        super.post(publishCommand, channel, message);
     }
 
     @Override
     public void onStart() {
         this.applicationContext.getBeansWithAnnotation(SpringEventListeners.class).values().forEach(super::register);
         ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(springEventProxy);
-        this.springCommand = new SpringCommand(this.applicationContext);
+        this.publishCommand = new PublishCommand();
         super.onStart();
     }
 
@@ -53,5 +53,13 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Publisher 
     @Override
     protected Receiver bindReceiver(Listener listener) {
         return new LocalSpringReceiver(listener.getChannel(), this);
+    }
+
+    public class PublishCommand implements Command {
+
+        @Override
+        public void execute(Channel channel, Object message) {
+            applicationContext.publishEvent(message);
+        }
     }
 }
