@@ -17,7 +17,7 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Publisher 
     public LocalSpringMessageBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         this.springEventProxy = new SpringEventProxy(this);
-        this.onCreate();
+        super.onCreate();
     }
 
     @Override
