@@ -3,7 +3,6 @@ package io.bayberry.aloha.mqtt;
 import io.bayberry.aloha.*;
 import io.bayberry.aloha.exception.AlohaException;
 import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
@@ -19,6 +18,7 @@ public class MqttMessageBus extends RemoteMessageBus implements Publisher {
 
     public MqttMessageBus(MqttMessageBusOptions options) {
         this.options = options;
+        super.onCreate();
     }
 
     @Override
@@ -27,13 +27,7 @@ public class MqttMessageBus extends RemoteMessageBus implements Publisher {
         MemoryPersistence persistence = new MemoryPersistence();
         try {
             this.client = new MqttClient(options.getServerUri(), options.getClientId(), persistence);
-        } catch (MqttException e) {
-            throw new AlohaException(e);
-        }
-        MqttConnectOptions connOpts = new MqttConnectOptions();
-        connOpts.setCleanSession(options.getCleanSession());
-        try {
-            this.client.connect(connOpts);
+            this.client.connect(this.options.getConnectOptions());
         } catch (MqttException e) {
             throw new AlohaException(e);
         }
@@ -43,7 +37,8 @@ public class MqttMessageBus extends RemoteMessageBus implements Publisher {
     @Override
     public void onDestroy() {
         try {
-            this.client.disconnect();
+            if (this.client != null)
+                this.client.disconnect();
         } catch (MqttException e) {
 
         }
@@ -52,7 +47,7 @@ public class MqttMessageBus extends RemoteMessageBus implements Publisher {
 
     @Override
     protected Receiver bindReceiver(Listener listener) {
-        return null;
+        return new MqttReceiver(listener.getChannel(), this);
     }
 
     @Override
@@ -63,6 +58,10 @@ public class MqttMessageBus extends RemoteMessageBus implements Publisher {
     @Override
     public void publish(Channel channel, Object message) {
         this.post(this.mqttCommand, channel, message);
+    }
+
+    public MqttMessageBusOptions getOptions() {
+        return options;
     }
 
     private class MqttCommand implements Command {
