@@ -43,4 +43,13 @@ public class MqttReceiver extends RemoteReceiver implements MqttCallback {
     public void deliveryComplete(IMqttDeliveryToken token) {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        try {
+            this.client.disconnect();
+        } catch (MqttException e) {
+        }
+        super.onDestroy();
+    }
 }
