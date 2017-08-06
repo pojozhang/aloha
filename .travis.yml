@@ -2,7 +2,12 @@ language: java
 jdk:
   - oraclejdk8
 services:
+  - docker
   - redis-server
+before_script:
+  - docker pull eclipse-mosquitto
+script:
+  - docker run -it -p 1883:1883 -p 9001:9001 eclipse-mosquitto
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
