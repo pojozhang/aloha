@@ -12,9 +12,9 @@ An aloha extension package provides easy integration with **spring boot**. For n
 LocalSpringMessageBus is just a wrapper of Spring's ApplicationEventPublisher. You can easily post a Spring event through the interface.
 ### Usage
 ```java
-MessageBus bus = new LocalSpringMessageBus(this.applicationContext);
+LocalSpringMessageBus bus = new LocalSpringMessageBus(this.applicationContext);
 bus.register(subscriber);
-bus.post(new SomeEvent());
+bus.publish(new SomeEvent());
 bus.start();
 ```
 
@@ -22,19 +22,25 @@ bus.start();
 RedisMessageBus is based on redis template, so make sure that you've imported **spring-boot-starter-data-redis** lib to your project.
 ### Usage
 ```java
-MessageBus bus = new RedisMessageBus(this.applicationContext);
+RedisMessageBus bus = new RedisMessageBus(this.applicationContext);
 bus.register(subscriber);
-bus.post(new SomeEvent());
+bus.produce(new SomeEvent());
 bus.start();
 ```
 
-## 3. Subscriber
-Besides, we also need some subscribers to subscribe channels so that we can receive messages from local or remote message buses.
+## 3. Subscriber/Consumer
+Besides, we also need some subscribers/consumers to listen to channels so that we can subscribe/consume messages from local or remote message buses.
 
 ### Usage
 ```java
 @Executor(maxCount = 2)
 @Subscribe
+public void onMessage(Message message) {
+    //handle message
+}
+
+@Executor(maxCount = 2)
+@Consume
 public void onMessage(Message message) {
     //handle message
 }
