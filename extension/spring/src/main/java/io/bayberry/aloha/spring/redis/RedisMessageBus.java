@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-public class RedisMessageBus extends RemoteMessageBus implements Publisher, Producer {
+public class RedisMessageBus extends RemoteMessageBus implements AsyncMessageBus {
 
     private static final RedisMessageBusOptions DEFAULT_SETTINGS = new RedisMessageBusOptions("mb:");
     private RedisTemplate<String, String> redisTemplate;
