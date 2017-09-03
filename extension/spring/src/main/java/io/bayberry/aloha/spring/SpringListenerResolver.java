@@ -1,6 +1,5 @@
 package io.bayberry.aloha.spring;
 
-import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.support.DefaultListenerResolver;
 import org.springframework.beans.factory.config.BeanExpressionContext;
