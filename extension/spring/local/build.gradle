@@ -1,0 +1,10 @@
+apply from: "$rootDir/bintray.gradle"
+
+ext {
+    description = 'An aloha extension module to provide easy integration with spring boot'
+    artifactId = 'aloha-spring-local'
+}
+
+jar {
+    appendix = "spring"
+}

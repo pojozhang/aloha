@@ -9,16 +9,20 @@ jar {
     appendix = "spring"
 }
 
-dependencies {
-    compileOnly(
-            "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
-            "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion",
-            "org.springframework.boot:spring-boot-starter-amqp:$springBootVersion"
-    )
-    testCompile(
-            "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
-            "org.springframework.boot:spring-boot-starter-test:$springBootVersion",
-            "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion",
-            "org.springframework.boot:spring-boot-starter-amqp:$springBootVersion"
-    )
+allprojects {
+    dependencies {
+        compileOnly(
+                "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+        )
+        testCompile(
+                "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
+                "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+        )
+    }
+}
+
+subprojects {
+    dependencies {
+        compile project(":extension:spring")
+    }
 }

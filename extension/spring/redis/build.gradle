@@ -1,0 +1,19 @@
+apply from: "$rootDir/bintray.gradle"
+
+ext {
+    description = 'An aloha extension module to provide easy integration with spring boot'
+    artifactId = 'aloha-spring-redis'
+}
+
+jar {
+    appendix = "spring"
+}
+
+dependencies {
+    compileOnly(
+            "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
+    )
+    testCompile(
+            "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
+    )
+}
