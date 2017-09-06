@@ -108,10 +108,13 @@ public class RedisMessageBus extends RemoteMessageBus implements SubscribableCha
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (method.getReturnType().isAssignableFrom(SubscribableChannel.class)) {
-                return new RedisSubscribableChannel();
+            Class<?> returnType = method.getReturnType();
+            if (returnType.isAssignableFrom(SubscribableChannel.class)) {
+                return RedisMessageBus.this.subscribableChannel;
+            } else if (returnType.isAssignableFrom(ConsumableChannel.class)) {
+                return RedisMessageBus.this.consumableChannel;
             }
-            throw new AlohaException("Redis message bus does not support " + method.getReturnType());
+            throw new AlohaException("Redis message bus does not support " + returnType);
         }
     }
 
