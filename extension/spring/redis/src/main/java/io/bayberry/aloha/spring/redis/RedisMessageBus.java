@@ -23,6 +23,7 @@ public class RedisMessageBus extends RemoteMessageBus implements SubscribableCha
     private ProduceCommand produceCommand;
     private PublishCommand publishCommand;
     private SubscribableChannel subscribableChannel;
+    private ConsumableChannel consumableChannel;
 
     public RedisMessageBus(ApplicationContext applicationContext) {
         this(applicationContext, DEFAULT_SETTINGS);
@@ -41,6 +42,7 @@ public class RedisMessageBus extends RemoteMessageBus implements SubscribableCha
         this.produceCommand = new ProduceCommand();
         this.publishCommand = new PublishCommand();
         this.subscribableChannel = new RedisSubscribableChannel();
+        this.consumableChannel = new RedisConsumableChannel();
         super.onStart();
     }
 
@@ -71,18 +73,18 @@ public class RedisMessageBus extends RemoteMessageBus implements SubscribableCha
     }
 
     @Override
-    public <T> T proxy(Class<T> proxyInterface) {
-        return (T) Proxy.newProxyInstance(proxyInterface.getClassLoader(), new Class[]{proxyInterface}, new RedisProxyInvocationHandler());
-    }
-
-    @Override
     public void produce(Object message) {
-
+        this.consumableChannel.produce(message);
     }
 
     @Override
     public void produce(Channel channel, Object message) {
+        this.consumableChannel.produce(channel, message);
+    }
 
+    @Override
+    public <T> T proxy(Class<T> proxyInterface) {
+        return (T) Proxy.newProxyInstance(proxyInterface.getClassLoader(), new Class[]{proxyInterface}, new RedisProxyInvocationHandler());
     }
 
     private class ProduceCommand implements Command {
@@ -123,6 +125,19 @@ public class RedisMessageBus extends RemoteMessageBus implements SubscribableCha
         @Override
         public void publish(Channel channel, Object message) {
             RedisMessageBus.this.post(RedisMessageBus.this.publishCommand, channel, message);
+        }
+    }
+
+    private class RedisConsumableChannel implements ConsumableChannel {
+
+        @Override
+        public void produce(Object message) {
+            this.produce(RedisMessageBus.this.getChannelResolver().resolve(message.getClass()), message);
+        }
+
+        @Override
+        public void produce(Channel channel, Object message) {
+            RedisMessageBus.this.post(RedisMessageBus.this.produceCommand, channel, message);
         }
     }
 }
