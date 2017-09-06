@@ -2,7 +2,7 @@ package io.bayberry.aloha.spring.rabbit;
 
 import io.bayberry.aloha.*;
 
-public class RabbitMessageBus extends RemoteMessageBus implements AsyncMessageBus {
+public class RabbitMessageBus extends RemoteMessageBus implements SubscribableChannel, ConsumableChannel {
 
     @Override
     protected Receiver bindReceiver(Listener listener) {
@@ -27,5 +27,11 @@ public class RabbitMessageBus extends RemoteMessageBus implements AsyncMessageBu
     @Override
     public void publish(Channel channel, Object message) {
 
+    }
+
+    @Override
+    public <T> T proxy(Class<T> proxyClass) {
+        //TODO
+        return null;
     }
 }

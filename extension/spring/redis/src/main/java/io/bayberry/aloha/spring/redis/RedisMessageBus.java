@@ -1,6 +1,7 @@
 package io.bayberry.aloha.spring.redis;
 
 import io.bayberry.aloha.*;
+import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.spring.SpringListenerResolver;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import io.bayberry.aloha.support.AsyncReceiverDecorator;
@@ -9,7 +10,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-public class RedisMessageBus extends RemoteMessageBus implements AsyncMessageBus {
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+public class RedisMessageBus extends RemoteMessageBus implements SubscribableChannel, ConsumableChannel {
 
     private static final RedisMessageBusOptions DEFAULT_SETTINGS = new RedisMessageBusOptions("mb:");
     private RedisTemplate<String, String> redisTemplate;
@@ -17,6 +22,7 @@ public class RedisMessageBus extends RemoteMessageBus implements AsyncMessageBus
     private ApplicationContext applicationContext;
     private ProduceCommand produceCommand;
     private PublishCommand publishCommand;
+    private SubscribableChannel subscribableChannel;
 
     public RedisMessageBus(ApplicationContext applicationContext) {
         this(applicationContext, DEFAULT_SETTINGS);
@@ -34,6 +40,7 @@ public class RedisMessageBus extends RemoteMessageBus implements AsyncMessageBus
         this.redisTemplate = this.applicationContext.getBean(StringRedisTemplate.class);
         this.produceCommand = new ProduceCommand();
         this.publishCommand = new PublishCommand();
+        this.subscribableChannel = new RedisSubscribableChannel();
         super.onStart();
     }
 
@@ -54,23 +61,28 @@ public class RedisMessageBus extends RemoteMessageBus implements AsyncMessageBus
     }
 
     @Override
-    public void produce(Object message) {
-        this.produce(this.getChannelResolver().resolve(message.getClass()), message);
-    }
-
-    @Override
-    public void produce(Channel channel, Object message) {
-        super.post(this.produceCommand, channel, message);
-    }
-
-    @Override
     public void publish(Object message) {
-        this.publish(this.getChannelResolver().resolve(message.getClass()), message);
+        this.subscribableChannel.publish(message);
     }
 
     @Override
     public void publish(Channel channel, Object message) {
-        this.post(this.publishCommand, channel, message);
+        this.subscribableChannel.publish(channel, message);
+    }
+
+    @Override
+    public <T> T proxy(Class<T> proxyInterface) {
+        return (T) Proxy.newProxyInstance(proxyInterface.getClassLoader(), new Class[]{proxyInterface}, new RedisProxyInvocationHandler());
+    }
+
+    @Override
+    public void produce(Object message) {
+
+    }
+
+    @Override
+    public void produce(Channel channel, Object message) {
+
     }
 
     private class ProduceCommand implements Command {
@@ -87,6 +99,30 @@ public class RedisMessageBus extends RemoteMessageBus implements AsyncMessageBus
         @Override
         public void execute(Channel channel, Object message) {
             RedisMessageBus.this.redisTemplate.convertAndSend(channel.getName(), RedisMessageBus.this.getSerializer().serialize(message));
+        }
+    }
+
+    private class RedisProxyInvocationHandler implements InvocationHandler {
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if (method.getReturnType().isAssignableFrom(SubscribableChannel.class)) {
+                return new RedisSubscribableChannel();
+            }
+            throw new AlohaException("Redis message bus does not support " + method.getReturnType());
+        }
+    }
+
+    private class RedisSubscribableChannel implements SubscribableChannel {
+
+        @Override
+        public void publish(Object message) {
+            this.publish(RedisMessageBus.this.getChannelResolver().resolve(message.getClass()), message);
+        }
+
+        @Override
+        public void publish(Channel channel, Object message) {
+            RedisMessageBus.this.post(RedisMessageBus.this.publishCommand, channel, message);
         }
     }
 }

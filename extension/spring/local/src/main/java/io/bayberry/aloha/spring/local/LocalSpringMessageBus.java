@@ -8,7 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 
-public class LocalSpringMessageBus extends LocalMessageBus implements Publisher {
+public class LocalSpringMessageBus extends LocalMessageBus implements SubscribableChannel {
 
     private ApplicationContext applicationContext;
     private SpringEventProxy springEventProxy;
@@ -53,6 +53,12 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Publisher 
     @Override
     protected Receiver bindReceiver(Listener listener) {
         return new LocalSpringReceiver(listener.getChannel(), this);
+    }
+
+    @Override
+    public <T> T proxy(Class<T> proxyClass) {
+        //TODO
+        return null;
     }
 
     public class PublishCommand implements Command {

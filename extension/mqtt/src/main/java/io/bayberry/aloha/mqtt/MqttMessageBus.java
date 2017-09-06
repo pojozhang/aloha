@@ -9,7 +9,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MqttMessageBus extends RemoteMessageBus implements Publisher {
+public class MqttMessageBus extends RemoteMessageBus implements SubscribableChannel {
 
     private static final Logger log = LoggerFactory.getLogger(MqttMessageBus.class);
     private MqttMessageBusOptions options;
@@ -62,6 +62,12 @@ public class MqttMessageBus extends RemoteMessageBus implements Publisher {
 
     public MqttMessageBusOptions getOptions() {
         return options;
+    }
+
+    @Override
+    public <T> T proxy(Class<T> proxyClass) {
+        //TODO
+        return null;
     }
 
     private class MqttCommand implements Command {
