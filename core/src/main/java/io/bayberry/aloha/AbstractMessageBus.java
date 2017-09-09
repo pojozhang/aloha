@@ -2,7 +2,7 @@ package io.bayberry.aloha;
 
 import io.bayberry.aloha.support.*;
 
-public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
+public abstract class AbstractMessageBus<M extends Message> extends LifeCycleContext implements MessageBus<M> {
 
     private ChannelResolver channelResolver;
     private ListenerResolver listenerResolver;
@@ -12,11 +12,6 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     private ExceptionHandlerFactory exceptionHandlerFactory;
     private ExecutionStrategy defaultExecutionStrategy;
     private ExecutionStrategyFactory executionStrategyFactory;
-
-    @Override
-    public void post(Command command, Channel channel, Object message) {
-        command.execute(channel, message);
-    }
 
     @Override
     public void register(Object container) {

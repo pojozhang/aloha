@@ -1,8 +1,8 @@
 package io.bayberry.aloha;
 
-public interface MessageBus extends LifeCycle {
+public interface MessageBus<M extends Message> extends LifeCycle {
 
-    void post(Message message);
+    void post(M message);
 
     void register(Object container);
 
