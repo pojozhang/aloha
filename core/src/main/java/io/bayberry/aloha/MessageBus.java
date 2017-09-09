@@ -1,10 +1,8 @@
 package io.bayberry.aloha;
 
-import java.lang.reflect.Proxy;
-
 public interface MessageBus extends LifeCycle {
 
-    void post(Command command, Channel channel, Object message);
+    void post(Message message);
 
     void register(Object container);
 
@@ -33,6 +31,4 @@ public interface MessageBus extends LifeCycle {
     ChannelResolver getChannelResolver();
 
     ReceiverRegistry getReceiverRegistry();
-
-    <T> T proxy(Class<T> proxyClass);
 }
