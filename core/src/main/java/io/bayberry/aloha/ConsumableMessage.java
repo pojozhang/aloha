@@ -1,5 +1,5 @@
 package io.bayberry.aloha;
 
-public class ConsumableMessage extends ChannelMessage {
+public class ConsumableMessage extends Message {
 
 }
