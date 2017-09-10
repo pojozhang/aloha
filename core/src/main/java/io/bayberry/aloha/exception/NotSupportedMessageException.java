@@ -4,7 +4,7 @@ import io.bayberry.aloha.Message;
 
 public class NotSupportedMessageException extends AlohaException {
 
-    public NotSupportedMessageException(Class<? extends Message> messageType) {
-        super("Not supported message type: " + messageType);
+    public NotSupportedMessageException(Message message) {
+        super("Not supported message type: " + message.getClass());
     }
 }

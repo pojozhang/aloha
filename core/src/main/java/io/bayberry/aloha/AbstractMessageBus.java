@@ -2,7 +2,7 @@ package io.bayberry.aloha;
 
 import io.bayberry.aloha.support.*;
 
-public abstract class AbstractMessageBus<M extends Message> extends LifeCycleContext implements MessageBus<M> {
+public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private ChannelResolver channelResolver;
     private ListenerResolver listenerResolver;
