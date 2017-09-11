@@ -1,6 +1,7 @@
 package io.bayberry.aloha.spring.local;
 
 import io.bayberry.aloha.*;
+import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.SpringListenerResolver;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import org.springframework.context.ApplicationContext;
@@ -8,7 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 
-public class LocalSpringMessageBus extends LocalMessageBus implements SubscribableChannel {
+public class LocalSpringMessageBus extends LocalMessageBus {
 
     private ApplicationContext applicationContext;
     private SpringEventProxy springEventProxy;
@@ -18,16 +19,6 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Subscribab
         this.applicationContext = applicationContext;
         this.springEventProxy = new SpringEventProxy(this);
         super.onCreate();
-    }
-
-    @Override
-    public void publish(Object message) {
-        this.publish(null, message);
-    }
-
-    @Override
-    public void publish(Channel channel, Object message) {
-        super.post(publishCommand, channel, message);
     }
 
     @Override
@@ -41,7 +32,7 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Subscribab
     @Override
     public void onDestroy() {
         this.applicationContext.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME,
-                ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
+            ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
         super.onDestroy();
     }
 
@@ -56,9 +47,11 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Subscribab
     }
 
     @Override
-    public <T> T proxy(Class<T> proxyClass) {
-        //TODO
-        return null;
+    public void post(Message message) {
+        if (message instanceof SubscribableMessage) {
+            this.publishCommand.execute(message.getChannel(), message.getPayload());
+        }
+        throw new UnsupportedMessageException(message);
     }
 
     public class PublishCommand implements Command {
