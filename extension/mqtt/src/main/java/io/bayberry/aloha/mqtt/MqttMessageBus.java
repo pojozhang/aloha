@@ -1,17 +1,21 @@
 package io.bayberry.aloha.mqtt;
 
-import io.bayberry.aloha.*;
+import io.bayberry.aloha.Channel;
+import io.bayberry.aloha.Command;
+import io.bayberry.aloha.Listener;
+import io.bayberry.aloha.Message;
+import io.bayberry.aloha.Receiver;
+import io.bayberry.aloha.RemoteMessageBus;
+import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UnsupportedMessageException;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class MqttMessageBus extends RemoteMessageBus implements SubscribableChannel {
+public class MqttMessageBus extends RemoteMessageBus {
 
-    private static final Logger log = LoggerFactory.getLogger(MqttMessageBus.class);
     private MqttMessageBusOptions options;
     private MqttClient client;
     private MqttCommand mqttCommand;
@@ -37,8 +41,9 @@ public class MqttMessageBus extends RemoteMessageBus implements SubscribableChan
     @Override
     public void onDestroy() {
         try {
-            if (this.client != null)
+            if (this.client != null) {
                 this.client.disconnect();
+            }
         } catch (MqttException e) {
 
         }
@@ -50,31 +55,27 @@ public class MqttMessageBus extends RemoteMessageBus implements SubscribableChan
         return new MqttReceiver(listener.getChannel(), this);
     }
 
-    @Override
-    public void publish(Object message) {
-        this.publish(this.getChannelResolver().resolve(message.getClass()), message);
-    }
-
-    @Override
-    public void publish(Channel channel, Object message) {
-        this.post(this.mqttCommand, channel, message);
-    }
-
     public MqttMessageBusOptions getOptions() {
         return options;
     }
 
     @Override
-    public <T> T proxy(Class<T> proxyClass) {
-        //TODO
-        return null;
+    public void post(Message message) {
+        if (message instanceof SubscribableMessage) {
+            this.mqttCommand.execute(message.getChannel(), message.getPayload());
+        }
+        throw new UnsupportedMessageException(message);
     }
 
     private class MqttCommand implements Command {
 
         @Override
         public void execute(Channel channel, Object message) {
-            MqttMessage mqttMessage = new MqttMessage(((String) MqttMessageBus.this.getSerializer().serialize(message)).getBytes());
+            if (channel == null) {
+                channel = MqttMessageBus.this.getChannelResolver().resolve(message.getClass());
+            }
+            MqttMessage mqttMessage = new MqttMessage(
+                ((String) MqttMessageBus.this.getSerializer().serialize(message)).getBytes());
             mqttMessage.setQos(options.getQos());
             try {
                 client.publish(channel.getName(), mqttMessage);
