@@ -32,7 +32,7 @@ public class LocalSpringMessageBus extends LocalMessageBus {
     @Override
     public void onDestroy() {
         this.applicationContext.getBean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME,
-            ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
+                ApplicationEventMulticaster.class).removeApplicationListener(this.springEventProxy);
         super.onDestroy();
     }
 

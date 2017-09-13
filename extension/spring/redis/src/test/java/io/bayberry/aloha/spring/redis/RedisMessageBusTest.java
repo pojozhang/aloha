@@ -1,6 +1,7 @@
 package io.bayberry.aloha.spring.redis;
 
 import io.bayberry.aloha.MessageBus;
+import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Executor;
 import io.bayberry.aloha.spring.BaseSpringTest;
@@ -23,25 +24,23 @@ public class RedisMessageBusTest extends BaseSpringTest {
     private static CountDownLatch countDownLatch;
     @Autowired
     private ApplicationContext applicationContext;
-    private MessageBus redisMessageBus;
-    private RedisProxy redisProxy;
+    private MessageBus messageBus;
 
     @Before
     public void setUp() {
-        redisMessageBus = new RedisMessageBus(applicationContext);
-        redisProxy = redisMessageBus.proxy(RedisProxy.class);
-        redisMessageBus.start();
+        messageBus = new RedisMessageBus(applicationContext);
+        messageBus.start();
     }
 
     @After
     public void tearDown() {
-        redisMessageBus.stop();
+        messageBus.stop();
     }
 
     @Test
     public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
         this.countDownLatch = new CountDownLatch(1);
-        this.redisProxy.channel().produce(new SyncRedisMessage());
+        this.messageBus.post(new SubscribableMessage(new SyncRedisMessage()));
         await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
     }
 
@@ -50,7 +49,7 @@ public class RedisMessageBusTest extends BaseSpringTest {
         final int NUMBER = 6;
         this.countDownLatch = new CountDownLatch(NUMBER);
         for (int i = 0; i < NUMBER; i++) {
-            this.redisProxy.channel().produce(new AsyncRedisMessage());
+            this.messageBus.post(new SubscribableMessage(new AsyncRedisMessage()));
         }
         await().atLeast(Duration.ONE_SECOND).atMost(Duration.FIVE_SECONDS)
                 .until(() -> this.countDownLatch.getCount() == 0);
