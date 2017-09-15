@@ -2,7 +2,7 @@ package io.bayberry.aloha;
 
 import java.lang.reflect.Method;
 
-public interface Listener {
+public interface Hub {
 
     Channel getChannel();
 
