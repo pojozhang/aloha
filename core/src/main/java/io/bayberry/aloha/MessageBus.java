@@ -24,11 +24,5 @@ public interface MessageBus extends LifeCycle {
 
     void setExecutionStrategyFactory(ExecutionStrategyFactory executionStrategyFactory);
 
-    ListenerRegistry getListenerRegistry();
-
-    ListenerResolver getListenerResolver();
-
-    ChannelResolver getChannelResolver();
-
-    ReceiverRegistry getReceiverRegistry();
+    Channel resolveChannel(Class messageType);
 }
