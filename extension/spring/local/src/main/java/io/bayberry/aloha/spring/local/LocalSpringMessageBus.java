@@ -42,8 +42,8 @@ public class LocalSpringMessageBus extends LocalMessageBus {
     }
 
     @Override
-    protected Receiver bindReceiver(Listener listener) {
-        return new LocalSpringReceiver(listener.getChannel(), this);
+    protected Stream bindStream(Listener listener) {
+        return new LocalSpringEventStream(listener.getChannel(), this);
     }
 
     @Override

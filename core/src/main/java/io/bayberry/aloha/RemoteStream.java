@@ -2,13 +2,13 @@ package io.bayberry.aloha;
 
 import io.bayberry.aloha.transport.Deserializer;
 
-public abstract class RemoteReceiver extends AbstractReceiver {
+public abstract class RemoteStream extends AbstractStream {
 
-    public RemoteReceiver(RemoteMessageBus messageBus) {
+    public RemoteStream(RemoteMessageBus messageBus) {
         this(null, messageBus);
     }
 
-    public RemoteReceiver(Channel channel, RemoteMessageBus messageBus) {
+    public RemoteStream(Channel channel, RemoteMessageBus messageBus) {
         super(channel, messageBus);
     }
 

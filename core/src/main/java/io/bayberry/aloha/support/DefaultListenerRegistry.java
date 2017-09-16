@@ -32,7 +32,7 @@ public class DefaultListenerRegistry implements ListenerRegistry {
     @Override
     public void unregister(Listener listener) {
         this.listeners.values().forEach(listeners -> listeners.forEach(l -> {
-            if (l.getContainer() == listener) {
+            if (l.getObject() == listener) {
                 listeners.remove(l);
             }
         }));

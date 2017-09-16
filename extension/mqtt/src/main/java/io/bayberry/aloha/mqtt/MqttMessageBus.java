@@ -4,7 +4,7 @@ import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.Command;
 import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.Message;
-import io.bayberry.aloha.Receiver;
+import io.bayberry.aloha.Stream;
 import io.bayberry.aloha.RemoteMessageBus;
 import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.exception.AlohaException;
@@ -51,8 +51,8 @@ public class MqttMessageBus extends RemoteMessageBus {
     }
 
     @Override
-    protected Receiver bindReceiver(Listener listener) {
-        return new MqttReceiver(listener.getChannel(), this);
+    protected Stream bindStream(Listener listener) {
+        return new MqttStream(listener.getChannel(), this);
     }
 
     public MqttMessageBusOptions getOptions() {

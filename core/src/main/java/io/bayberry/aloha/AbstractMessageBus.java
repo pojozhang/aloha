@@ -7,7 +7,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     private ChannelResolver channelResolver;
     private ListenerResolver listenerResolver;
     private ListenerRegistry listenerRegistry;
-    private ReceiverRegistry receiverRegistry;
+    private StreamRegistry streamRegistry;
     private ExceptionHandler defaultExceptionHandler;
     private ExceptionHandlerFactory exceptionHandlerFactory;
     private ExecutionStrategy defaultExecutionStrategy;
@@ -26,7 +26,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     @Override
     protected void onCreate() {
         this.listenerRegistry = this.initListenerRegistry();
-        this.receiverRegistry = this.initReceiverRegistry();
+        this.streamRegistry = this.initStreamRegistry();
         this.listenerResolver = this.initListenerResolver();
         this.channelResolver = this.initChannelResolver();
         this.defaultExceptionHandler = this.initDefaultExceptionHandler();
@@ -38,21 +38,22 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     @Override
     public void onStart() {
         this.listenerRegistry.getListeners().forEach(listener -> {
-            Receiver receiver = this.bindReceiver(listener);
-            receiver.register(listener);
-            this.getReceiverRegistry().register(receiver);
+            if (listener instanceof Consumer) {
+                Stream stream = this.bindStream(listener);
+                stream.register(listener);
+                this.getStreamRegistry().register(stream);
+            }//TODO subscriber
         });
-        this.getReceiverRegistry().getReceivers().forEach(Receiver::start);
+        this.getStreamRegistry().getStreams().forEach(Stream::start);
     }
 
     @Override
     public void onDestroy() {
-        this.getReceiverRegistry().getReceivers().forEach(Receiver::stop);
+        this.getStreamRegistry().getStreams().forEach(Stream::stop);
     }
 
-    @Override
-    public ReceiverRegistry getReceiverRegistry() {
-        return receiverRegistry;
+    protected StreamRegistry getStreamRegistry() {
+        return streamRegistry;
     }
 
     @Override
@@ -96,17 +97,19 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     }
 
     @Override
-    public ListenerRegistry getListenerRegistry() {
+    public Channel resolveChannel(Class messageType) {
+        return this.getChannelResolver().resolve(messageType);
+    }
+
+    protected ListenerRegistry getListenerRegistry() {
         return listenerRegistry;
     }
 
-    @Override
-    public ListenerResolver getListenerResolver() {
+    protected ListenerResolver getListenerResolver() {
         return listenerResolver;
     }
 
-    @Override
-    public ChannelResolver getChannelResolver() {
+    protected ChannelResolver getChannelResolver() {
         return channelResolver;
     }
 
@@ -118,8 +121,8 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         return new DefaultListenerResolver();
     }
 
-    protected ReceiverRegistry initReceiverRegistry() {
-        return new DefaultReceiverRegistry();
+    protected StreamRegistry initStreamRegistry() {
+        return new DefaultStreamRegistry();
     }
 
     protected ChannelResolver initChannelResolver() {
@@ -138,5 +141,5 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
 
-    protected abstract Receiver bindReceiver(Listener listener);
+    protected abstract Stream bindStream(Listener listener);
 }

@@ -2,15 +2,15 @@ package io.bayberry.aloha;
 
 import java.lang.reflect.Method;
 
-public interface Hub {
+public interface Listener {
 
     Channel getChannel();
 
-    Object getContainer();
+    Object getObject();
 
     Method getMethod();
 
-    Receiver getReceiver();
+    Stream getStream();
 
     MessageBus getMessageBus();
 
@@ -18,5 +18,5 @@ public interface Hub {
 
     ExecutionStrategy getExecutionStrategy();
 
-    void accept(Receiver receiver, Object value) throws Exception;
+    void accept(Stream stream, Object value) throws Exception;
 }

@@ -1,7 +1,6 @@
 package io.bayberry.aloha;
 
 import io.bayberry.aloha.annotation.Subscribe;
-import io.bayberry.aloha.exception.AlohaException;
 
 import java.lang.reflect.Method;
 

@@ -1,17 +1,17 @@
 package io.bayberry.aloha.mqtt;
 
 import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.RemoteReceiver;
+import io.bayberry.aloha.RemoteStream;
 import io.bayberry.aloha.exception.AlohaException;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-public class MqttReceiver extends RemoteReceiver implements MqttCallback {
+public class MqttStream extends RemoteStream implements MqttCallback {
 
     private MqttMessageBusOptions options;
     private MqttClient client;
 
-    public MqttReceiver(Channel channel, MqttMessageBus messageBus) {
+    public MqttStream(Channel channel, MqttMessageBus messageBus) {
         super(channel, messageBus);
         this.options = messageBus.getOptions();
     }

@@ -4,11 +4,11 @@ import io.bayberry.aloha.*;
 
 import java.util.List;
 
-public class DelegateReceiver implements Receiver {
+public class DelegateStream implements Stream {
 
-    protected Receiver delegate;
+    protected Stream delegate;
 
-    public DelegateReceiver(Receiver delegate) {
+    public DelegateStream(Stream delegate) {
         this.delegate = delegate;
     }
 

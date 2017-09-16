@@ -12,7 +12,7 @@ public abstract class AbstractListener implements Listener {
     protected MessageBus messageBus;
     protected ExceptionHandler exceptionHandler;
     protected ExecutionStrategy executionStrategy;
-    protected Receiver receiver;
+    protected Stream stream;
 
     @Override
     public ExceptionHandler getExceptionHandler() {
@@ -30,7 +30,7 @@ public abstract class AbstractListener implements Listener {
     }
 
     @Override
-    public Object getContainer() {
+    public Object getObject() {
         return this.container;
     }
 
@@ -40,8 +40,8 @@ public abstract class AbstractListener implements Listener {
     }
 
     @Override
-    public Receiver getReceiver() {
-        return receiver;
+    public Stream getStream() {
+        return stream;
     }
 
     @Override
@@ -73,12 +73,12 @@ public abstract class AbstractListener implements Listener {
         this.executionStrategy = executionStrategy;
     }
 
-    public void setReceiver(Receiver receiver) {
-        this.receiver = receiver;
+    public void setStream(Stream stream) {
+        this.stream = stream;
     }
 
     @Override
-    public void accept(Receiver listener, Object value) throws Exception {
+    public void accept(Stream listener, Object value) throws Exception {
         try {
             this.invoke(listener, value);
         } catch (Exception exception) {
@@ -86,17 +86,17 @@ public abstract class AbstractListener implements Listener {
         }
     }
 
-    protected void invoke(Receiver receiver, Object message) throws Exception {
+    protected void invoke(Stream stream, Object message) throws Exception {
         this.executionStrategy.execute(this, () -> {
             try {
                 if (this.getMethod().getParameterTypes() != null) {
-                    this.getMethod().invoke(this.getContainer(), message);
+                    this.getMethod().invoke(this.getObject(), message);
                 } else {
-                    this.getMethod().invoke(this.getContainer());
+                    this.getMethod().invoke(this.getObject());
                 }
             } catch (Exception e) {
                 try {
-                    this.handleException(e, receiver, message);
+                    this.handleException(e, stream, message);
                 } catch (Exception error) {
                     throw new AlohaException(error);
                 }
@@ -104,15 +104,15 @@ public abstract class AbstractListener implements Listener {
         });
     }
 
-    protected void handleException(Exception exception, Receiver receiver, Object value) throws Exception {
+    protected void handleException(Exception exception, Stream stream, Object value) throws Exception {
         try {
             if (this.getExceptionHandler() != null) {
-                this.getExceptionHandler().handle(receiver.getChannel(), value, receiver.getMessageBus(), exception);
+                this.getExceptionHandler().handle(stream.getChannel(), value, stream.getMessageBus(), exception);
             } else {
-                receiver.handleException(exception, value);
+                stream.handleException(exception, value);
             }
         } catch (Exception e) {
-            receiver.handleException(e, value);
+            stream.handleException(e, value);
         }
     }
 }

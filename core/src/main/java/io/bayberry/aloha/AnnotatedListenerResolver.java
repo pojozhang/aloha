@@ -11,7 +11,7 @@ public abstract class AnnotatedListenerResolver<A extends Annotation> {
 
     protected Channel resolve(Method method, MessageBus messageBus) {
         if (method.getParameterTypes().length > 0) {
-            return messageBus.getChannelResolver().resolve(method.getParameterTypes()[0]);
+            return messageBus.resolveChannel(method.getParameterTypes()[0]);
         } else {
             throw new AlohaException("Fail to resolve subscriber: channel is empty");
         }

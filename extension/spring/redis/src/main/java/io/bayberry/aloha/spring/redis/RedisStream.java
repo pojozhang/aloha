@@ -2,18 +2,18 @@ package io.bayberry.aloha.spring.redis;
 
 import io.bayberry.aloha.Channel;
 import io.bayberry.aloha.RemoteMessageBus;
-import io.bayberry.aloha.RemoteReceiver;
+import io.bayberry.aloha.RemoteStream;
 import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.util.LoopRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
 
-public class RedisReceiver extends RemoteReceiver {
+public class RedisStream extends RemoteStream {
 
     private RedisTemplate<String, String> redisTemplate;
 
-    public RedisReceiver(Channel channel, RedisTemplate<String, String> redisTemplate, RemoteMessageBus messageBus) {
+    public RedisStream(Channel channel, RedisTemplate<String, String> redisTemplate, RemoteMessageBus messageBus) {
         super(channel, messageBus);
         this.redisTemplate = redisTemplate;
         this.onCreate();

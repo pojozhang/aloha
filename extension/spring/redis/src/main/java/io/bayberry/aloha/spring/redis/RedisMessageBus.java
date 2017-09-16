@@ -4,7 +4,7 @@ import io.bayberry.aloha.*;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.SpringListenerResolver;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
-import io.bayberry.aloha.support.AsyncReceiverDecorator;
+import io.bayberry.aloha.support.AsyncStreamDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -49,9 +49,9 @@ public class RedisMessageBus extends RemoteMessageBus {
     }
 
     @Override
-    protected Receiver bindReceiver(Listener listener) {
-        return new AsyncReceiverDecorator(
-                new RedisReceiver(listener.getChannel(), redisTemplate, this));
+    protected Stream bindStream(Listener listener) {
+        return new AsyncStreamDecorator(
+                new RedisStream(listener.getChannel(), redisTemplate, this));
     }
 
     @Override

@@ -1,18 +1,18 @@
 package io.bayberry.aloha.support;
 
-import io.bayberry.aloha.Receiver;
+import io.bayberry.aloha.Stream;
 import io.bayberry.aloha.exception.AlohaException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class AsyncReceiverDecorator extends DelegateReceiver {
+public class AsyncStreamDecorator extends DelegateStream {
 
     private ExecutorService threadPool = Executors.newSingleThreadExecutor();
     private Future task;
 
-    public AsyncReceiverDecorator(Receiver delegate) {
+    public AsyncStreamDecorator(Stream delegate) {
         super(delegate);
     }
 
