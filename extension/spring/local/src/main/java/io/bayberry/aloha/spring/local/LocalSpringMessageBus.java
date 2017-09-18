@@ -1,7 +1,6 @@
 package io.bayberry.aloha.spring.local;
 
 import io.bayberry.aloha.*;
-import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.SpringListenerResolver;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import io.bayberry.aloha.util.Reflection;
@@ -56,8 +55,9 @@ public class LocalSpringMessageBus extends LocalMessageBus {
     public void post(Message message) {
         if (message instanceof SubscribableMessage) {
             this.publishCommand.execute(message.getChannel(), message.getPayload());
+        } else {
+            super.handleUnsupportedMessage(message);
         }
-        throw new UnsupportedMessageException(message);
     }
 
     public class PublishCommand implements Command {

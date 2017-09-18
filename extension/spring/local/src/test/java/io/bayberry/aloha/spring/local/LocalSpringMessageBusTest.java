@@ -1,5 +1,7 @@
 package io.bayberry.aloha.spring.local;
 
+import io.bayberry.aloha.MessageBus;
+import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Executor;
 import io.bayberry.aloha.spring.BaseSpringTest;
@@ -22,23 +24,23 @@ public class LocalSpringMessageBusTest extends BaseSpringTest {
     private static CountDownLatch countDownLatch;
     @Autowired
     private ApplicationContext applicationContext;
-    private LocalSpringMessageBus localSpringMessageBus;
+    private MessageBus messageBus;
 
     @Before
     public void setUp() {
-        localSpringMessageBus = new LocalSpringMessageBus(applicationContext);
-        localSpringMessageBus.start();
+        messageBus = new LocalSpringMessageBus(applicationContext);
+        messageBus.start();
     }
 
     @After
     public void tearDown() {
-        localSpringMessageBus.stop();
+        messageBus.stop();
     }
 
     @Test
     public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
         this.countDownLatch = new CountDownLatch(1);
-        this.localSpringMessageBus.publish(new SyncSpringMessage());
+        this.messageBus.post(new SubscribableMessage(new SyncSpringMessage()));
         assertEquals(0, this.countDownLatch.getCount());
     }
 
@@ -47,7 +49,7 @@ public class LocalSpringMessageBusTest extends BaseSpringTest {
         final int MESSAGE_NUMBER = 5;
         this.countDownLatch = new CountDownLatch(MESSAGE_NUMBER);
         for (int i = 0; i < MESSAGE_NUMBER; i++) {
-            this.localSpringMessageBus.publish(new SyncSpringMessage());
+            this.messageBus.post(new SubscribableMessage(new SyncSpringMessage()));
         }
         assertEquals(0, this.countDownLatch.getCount());
     }
@@ -55,7 +57,7 @@ public class LocalSpringMessageBusTest extends BaseSpringTest {
     @Test
     public void the_subscriber_should_be_called_synchronously_if_target_message_is_base_type_of_source_message() {
         this.countDownLatch = new CountDownLatch(1);
-        this.localSpringMessageBus.publish(new ChildSyncSpringMessage());
+        this.messageBus.post(new SubscribableMessage(new ChildSyncSpringMessage()));
         assertEquals(0, this.countDownLatch.getCount());
     }
 
