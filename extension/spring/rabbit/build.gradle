@@ -10,10 +10,7 @@ jar {
 }
 
 dependencies {
-    compileOnly(
-            "org.springframework.boot:spring-boot-starter-amqp:$springBootVersion"
-    )
-    testCompile(
-            "org.springframework.boot:spring-boot-starter-amqp:$springBootVersion"
+    compile(
+            "org.springframework.amqp:spring-rabbit:$springRabbitVersion"
     )
 }
