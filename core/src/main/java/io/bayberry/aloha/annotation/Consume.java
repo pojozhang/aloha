@@ -15,7 +15,7 @@ public @interface Consume {
 
     String channel() default "";
 
-    Class<? extends AnnotatedListenerResolver> annotationResolver() default AnnotatedConsumerResolver.class;
+    Class<? extends AnnotatedListenerResolver> resolver() default AnnotatedConsumerResolver.class;
 
     Class<? extends ExecutionStrategy> executionStrategy() default InheritedExecutionStrategy.class;
 

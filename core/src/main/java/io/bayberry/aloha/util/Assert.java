@@ -14,6 +14,14 @@ public class Assert {
         if (object == null) throwException(message);
     }
 
+    public static void isTrue(boolean condition, String message) {
+        if (!condition) throwException(message);
+    }
+
+    public static void isFalse(boolean condition, String message) {
+        if (condition) throwException(message);
+    }
+
     private static void throwException(String message) {
         throw new AlohaException(message);
     }

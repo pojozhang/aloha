@@ -11,6 +11,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,17 +19,22 @@ import static java.util.stream.Collectors.toSet;
 
 public class DefaultListenerResolver implements ListenerResolver {
 
-    private static Set<Class<? extends Annotation>> SUPPORTED_LISTENER_ANNOTATION_CLASSES;
+    private static Set<Class<? extends Annotation>> DEFAULT_SUPPORTED_LISTENER_ANNOTATION_CLASSES;
+    private static Set<Class<? extends Listener>> DEFAULT_SUPPORTED_LISTENER_CLASSES;
 
     static {
-        SUPPORTED_LISTENER_ANNOTATION_CLASSES = new HashSet<>();
-        SUPPORTED_LISTENER_ANNOTATION_CLASSES.add(Consume.class);
-        SUPPORTED_LISTENER_ANNOTATION_CLASSES.add(Subscribe.class);
+        DEFAULT_SUPPORTED_LISTENER_ANNOTATION_CLASSES = new HashSet<>();
+        DEFAULT_SUPPORTED_LISTENER_ANNOTATION_CLASSES.add(Consume.class);
+        DEFAULT_SUPPORTED_LISTENER_ANNOTATION_CLASSES.add(Subscribe.class);
+
+        DEFAULT_SUPPORTED_LISTENER_CLASSES = new HashSet<>();
+        DEFAULT_SUPPORTED_LISTENER_CLASSES.add(Consumer.class);
+        DEFAULT_SUPPORTED_LISTENER_CLASSES.add(Subscriber.class);
     }
 
     @Override
     public Set<Listener> resolve(Object container, MessageBus messageBus) {
-        Set<Class<? extends Annotation>> supportedListenerAnnotationClasses = this.getSupportedListenerAnnotations();
+        Collection<Class<? extends Annotation>> supportedListenerAnnotationClasses = this.getSupportedListenerAnnotations();
         Assert.notEmpty(supportedListenerAnnotationClasses, "Fail to resolve listeners: no supported annotation");
         Set<Listener> listeners = new HashSet<>();
         supportedListenerAnnotationClasses.forEach(annotationClass -> {
@@ -36,10 +42,11 @@ public class DefaultListenerResolver implements ListenerResolver {
                     .filter(method -> method.isAnnotationPresent(annotationClass))
                     .map(method -> {
                         Annotation annotation = method.getAnnotation(annotationClass);
-                        Method resolverMethod = Reflection.getDeclaredMethod(annotationClass, "annotationResolver").orElseThrow(() -> new AlohaException("Annotation must contains annotationResolver() method"));
+                        Method resolverMethod = Reflection.getDeclaredMethod(annotationClass, "resolver").orElseThrow(() -> new AlohaException("Annotation must contains annotationResolver() method"));
                         try {
                             Class<? extends AnnotatedListenerResolver> resolverClass = (Class<? extends AnnotatedListenerResolver>) resolverMethod.invoke(annotation);
                             Listener listener = resolverClass.newInstance().resolve(container, annotation, method, messageBus);
+                            Assert.isTrue(this.validateListener(listener), "Unsupported listener type: " + listener.getClass());
                             this.afterResolveListener(listener);
                             return listener;
                         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
@@ -50,8 +57,19 @@ public class DefaultListenerResolver implements ListenerResolver {
         return listeners;
     }
 
-    protected Set<Class<? extends Annotation>> getSupportedListenerAnnotations() {
-        return SUPPORTED_LISTENER_ANNOTATION_CLASSES;
+    protected boolean validateListener(Listener listener) {
+        for (Class<? extends Listener> type : this.getSupportedListenerClasses()) {
+            if (type.isAssignableFrom(listener.getClass())) return true;
+        }
+        return false;
+    }
+
+    protected Collection<Class<? extends Annotation>> getSupportedListenerAnnotations() {
+        return DEFAULT_SUPPORTED_LISTENER_ANNOTATION_CLASSES;
+    }
+
+    protected Collection<Class<? extends Listener>> getSupportedListenerClasses() {
+        return DEFAULT_SUPPORTED_LISTENER_CLASSES;
     }
 
     protected void afterResolveListener(Listener listener) {

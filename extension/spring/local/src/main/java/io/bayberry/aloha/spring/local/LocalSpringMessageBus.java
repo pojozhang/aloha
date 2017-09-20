@@ -1,7 +1,7 @@
 package io.bayberry.aloha.spring.local;
 
 import io.bayberry.aloha.*;
-import io.bayberry.aloha.spring.SpringListenerResolver;
+import io.bayberry.aloha.spring.SpringSubscriberResolver;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import io.bayberry.aloha.util.Reflection;
 import org.springframework.context.*;
@@ -43,7 +43,7 @@ public class LocalSpringMessageBus extends LocalMessageBus {
 
     @Override
     protected ListenerResolver initListenerResolver() {
-        return new SpringListenerResolver(this.applicationContext);
+        return new SpringSubscriberResolver(this.applicationContext);
     }
 
     @Override

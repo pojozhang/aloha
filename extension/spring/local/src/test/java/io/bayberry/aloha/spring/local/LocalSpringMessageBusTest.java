@@ -4,6 +4,7 @@ import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Executor;
+import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.BaseSpringTest;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import org.junit.After;
@@ -64,13 +65,13 @@ public class LocalSpringMessageBusTest extends BaseSpringTest {
     @SpringEventListeners
     public static class SpringEventConsumers {
 
-        @Consume
+        @Subscribe
         public void onReceive(SyncSpringMessage message) {
             countDownLatch.countDown();
         }
 
         @Executor(maxCount = 3, capacity = 3)
-        @Consume
+        @Subscribe
         public void onReceive(AsyncSpringMessage message) throws InterruptedException {
             Thread.sleep(1000);
             countDownLatch.countDown();
