@@ -1,14 +1,7 @@
 package io.bayberry.aloha.mqtt;
 
-import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.Command;
-import io.bayberry.aloha.Listener;
-import io.bayberry.aloha.Message;
-import io.bayberry.aloha.Stream;
-import io.bayberry.aloha.RemoteMessageBus;
-import io.bayberry.aloha.SubscribableMessage;
+import io.bayberry.aloha.*;
 import io.bayberry.aloha.exception.AlohaException;
-import io.bayberry.aloha.exception.UnsupportedMessageException;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -64,7 +57,7 @@ public class MqttMessageBus extends RemoteMessageBus {
         if (message instanceof SubscribableMessage) {
             this.mqttCommand.execute(message.getChannel(), message.getPayload());
         }
-        throw new UnsupportedMessageException(message);
+        super.handleUnsupportedMessage(message);
     }
 
     private class MqttCommand implements Command {
@@ -75,7 +68,7 @@ public class MqttMessageBus extends RemoteMessageBus {
                 channel = MqttMessageBus.this.getChannelResolver().resolve(message.getClass());
             }
             MqttMessage mqttMessage = new MqttMessage(
-                ((String) MqttMessageBus.this.getSerializer().serialize(message)).getBytes());
+                    ((String) MqttMessageBus.this.getSerializer().serialize(message)).getBytes());
             mqttMessage.setQos(options.getQos());
             try {
                 client.publish(channel.getName(), mqttMessage);
