@@ -2,8 +2,7 @@ package io.bayberry.aloha.spring.local;
 
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.SubscribableMessage;
-import io.bayberry.aloha.annotation.Consume;
-import io.bayberry.aloha.annotation.Executor;
+import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.BaseSpringTest;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
@@ -70,7 +69,7 @@ public class LocalSpringMessageBusTest extends BaseSpringTest {
             countDownLatch.countDown();
         }
 
-        @Executor(maxCount = 3, capacity = 3)
+        @Concurrency(maxCount = 3, capacity = 3)
         @Subscribe
         public void onReceive(AsyncSpringMessage message) throws InterruptedException {
             Thread.sleep(1000);

@@ -2,7 +2,7 @@ package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.ExecutionStrategy;
 import io.bayberry.aloha.Listener;
-import io.bayberry.aloha.annotation.Executor;
+import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.util.BlockingThreadPoolExecutor;
 
 import java.util.Map;
@@ -15,19 +15,19 @@ public class DefaultExecutionStrategy implements ExecutionStrategy {
 
     @Override
     public void execute(Listener listener, Runnable runnable) {
-        Executor executor = listener.getMethod().getAnnotation(Executor.class);
-        if (executor != null && executor.maxCount() > 1) {
-            getOrCreateThreadPoolExecutor(listener, executor).execute(runnable);
+        Concurrency concurrency = listener.getMethod().getAnnotation(Concurrency.class);
+        if (concurrency != null && concurrency.maxCount() > 1) {
+            getOrCreateThreadPoolExecutor(listener, concurrency).execute(runnable);
         } else {
             runnable.run();
         }
     }
 
-    private ThreadPoolExecutor getOrCreateThreadPoolExecutor(Listener listener, Executor executor) {
+    private ThreadPoolExecutor getOrCreateThreadPoolExecutor(Listener listener, Concurrency concurrency) {
         ThreadPoolExecutor pool = pools.get(listener);
         if (pool == null) {
-            ThreadPoolExecutor newPool = new BlockingThreadPoolExecutor(executor.minCount(), executor.maxCount(),
-                    executor.capacity(), executor.keepAliveTime(), executor.unit());
+            ThreadPoolExecutor newPool = new BlockingThreadPoolExecutor(concurrency.minCount(), concurrency.maxCount(),
+                    concurrency.capacity(), concurrency.keepAliveTime(), concurrency.unit());
             pool = pools
                     .putIfAbsent(listener, newPool);
             if (pool == null) {
