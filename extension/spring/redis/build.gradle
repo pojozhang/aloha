@@ -10,9 +10,10 @@ jar {
 }
 
 dependencies {
-    compileOnly(
-            "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
+    compile(
+            "org.springframework.data:spring-data-redis:$springRedisVersion"
     )
+
     testCompile(
             "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
     )
