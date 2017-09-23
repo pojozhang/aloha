@@ -3,7 +3,7 @@ package io.bayberry.aloha.spring.redis;
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Consume;
-import io.bayberry.aloha.annotation.Executor;
+import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.spring.BaseSpringTest;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import org.awaitility.Duration;
@@ -63,7 +63,7 @@ public class RedisMessageBusTest extends BaseSpringTest {
             countDownLatch.countDown();
         }
 
-        @Executor(maxCount = 3, capacity = 3)
+        @Concurrency(maxCount = 3, capacity = 3)
         @Consume
         public void onReceive(AsyncRedisMessage message) throws InterruptedException {
             Thread.sleep(1000);
