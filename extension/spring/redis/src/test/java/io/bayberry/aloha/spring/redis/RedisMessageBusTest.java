@@ -1,9 +1,9 @@
 package io.bayberry.aloha.spring.redis;
 
+import io.bayberry.aloha.ConsumableMessage;
 import io.bayberry.aloha.MessageBus;
-import io.bayberry.aloha.SubscribableMessage;
-import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Concurrency;
+import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.spring.BaseSpringTest;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import org.awaitility.Duration;
@@ -38,25 +38,25 @@ public class RedisMessageBusTest extends BaseSpringTest {
     }
 
     @Test
-    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
+    public void the_consumer_should_be_called_asynchronously_after_single_message_is_post() {
         this.countDownLatch = new CountDownLatch(1);
-        this.messageBus.post(new SubscribableMessage(new SyncRedisMessage()));
+        this.messageBus.post(new ConsumableMessage(new SyncRedisMessage()));
         await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
     }
 
     @Test
-    public void the_subscriber_should_be_called_asynchronously_for_n_times_after_n_messages_are_post() {
+    public void the_consumer_should_be_called_asynchronously_for_n_times_after_n_messages_are_post() {
         final int NUMBER = 6;
         this.countDownLatch = new CountDownLatch(NUMBER);
         for (int i = 0; i < NUMBER; i++) {
-            this.messageBus.post(new SubscribableMessage(new AsyncRedisMessage()));
+            this.messageBus.post(new ConsumableMessage(new AsyncRedisMessage()));
         }
         await().atLeast(Duration.ONE_SECOND).atMost(Duration.FIVE_SECONDS)
                 .until(() -> this.countDownLatch.getCount() == 0);
     }
 
     @RedisListeners
-    public static class RedisConsumers {
+    public static class TestRedisListeners {
 
         @Consume
         public void onReceive(SyncRedisMessage message) {
