@@ -1,5 +1,6 @@
 package io.bayberry.aloha;
 
+import io.bayberry.aloha.exception.UnsupportedListenerException;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.support.*;
 
@@ -40,6 +41,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     public void onStart() {
         this.listenerRegistry.getListeners().forEach(listener -> {
             Stream stream = this.bindStream(listener);
+            if (stream == null) this.handleUnsupportedListener(listener);
             stream.register(listener);
             this.getStreamRegistry().register(stream);
         });
@@ -144,5 +146,9 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     protected void handleUnsupportedMessage(Message message) {
         throw new UnsupportedMessageException(message);
+    }
+
+    protected void handleUnsupportedListener(Listener listener) {
+        throw new UnsupportedListenerException(listener);
     }
 }
