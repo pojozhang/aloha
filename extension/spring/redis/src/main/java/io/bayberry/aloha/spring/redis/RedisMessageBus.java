@@ -1,22 +1,34 @@
 package io.bayberry.aloha.spring.redis;
 
 import io.bayberry.aloha.*;
+import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.spring.SpringListenerResolver;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
+import io.bayberry.aloha.spring.util.SpringUtils;
 import io.bayberry.aloha.support.AsyncStreamDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
+import io.bayberry.aloha.util.Assert;
+import io.bayberry.aloha.util.LoopRunner;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+
+import java.util.concurrent.TimeUnit;
 
 public class RedisMessageBus extends RemoteMessageBus {
 
     private static final RedisMessageBusOptions DEFAULT_SETTINGS = new RedisMessageBusOptions("mb:");
-    private RedisTemplate<String, String> redisTemplate;
-    private RedisMessageBusOptions options;
     private ApplicationContext applicationContext;
+    private RedisTemplate<String, String> redisTemplate;
+    private RedisConnectionFactory redisConnectionFactory;
+    private RedisSubscribableStream redisSubscribableStream;
     private ProduceCommand produceCommand;
     private PublishCommand publishCommand;
+    private RedisMessageBusOptions options;
 
     public RedisMessageBus(ApplicationContext applicationContext) {
         this(applicationContext, DEFAULT_SETTINGS);
@@ -31,7 +43,10 @@ public class RedisMessageBus extends RemoteMessageBus {
     @Override
     public void onStart() {
         this.applicationContext.getBeansWithAnnotation(RedisListeners.class).values().forEach(super::register);
-        this.redisTemplate = this.applicationContext.getBean(StringRedisTemplate.class);
+        this.redisConnectionFactory = Assert.notNull(SpringUtils.getBean(this.applicationContext, RedisConnectionFactory.class), "RedisConnectionFactory not found");
+        this.redisTemplate = new RedisTemplate<>();
+        this.redisTemplate.setConnectionFactory(this.redisConnectionFactory);
+        this.redisSubscribableStream = new RedisSubscribableStream();
         this.produceCommand = new ProduceCommand();
         this.publishCommand = new PublishCommand();
         super.onStart();
@@ -49,8 +64,14 @@ public class RedisMessageBus extends RemoteMessageBus {
 
     @Override
     protected Stream bindStream(Listener listener) {
-        return new AsyncStreamDecorator(
-                new RedisStream(listener.getChannel(), redisTemplate, this));
+        if (listener instanceof Consumer) {
+            return new AsyncStreamDecorator(
+                    new RedisConsumableStream(listener.getChannel()));
+        }
+        if (listener instanceof Subscriber) {
+            return this.redisSubscribableStream;
+        }
+        return null;
     }
 
     @Override
@@ -76,7 +97,7 @@ public class RedisMessageBus extends RemoteMessageBus {
         }
     }
 
-    public class PublishCommand implements Command {
+    private class PublishCommand implements Command {
 
         @Override
         public void execute(Channel channel, Object message) {
@@ -84,6 +105,56 @@ public class RedisMessageBus extends RemoteMessageBus {
                 channel = RedisMessageBus.this.getChannelResolver().resolve(message.getClass());
             }
             RedisMessageBus.this.redisTemplate.convertAndSend(channel.getName(), RedisMessageBus.this.getSerializer().serialize(message));
+        }
+    }
+
+    private class RedisConsumableStream extends RemoteStream {
+
+        public RedisConsumableStream(Channel channel) {
+            super(channel, RedisMessageBus.this);
+            this.onCreate();
+        }
+
+        @Override
+        protected void onStart() {
+            new LoopRunner().run(
+                    () -> {
+                        String message = RedisMessageBus.this.redisTemplate.opsForList()
+                                .leftPop(super.getChannel().getName(), 3000, TimeUnit.MILLISECONDS);
+                        if (message != null) {
+                            super.notifyAll(message);
+                        }
+                    },
+                    exception -> {
+                        try {
+                            handleException(exception, null);
+                        } catch (Exception error) {
+                            throw new AlohaException(error);
+                        }
+                    });
+        }
+    }
+
+    private class RedisSubscribableStream extends RemoteStream {
+
+        private RedisMessageListenerContainer redisMessageListenerContainer;
+
+        public RedisSubscribableStream() {
+            super(RedisMessageBus.this);
+            this.redisMessageListenerContainer = new RedisMessageListenerContainer();
+            this.redisMessageListenerContainer.setConnectionFactory(RedisMessageBus.this.redisConnectionFactory);
+            this.onCreate();
+        }
+
+        @Override
+        protected void onStart() {
+
+        }
+
+        @Override
+        public void register(Listener listener) {
+            MessageListenerAdapter adapter = new MessageListenerAdapter(listener);
+            this.redisMessageListenerContainer.addMessageListener(adapter, new ChannelTopic(listener.getChannel().getName()));
         }
     }
 }

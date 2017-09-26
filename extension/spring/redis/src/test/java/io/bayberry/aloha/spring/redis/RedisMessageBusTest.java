@@ -2,8 +2,10 @@ package io.bayberry.aloha.spring.redis;
 
 import io.bayberry.aloha.ConsumableMessage;
 import io.bayberry.aloha.MessageBus;
-import io.bayberry.aloha.annotation.Concurrency;
+import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Consume;
+import io.bayberry.aloha.annotation.Concurrency;
+import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.BaseSpringTest;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import org.awaitility.Duration;
@@ -55,18 +57,30 @@ public class RedisMessageBusTest extends BaseSpringTest {
                 .until(() -> this.countDownLatch.getCount() == 0);
     }
 
+    @Test
+    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
+        this.countDownLatch = new CountDownLatch(1);
+        this.messageBus.post(new SubscribableMessage(new SyncRedisMessage()));
+        await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
+    }
+
     @RedisListeners
     public static class TestRedisListeners {
 
         @Consume
-        public void onReceive(SyncRedisMessage message) {
+        public void onConsume(SyncRedisMessage message) {
             countDownLatch.countDown();
         }
 
         @Concurrency(maxCount = 3, capacity = 3)
         @Consume
-        public void onReceive(AsyncRedisMessage message) throws InterruptedException {
+        public void onConsume(AsyncRedisMessage message) throws InterruptedException {
             Thread.sleep(1000);
+            countDownLatch.countDown();
+        }
+
+        @Subscribe
+        public void onSubscribe(SyncRedisMessage message) {
             countDownLatch.countDown();
         }
     }
