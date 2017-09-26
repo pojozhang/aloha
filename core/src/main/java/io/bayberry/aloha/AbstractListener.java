@@ -78,11 +78,11 @@ public abstract class AbstractListener implements Listener {
     }
 
     @Override
-    public void accept(Stream listener, Object value) throws Exception {
+    public void accept(Stream stream, Object value) throws Exception {
         try {
-            this.invoke(listener, value);
+            this.invoke(stream, value);
         } catch (Exception exception) {
-            this.handleException(exception, listener, value);
+            this.handleException(exception, stream, value);
         }
     }
 
