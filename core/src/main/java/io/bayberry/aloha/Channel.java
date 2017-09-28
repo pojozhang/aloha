@@ -4,6 +4,10 @@ public class Channel {
 
     private String name;
 
+    public static Channel valueOf(String name) {
+        return new Channel(name);
+    }
+
     public Channel() {
     }
 
