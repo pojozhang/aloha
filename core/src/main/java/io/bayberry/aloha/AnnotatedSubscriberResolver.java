@@ -8,7 +8,7 @@ public class AnnotatedSubscriberResolver extends AnnotatedListenerResolver<Subsc
 
     @Override
     public Listener resolve(Object container, Subscribe annotation, Method method, MessageBus messageBus) {
-        return new Subscriber(container, resolveChannel(annotation, method, messageBus), method, messageBus, messageBus.getDefaultExceptionHandler(), messageBus.getDefaultExecutionStrategy());
+        return new Subscriber(container, this.resolveChannel(annotation, method, messageBus), method, messageBus, messageBus.getDefaultExceptionHandler(), messageBus.getDefaultExecutionStrategy());
     }
 
     protected Channel resolveChannel(Subscribe annotation, Method method, MessageBus messageBus) {
