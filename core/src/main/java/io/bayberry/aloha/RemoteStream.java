@@ -4,10 +4,6 @@ import io.bayberry.aloha.transport.Deserializer;
 
 public abstract class RemoteStream extends AbstractStream {
 
-    public RemoteStream(RemoteMessageBus messageBus) {
-        this(null, messageBus);
-    }
-
     public RemoteStream(Channel channel, RemoteMessageBus messageBus) {
         super(channel, messageBus);
     }

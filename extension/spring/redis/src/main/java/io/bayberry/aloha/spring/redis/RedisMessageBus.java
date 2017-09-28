@@ -140,7 +140,7 @@ public class RedisMessageBus extends RemoteMessageBus {
         private RedisMessageListenerContainer redisMessageListenerContainer;
 
         public RedisSubscribableStream() {
-            super(RedisMessageBus.this);
+            super(Channel.valueOf("redis.subscribable.stream"), RedisMessageBus.this);
             this.redisMessageListenerContainer = new RedisMessageListenerContainer();
             this.redisMessageListenerContainer.setConnectionFactory(RedisMessageBus.this.redisConnectionFactory);
             this.onCreate();
