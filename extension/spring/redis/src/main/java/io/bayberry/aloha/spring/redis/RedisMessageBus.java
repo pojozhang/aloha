@@ -46,6 +46,7 @@ public class RedisMessageBus extends RemoteMessageBus {
         this.redisConnectionFactory = Assert.notNull(SpringUtils.getBean(this.applicationContext, RedisConnectionFactory.class), "RedisConnectionFactory not found");
         this.redisTemplate = new RedisTemplate<>();
         this.redisTemplate.setConnectionFactory(this.redisConnectionFactory);
+        this.redisTemplate.afterPropertiesSet();
         this.redisSubscribableStream = new RedisSubscribableStream();
         this.produceCommand = new ProduceCommand();
         this.publishCommand = new PublishCommand();
