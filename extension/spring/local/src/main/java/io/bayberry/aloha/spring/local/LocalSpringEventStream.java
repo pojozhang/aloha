@@ -10,8 +10,4 @@ public class LocalSpringEventStream extends LocalStream {
         super(channel, messageBus);
         this.onCreate();
     }
-
-    @Override
-    protected void onStart() {
-    }
 }
