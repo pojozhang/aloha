@@ -1,12 +1,21 @@
 package io.bayberry.aloha.support;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.bayberry.aloha.exception.DeserializationException;
 import io.bayberry.aloha.transport.Deserializer;
 
-public class JsonDeserializer<T> implements Deserializer<String, T> {
+import java.io.IOException;
+
+public class JsonDeserializer<T> implements Deserializer<byte[], T> {
+
+    private static ObjectMapper JSON = new ObjectMapper();
 
     @Override
-    public T deserialize(String source, Class<T> targetType) {
-        return JSON.parseObject(source, targetType);
+    public T deserialize(byte[] source, Class<T> targetType) {
+        try {
+            return JSON.readValue(source, targetType);
+        } catch (IOException e) {
+            throw new DeserializationException(source, targetType, e);
+        }
     }
 }
