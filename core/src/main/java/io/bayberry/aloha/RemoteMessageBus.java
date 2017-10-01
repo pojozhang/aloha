@@ -1,43 +1,28 @@
 package io.bayberry.aloha;
 
 import io.bayberry.aloha.support.*;
-import io.bayberry.aloha.transport.Deserializer;
 import io.bayberry.aloha.transport.Serializer;
 
-public abstract class RemoteMessageBus extends AbstractMessageBus {
+public abstract class RemoteMessageBus<S, T> extends AbstractMessageBus {
 
-    protected Serializer serializer;
-    protected Deserializer deserializer;
+    protected Serializer<S, T> serializer;
 
     @Override
     protected void onCreate() {
         this.serializer = this.initSerializer();
-        this.deserializer = this.initDeserializer();
         super.onCreate();
     }
 
-    public Serializer getSerializer() {
+    public Serializer<S, T> getSerializer() {
         return serializer;
     }
 
-    public void setSerializer(Serializer serializer) {
+    public void setSerializer(Serializer<S, T> serializer) {
         this.serializer = serializer;
     }
 
-    public Deserializer getDeserializer() {
-        return deserializer;
-    }
-
-    public void setDeserializer(Deserializer deserializer) {
-        this.deserializer = deserializer;
-    }
-
-    protected Serializer initSerializer() {
+    protected Serializer<S, T> initSerializer() {
         return new JsonSerializer();
-    }
-
-    protected Deserializer initDeserializer() {
-        return new JsonDeserializer();
     }
 
     @Override

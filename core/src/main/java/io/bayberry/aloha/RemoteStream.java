@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-import io.bayberry.aloha.transport.Deserializer;
+import io.bayberry.aloha.transport.Serializer;
 
 public abstract class RemoteStream extends AbstractStream {
 
@@ -21,8 +21,8 @@ public abstract class RemoteStream extends AbstractStream {
     @SuppressWarnings("unchecked")
     @Override
     protected Object getConvertedMessage(Object origin, Listener listener) {
-        Deserializer deserializer = getMessageBus().getDeserializer();
-        return deserializer == null ? origin
-                : deserializer.deserialize(origin, listener.getMethod().getParameterTypes()[0]);
+        Serializer serializer = getMessageBus().getSerializer();
+        return serializer == null ? origin
+                : serializer.deserialize(origin, listener.getMethod().getParameterTypes()[0]);
     }
 }
