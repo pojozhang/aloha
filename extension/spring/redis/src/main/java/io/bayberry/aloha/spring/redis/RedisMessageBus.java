@@ -37,12 +37,12 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
         this.applicationContext = applicationContext;
         this.redisConnectionFactory = connectionFactory;
         this.options = options;
-        super.onCreate();
+        this.onCreate();
     }
 
     @Override
-    public void onStart() {
-        this.applicationContext.getBeansWithAnnotation(RedisListeners.class).values().forEach(super::register);
+    protected void onCreate() {
+        super.onCreate();
         this.redisTemplate = new RedisTemplate<>();
         this.redisTemplate.setConnectionFactory(this.redisConnectionFactory);
         this.redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -51,8 +51,13 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
         this.redisSubscribableStreamContainer = new RedisSubscribableStreamContainer();
         this.produceCommand = new ProduceCommand();
         this.publishCommand = new PublishCommand();
-        super.onStart();
+        this.applicationContext.getBeansWithAnnotation(RedisListeners.class).values().forEach(super::register);
+    }
+
+    @Override
+    public void onStart() {
         this.redisSubscribableStreamContainer.start();
+        super.onStart();
     }
 
     @Override
@@ -83,11 +88,13 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
     public void post(Message message) {
         if (message instanceof SubscribableMessage) {
             this.publishCommand.execute(message.getChannel(), message.getPayload());
-        } else if (message instanceof ConsumableMessage) {
-            this.produceCommand.execute(message.getChannel(), message.getPayload());
-        } else {
-            super.handleUnsupportedMessage(message);
+            return;
         }
+        if (message instanceof ConsumableMessage) {
+            this.produceCommand.execute(message.getChannel(), message.getPayload());
+            return;
+        }
+        super.handleUnsupportedMessage(message);
     }
 
     private class ProduceCommand implements Command {
