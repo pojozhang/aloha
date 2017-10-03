@@ -4,10 +4,8 @@ import io.bayberry.aloha.*;
 import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.spring.SpringListenerResolver;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
-import io.bayberry.aloha.spring.util.SpringUtils;
 import io.bayberry.aloha.support.AsyncStreamDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
-import io.bayberry.aloha.util.Assert;
 import io.bayberry.aloha.util.LoopRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.connection.MessageListener;
@@ -37,6 +35,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
 
     public RedisMessageBus(ApplicationContext applicationContext, RedisConnectionFactory connectionFactory, RedisMessageBusOptions options) {
         this.applicationContext = applicationContext;
+        this.redisConnectionFactory = connectionFactory;
         this.options = options;
         super.onCreate();
     }
@@ -44,7 +43,6 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
     @Override
     public void onStart() {
         this.applicationContext.getBeansWithAnnotation(RedisListeners.class).values().forEach(super::register);
-        this.redisConnectionFactory = Assert.notNull(SpringUtils.getBean(this.applicationContext, RedisConnectionFactory.class), "RedisConnectionFactory not found");
         this.redisTemplate = new RedisTemplate<>();
         this.redisTemplate.setConnectionFactory(this.redisConnectionFactory);
         this.redisTemplate.setKeySerializer(new StringRedisSerializer());
