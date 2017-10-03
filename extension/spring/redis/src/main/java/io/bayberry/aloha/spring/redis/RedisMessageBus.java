@@ -16,14 +16,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.util.concurrent.TimeUnit;
 
-public class RedisMessageBus extends RemoteMessageBus {
+public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
 
     private static final RedisMessageBusOptions DEFAULT_SETTINGS = new RedisMessageBusOptions("mb:");
     private ApplicationContext applicationContext;
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, byte[]> redisTemplate;
     private RedisConnectionFactory redisConnectionFactory;
     private RedisSubscribableStreamContainer redisSubscribableStreamContainer;
     private ProduceCommand produceCommand;
@@ -46,6 +47,8 @@ public class RedisMessageBus extends RemoteMessageBus {
         this.redisConnectionFactory = Assert.notNull(SpringUtils.getBean(this.applicationContext, RedisConnectionFactory.class), "RedisConnectionFactory not found");
         this.redisTemplate = new RedisTemplate<>();
         this.redisTemplate.setConnectionFactory(this.redisConnectionFactory);
+        this.redisTemplate.setKeySerializer(new StringRedisSerializer());
+        this.redisTemplate.setEnableDefaultSerializer(false);
         this.redisTemplate.afterPropertiesSet();
         this.redisSubscribableStreamContainer = new RedisSubscribableStreamContainer();
         this.produceCommand = new ProduceCommand();
@@ -97,7 +100,7 @@ public class RedisMessageBus extends RemoteMessageBus {
                 channel = RedisMessageBus.this.getChannelResolver().resolve(message.getClass());
             }
             RedisMessageBus.this.redisTemplate.opsForList()
-                    .rightPush(channel.getName(), (String) RedisMessageBus.this.getSerializer().serialize(message));
+                    .rightPush(channel.getName(), RedisMessageBus.this.getSerializer().serialize(message));
         }
     }
 
@@ -123,7 +126,7 @@ public class RedisMessageBus extends RemoteMessageBus {
         protected void onStart() {
             new LoopRunner().run(
                     () -> {
-                        String message = RedisMessageBus.this.redisTemplate.opsForList()
+                        byte[] message = RedisMessageBus.this.redisTemplate.opsForList()
                                 .leftPop(super.getChannel().getName(), 3000, TimeUnit.MILLISECONDS);
                         if (message != null) {
                             super.notifyAll(message);
