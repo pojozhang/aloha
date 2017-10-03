@@ -1,6 +1,7 @@
 package io.bayberry.aloha.mqtt;
 
-import io.bayberry.aloha.annotation.Consume;
+import io.bayberry.aloha.SubscribableMessage;
+import io.bayberry.aloha.annotation.Subscribe;
 import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class MqttMessageBusTest {
     @Before
     public void setUp() {
         mqttMessageBus = new MqttMessageBus(options);
-        mqttMessageBus.register(new MqttSubscribers());
+        mqttMessageBus.register(new MqttListeners());
         mqttMessageBus.start();
     }
 
@@ -39,14 +40,14 @@ public class MqttMessageBusTest {
     @Test
     public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
         this.countDownLatch = new CountDownLatch(1);
-        this.mqttMessageBus.publish(new MqttMessage());
+        this.mqttMessageBus.post(new SubscribableMessage(new MqttMessage()));
         await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
     }
 
-    public static class MqttSubscribers {
+    public static class MqttListeners {
 
-        @Consume
-        public void onReceive(MqttMessage message) {
+        @Subscribe
+        public void onSubscribe(MqttMessage message) {
             countDownLatch.countDown();
         }
     }

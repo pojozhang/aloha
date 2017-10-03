@@ -36,7 +36,7 @@ public class MqttStream extends RemoteStream implements MqttCallback {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
-        super.notifyAll(new String(message.getPayload()));
+        super.notifyAll(message.getPayload());
     }
 
     @Override
