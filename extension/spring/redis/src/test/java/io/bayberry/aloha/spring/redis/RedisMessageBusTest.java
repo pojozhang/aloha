@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -26,11 +27,13 @@ public class RedisMessageBusTest extends BaseSpringTest {
     private static CountDownLatch countDownLatch;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private RedisConnectionFactory connectionFactory;
     private MessageBus messageBus;
 
     @Before
     public void setUp() {
-        messageBus = new RedisMessageBus(applicationContext);
+        messageBus = new RedisMessageBus(applicationContext, connectionFactory);
         messageBus.start();
     }
 

@@ -31,11 +31,11 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
     private PublishCommand publishCommand;
     private RedisMessageBusOptions options;
 
-    public RedisMessageBus(ApplicationContext applicationContext) {
-        this(applicationContext, DEFAULT_SETTINGS);
+    public RedisMessageBus(ApplicationContext applicationContext, RedisConnectionFactory connectionFactory) {
+        this(applicationContext, connectionFactory, DEFAULT_SETTINGS);
     }
 
-    public RedisMessageBus(ApplicationContext applicationContext, RedisMessageBusOptions options) {
+    public RedisMessageBus(ApplicationContext applicationContext, RedisConnectionFactory connectionFactory, RedisMessageBusOptions options) {
         this.applicationContext = applicationContext;
         this.options = options;
         super.onCreate();
