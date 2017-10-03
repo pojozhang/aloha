@@ -12,6 +12,6 @@ public class DefaultLogExceptionHandler implements ExceptionHandler {
 
     @Override
     public void handle(Channel channel, Object value, MessageBus messageBus, Exception exception) {
-        log.error("An error occurs:", exception);
+        log.error("An error occurs", exception);
     }
 }
