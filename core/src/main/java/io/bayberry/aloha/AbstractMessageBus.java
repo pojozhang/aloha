@@ -4,11 +4,12 @@ import io.bayberry.aloha.exception.UnsupportedListenerException;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.support.*;
 
+import java.util.Set;
+
 public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private ChannelResolver channelResolver;
     private ListenerResolver listenerResolver;
-    private ListenerRegistry listenerRegistry;
     private StreamRegistry streamRegistry;
     private ExceptionHandler defaultExceptionHandler;
     private ExceptionHandlerFactory exceptionHandlerFactory;
@@ -17,17 +18,22 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     @Override
     public void register(Object container) {
-        this.listenerRegistry.register(this.listenerResolver.resolve(container, this));
+        Set<Listener> listeners = this.listenerResolver.resolve(container, this);
+        listeners.forEach(listener -> {
+            Stream stream = this.bindStream(listener);
+            stream.register(listener);
+            this.getStreamRegistry().register(stream);
+        });
     }
 
     @Override
     public void unregister(Object container) {
-        this.listenerRegistry.unregister(this.listenerResolver.resolve(container, this));
+        Set<Listener> listeners = this.listenerResolver.resolve(container, this);
+        listeners.forEach(listener -> listener.getStream().unregister(listener));
     }
 
     @Override
     protected void onCreate() {
-        this.listenerRegistry = this.initListenerRegistry();
         this.streamRegistry = this.initStreamRegistry();
         this.listenerResolver = this.initListenerResolver();
         this.channelResolver = this.initChannelResolver();
@@ -39,12 +45,6 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     @Override
     public void onStart() {
-        this.listenerRegistry.getListeners().forEach(listener -> {
-            Stream stream = this.bindStream(listener);
-            if (stream == null) this.handleUnsupportedListener(listener);
-            stream.register(listener);
-            this.getStreamRegistry().register(stream);
-        });
         this.getStreamRegistry().getStreams().forEach(Stream::start);
     }
 
@@ -102,20 +102,12 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         return this.getChannelResolver().resolve(messageType);
     }
 
-    protected ListenerRegistry getListenerRegistry() {
-        return listenerRegistry;
-    }
-
     protected ListenerResolver getListenerResolver() {
         return listenerResolver;
     }
 
     protected ChannelResolver getChannelResolver() {
         return channelResolver;
-    }
-
-    protected ListenerRegistry initListenerRegistry() {
-        return new DefaultListenerRegistry();
     }
 
     protected ListenerResolver initListenerResolver() {
@@ -143,12 +135,4 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
 
     protected abstract Stream bindStream(Listener listener);
-
-    protected void handleUnsupportedMessage(Message message) {
-        throw new UnsupportedMessageException(message);
-    }
-
-    protected void handleUnsupportedListener(Listener listener) {
-        throw new UnsupportedListenerException(listener);
-    }
 }
