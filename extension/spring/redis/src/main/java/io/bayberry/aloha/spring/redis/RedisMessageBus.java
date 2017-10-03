@@ -2,6 +2,8 @@ package io.bayberry.aloha.spring.redis;
 
 import io.bayberry.aloha.*;
 import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UnsupportedListenerException;
+import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.SpringListenerResolver;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import io.bayberry.aloha.support.AsyncStreamDecorator;
@@ -81,7 +83,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
             this.redisSubscribableStreamContainer.add(stream);
             return stream;
         }
-        return null;
+        throw new UnsupportedListenerException(listener);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
             this.produceCommand.execute(message.getChannel(), message.getPayload());
             return;
         }
-        super.handleUnsupportedMessage(message);
+        throw new UnsupportedMessageException(message);
     }
 
     private class ProduceCommand implements Command {
