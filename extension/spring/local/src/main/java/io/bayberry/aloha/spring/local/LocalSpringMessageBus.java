@@ -1,6 +1,7 @@
 package io.bayberry.aloha.spring.local;
 
 import io.bayberry.aloha.*;
+import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.SpringSubscriberResolver;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import io.bayberry.aloha.util.Reflection;
@@ -23,15 +24,15 @@ public class LocalSpringMessageBus extends LocalMessageBus {
     public LocalSpringMessageBus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         this.applicationListenerProxy = new ApplicationListenerProxy();
-        super.onCreate();
+        this.onCreate();
     }
 
     @Override
-    public void onStart() {
+    protected void onCreate() {
+        super.onCreate();
         this.applicationContext.getBeansWithAnnotation(SpringEventListeners.class).values().forEach(super::register);
         ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(applicationListenerProxy);
         this.publishCommand = new PublishCommand();
-        super.onStart();
     }
 
     @Override
@@ -55,9 +56,9 @@ public class LocalSpringMessageBus extends LocalMessageBus {
     public void post(Message message) {
         if (message instanceof SubscribableMessage) {
             this.publishCommand.execute(message.getChannel(), message.getPayload());
-        } else {
-            super.handleUnsupportedMessage(message);
+            return;
         }
+        throw new UnsupportedMessageException(message);
     }
 
     public class PublishCommand implements Command {
@@ -101,6 +102,14 @@ public class LocalSpringMessageBus extends LocalMessageBus {
 
         private Channel resolveChannel(Class messageType) {
             return LocalSpringMessageBus.this.resolveChannel(messageType);
+        }
+    }
+
+    private class LocalSpringEventStream extends LocalStream {
+
+        public LocalSpringEventStream(Channel channel, LocalMessageBus messageBus) {
+            super(channel, messageBus);
+            this.onCreate();
         }
     }
 }
