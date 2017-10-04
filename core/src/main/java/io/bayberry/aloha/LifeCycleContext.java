@@ -25,14 +25,14 @@ public abstract class LifeCycleContext implements LifeCycle {
     @Override
     public void stop() {
         this.status.stop();
-        this.onDestroy();
+        this.onStop();
     }
 
     protected abstract void onCreate();
 
     protected abstract void onStart();
 
-    protected abstract void onDestroy();
+    protected abstract void onStop();
 
     public LifeCycleStatus getStatus() {
         return status;
