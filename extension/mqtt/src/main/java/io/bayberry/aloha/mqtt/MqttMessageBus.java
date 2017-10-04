@@ -18,14 +18,23 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
     public MqttMessageBus(MqttMessageBusOptions options) {
         this.options = options;
         this.mqttCommand = new MqttCommand();
+        this.onCreate();
+    }
+
+    @Override
+    protected void onCreate() {
         super.onCreate();
+        MemoryPersistence persistence = new MemoryPersistence();
+        try {
+            this.client = new MqttClient(options.getServerUri(), options.getClientId(), persistence);
+        } catch (MqttException e) {
+            throw new AlohaException(e);
+        }
     }
 
     @Override
     public void onStart() {
-        MemoryPersistence persistence = new MemoryPersistence();
         try {
-            this.client = new MqttClient(options.getServerUri(), options.getClientId(), persistence);
             this.client.connect(this.options.getConnectOptions());
         } catch (MqttException e) {
             throw new AlohaException(e);
