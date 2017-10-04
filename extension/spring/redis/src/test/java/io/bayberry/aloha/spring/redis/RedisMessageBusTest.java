@@ -6,23 +6,27 @@ import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Subscribe;
-import io.bayberry.aloha.spring.BaseSpringTest;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.concurrent.CountDownLatch;
 
 import static org.awaitility.Awaitility.await;
 
+@SpringBootTest
 @SpringBootApplication
-public class RedisMessageBusTest extends BaseSpringTest {
+@RunWith(SpringRunner.class)
+public class RedisMessageBusTest {
 
     private static CountDownLatch countDownLatch;
     @Autowired

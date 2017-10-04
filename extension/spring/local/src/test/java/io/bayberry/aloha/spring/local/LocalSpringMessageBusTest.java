@@ -4,22 +4,25 @@ import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Subscribe;
-import io.bayberry.aloha.spring.BaseSpringTest;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.concurrent.CountDownLatch;
 
-import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 
+@SpringBootTest
 @SpringBootApplication
-public class LocalSpringMessageBusTest extends BaseSpringTest {
+@RunWith(SpringRunner.class)
+public class LocalSpringMessageBusTest {
 
     private static CountDownLatch countDownLatch;
     @Autowired
