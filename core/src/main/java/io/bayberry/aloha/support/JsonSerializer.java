@@ -1,6 +1,7 @@
 package io.bayberry.aloha.support;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.bayberry.aloha.exception.DeserializationException;
@@ -15,6 +16,7 @@ public class JsonSerializer<S> implements Serializer<S, byte[]> {
 
     static {
         JSON.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        JSON.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
     @Override
