@@ -1,7 +1,8 @@
 package io.bayberry.aloha;
 
 import io.bayberry.aloha.support.*;
-import io.bayberry.aloha.transport.Serializer;
+import io.bayberry.aloha.support.serializer.JsonSerializer;
+import io.bayberry.aloha.support.serializer.Serializer;
 
 public abstract class RemoteMessageBus<S, T> extends AbstractMessageBus {
 

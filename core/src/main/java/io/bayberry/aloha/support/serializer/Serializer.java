@@ -1,4 +1,4 @@
-package io.bayberry.aloha.transport;
+package io.bayberry.aloha.support.serializer;
 
 public interface Serializer<S, T> {
 

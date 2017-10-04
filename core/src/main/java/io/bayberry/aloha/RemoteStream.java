@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-import io.bayberry.aloha.transport.Serializer;
+import io.bayberry.aloha.support.serializer.Serializer;
 
 public abstract class RemoteStream extends AbstractStream {
 

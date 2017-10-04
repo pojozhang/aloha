@@ -1,4 +1,4 @@
-package io.bayberry.aloha.support;
+package io.bayberry.aloha.support.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.bayberry.aloha.exception.DeserializationException;
 import io.bayberry.aloha.exception.SerializationException;
-import io.bayberry.aloha.transport.Serializer;
 
 import java.io.IOException;
 
