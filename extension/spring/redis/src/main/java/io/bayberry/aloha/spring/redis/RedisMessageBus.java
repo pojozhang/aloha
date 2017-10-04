@@ -63,6 +63,12 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
     }
 
     @Override
+    public void onStop() {
+        this.redisSubscribableStreamContainer.stop();
+        super.onStop();
+    }
+
+    @Override
     protected ListenerResolver initListenerResolver() {
         return new SpringListenerResolver(this.applicationContext);
     }
@@ -166,6 +172,10 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
 
         public void start() {
             this.redisMessageListenerContainer.start();
+        }
+
+        public void stop() {
+            this.redisMessageListenerContainer.stop();
         }
     }
 

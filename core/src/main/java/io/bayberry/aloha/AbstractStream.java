@@ -46,7 +46,7 @@ public abstract class AbstractStream extends MessageBusContext implements Stream
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
     }
 
     @Override

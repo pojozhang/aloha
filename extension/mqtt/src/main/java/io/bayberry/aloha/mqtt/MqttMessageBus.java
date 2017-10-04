@@ -43,7 +43,7 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
         try {
             if (this.client != null) {
                 this.client.disconnect();
@@ -51,7 +51,7 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
         } catch (MqttException e) {
 
         }
-        super.onDestroy();
+        super.onStop();
     }
 
     @Override

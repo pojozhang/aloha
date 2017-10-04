@@ -45,11 +45,11 @@ public class MqttStream extends RemoteStream implements MqttCallback {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
         try {
             this.client.disconnect();
         } catch (MqttException e) {
         }
-        super.onDestroy();
+        super.onStop();
     }
 }

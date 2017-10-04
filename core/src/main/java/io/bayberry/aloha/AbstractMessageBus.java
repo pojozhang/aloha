@@ -49,7 +49,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
         this.getStreamRegistry().getStreams().forEach(Stream::stop);
     }
 
