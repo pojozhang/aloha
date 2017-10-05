@@ -8,14 +8,13 @@ import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import org.awaitility.Duration;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -30,21 +29,7 @@ public class RedisMessageBusTest {
 
     private static CountDownLatch countDownLatch;
     @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private RedisConnectionFactory connectionFactory;
     private MessageBus messageBus;
-
-    @Before
-    public void setUp() {
-        messageBus = new RedisMessageBus(applicationContext, connectionFactory);
-        messageBus.start();
-    }
-
-    @After
-    public void tearDown() {
-        messageBus.stop();
-    }
 
     @Test
     public void the_consumer_should_be_called_asynchronously_after_single_message_is_post() {

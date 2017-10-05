@@ -9,7 +9,10 @@ import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import io.bayberry.aloha.support.AsyncStreamDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
 import io.bayberry.aloha.util.LoopRunner;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,7 +23,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.util.concurrent.TimeUnit;
 
-public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
+public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> implements ApplicationContextAware, InitializingBean {
 
     private static final RedisMessageBusOptions DEFAULT_SETTINGS = new RedisMessageBusOptions("mb:");
     private ApplicationContext applicationContext;
@@ -31,15 +34,13 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
     private PublishCommand publishCommand;
     private RedisMessageBusOptions options;
 
-    public RedisMessageBus(ApplicationContext applicationContext, RedisConnectionFactory connectionFactory) {
-        this(applicationContext, connectionFactory, DEFAULT_SETTINGS);
+    public RedisMessageBus(RedisConnectionFactory connectionFactory) {
+        this(connectionFactory, DEFAULT_SETTINGS);
     }
 
-    public RedisMessageBus(ApplicationContext applicationContext, RedisConnectionFactory connectionFactory, RedisMessageBusOptions options) {
-        this.applicationContext = applicationContext;
+    public RedisMessageBus(RedisConnectionFactory connectionFactory, RedisMessageBusOptions options) {
         this.redisConnectionFactory = connectionFactory;
         this.options = options;
-        this.onCreate();
     }
 
     @Override
@@ -103,6 +104,16 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> {
             return;
         }
         throw new UnsupportedMessageException(message);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.onCreate();
     }
 
     private class ProduceCommand implements Command {
