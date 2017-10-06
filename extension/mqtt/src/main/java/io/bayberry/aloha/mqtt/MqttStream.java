@@ -1,6 +1,7 @@
 package io.bayberry.aloha.mqtt;
 
 import io.bayberry.aloha.Channel;
+import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.RemoteStream;
 import io.bayberry.aloha.exception.AlohaException;
 import org.eclipse.paho.client.mqttv3.*;

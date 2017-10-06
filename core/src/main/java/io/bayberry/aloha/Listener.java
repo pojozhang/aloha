@@ -1,14 +1,15 @@
 package io.bayberry.aloha;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 public interface Listener {
-
-    Channel getChannel();
 
     Object getObject();
 
     Method getMethod();
+
+    Optional<Class> getMessageType();
 
     Stream getStream();
 

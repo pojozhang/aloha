@@ -13,10 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Subscribe {
 
-    String channel() default "";
-
-    Class<? extends AnnotatedListenerResolver> resolver() default AnnotatedSubscriberResolver.class;
-
     Class<? extends ExecutionStrategy> executionStrategy() default InheritedExecutionStrategy.class;
 
     Class<? extends ExceptionHandler> exceptionHandler() default InheritedExceptionHandler.class;

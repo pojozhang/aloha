@@ -3,10 +3,10 @@ package io.bayberry.aloha;
 import io.bayberry.aloha.exception.AlohaException;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 public abstract class AbstractListener implements Listener {
 
-    protected Channel channel;
     protected Object container;
     protected Method method;
     protected MessageBus messageBus;
@@ -25,11 +25,6 @@ public abstract class AbstractListener implements Listener {
     }
 
     @Override
-    public Channel getChannel() {
-        return channel;
-    }
-
-    @Override
     public Object getObject() {
         return this.container;
     }
@@ -40,6 +35,13 @@ public abstract class AbstractListener implements Listener {
     }
 
     @Override
+    public Optional<Class> getMessageType() {
+        Class<?>[] parameterTypes = this.method.getParameterTypes();
+        if (parameterTypes == null || parameterTypes.length < 1) return Optional.empty();
+        return Optional.of(parameterTypes[0]);
+    }
+
+    @Override
     public Stream getStream() {
         return stream;
     }
@@ -47,10 +49,6 @@ public abstract class AbstractListener implements Listener {
     @Override
     public MessageBus getMessageBus() {
         return messageBus;
-    }
-
-    public void setChannel(Channel channel) {
-        this.channel = channel;
     }
 
     public void setContainer(Object container) {

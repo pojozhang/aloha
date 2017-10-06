@@ -1,8 +1,8 @@
 package io.bayberry.aloha;
 
-import io.bayberry.aloha.exception.UnsupportedListenerException;
-import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.support.*;
+import io.bayberry.aloha.util.Assert;
+import io.bayberry.aloha.util.Strings;
 
 import java.util.Set;
 
@@ -20,7 +20,8 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     public void register(Object container) {
         Set<Listener> listeners = this.listenerResolver.resolve(container, this);
         listeners.forEach(listener -> {
-            Stream stream = this.bindStream(listener);
+            Channel channel = this.resolveChannel(listener);
+            Stream stream = this.bindStream(channel, listener);
             stream.register(listener);
             this.getStreamRegistry().register(stream);
         });
@@ -102,6 +103,12 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         return this.getChannelResolver().resolve(messageType);
     }
 
+    protected Channel resolveChannel(Listener listener) {
+        io.bayberry.aloha.annotation.Channel channel = listener.getMethod().getAnnotation(io.bayberry.aloha.annotation.Channel.class);
+        if (channel != null && !Strings.isNullOrEmpty(channel.value())) return Channel.valueOf(channel.value());
+        return this.resolveChannel(Assert.notNull(listener.getMessageType(), "Fail to resolve channel of listener"));
+    }
+
     protected ListenerResolver getListenerResolver() {
         return listenerResolver;
     }
@@ -111,7 +118,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     }
 
     protected ListenerResolver initListenerResolver() {
-        return new DefaultListenerResolver();
+        return new AnnotatedListenerResolver();
     }
 
     protected StreamRegistry initStreamRegistry() {
@@ -119,7 +126,7 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     }
 
     protected ChannelResolver initChannelResolver() {
-        return new DefaultChannelResolver();
+        return new SimpleChannelResolver();
     }
 
     protected ExceptionHandler initDefaultExceptionHandler() {
@@ -134,5 +141,5 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
 
-    protected abstract Stream bindStream(Listener listener);
+    protected abstract Stream bindStream(Channel channel, Listener listener);
 }

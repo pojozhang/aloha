@@ -4,8 +4,8 @@ import io.bayberry.aloha.*;
 import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.exception.UnsupportedListenerException;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
-import io.bayberry.aloha.spring.SpringListenerResolver;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
+import io.bayberry.aloha.spring.util.ExpressionInterpreter;
 import io.bayberry.aloha.support.AsyncStreamDecorator;
 import io.bayberry.aloha.support.PrefixChannelResolverDecorator;
 import io.bayberry.aloha.util.LoopRunner;
@@ -33,6 +33,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> implements
     private ProduceCommand produceCommand;
     private PublishCommand publishCommand;
     private RedisMessageBusOptions options;
+    private ExpressionInterpreter expressionInterpreter;
 
     public RedisMessageBus(RedisConnectionFactory connectionFactory) {
         this(connectionFactory, DEFAULT_SETTINGS);
@@ -46,6 +47,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> implements
     @Override
     protected void onCreate() {
         super.onCreate();
+        this.expressionInterpreter = new ExpressionInterpreter(this.applicationContext);
         this.redisTemplate = new RedisTemplate<>();
         this.redisTemplate.setConnectionFactory(this.redisConnectionFactory);
         this.redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -70,23 +72,19 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> implements
     }
 
     @Override
-    protected ListenerResolver initListenerResolver() {
-        return new SpringListenerResolver(this.applicationContext);
-    }
-
-    @Override
     public ChannelResolver initChannelResolver() {
         return new PrefixChannelResolverDecorator(this.options.getChannelPrefix(), super.initChannelResolver());
     }
 
     @Override
-    protected Stream bindStream(Listener listener) {
+    protected Stream bindStream(Channel channel, Listener listener) {
+        channel.setName(this.expressionInterpreter.explain(channel.getName(), String.class));
         if (listener instanceof Consumer) {
             return new AsyncStreamDecorator(
-                    new RedisConsumableStream(listener.getChannel()));
+                    new RedisConsumableStream(channel));
         }
         if (listener instanceof Subscriber) {
-            RedisSubscribableStream stream = new RedisSubscribableStream(listener.getChannel());
+            RedisSubscribableStream stream = new RedisSubscribableStream(channel);
             this.redisSubscribableStreamContainer.add(stream);
             return stream;
         }

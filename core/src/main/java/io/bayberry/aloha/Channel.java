@@ -2,17 +2,19 @@ package io.bayberry.aloha;
 
 public class Channel {
 
+    public static Channel UNKNOWN = new Channel();
+
     private String name;
 
     public static Channel valueOf(String name) {
         return new Channel(name);
     }
 
-    public Channel() {
-    }
-
     public Channel(String name) {
         this.name = name;
+    }
+
+    private Channel() {
     }
 
     public String getName() {

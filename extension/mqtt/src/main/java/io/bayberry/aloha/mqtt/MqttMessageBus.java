@@ -55,9 +55,9 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
     }
 
     @Override
-    protected Stream bindStream(Listener listener) {
+    protected Stream bindStream(Channel channel, Listener listener) {
         if (listener instanceof Subscriber) {
-            return new MqttStream(listener.getChannel(), this);
+            return new MqttStream(channel, this);
         }
         throw new UnsupportedListenerException(listener);
     }

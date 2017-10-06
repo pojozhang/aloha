@@ -1,19 +1,48 @@
 package io.bayberry.aloha;
 
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.annotation.Consume;
+import io.bayberry.aloha.annotation.Subscribe;
+import io.bayberry.aloha.util.Assert;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AnnotatedListenerResolver<A extends Annotation> {
+import static java.util.stream.Collectors.toSet;
 
-    public abstract Listener resolve(Object container, A annotation, Method method, MessageBus messageBus);
+public class AnnotatedListenerResolver implements ListenerResolver {
 
-    protected Channel resolve(Method method, MessageBus messageBus) {
-        if (method.getParameterTypes().length > 0) {
-            return messageBus.resolveChannel(method.getParameterTypes()[0]);
-        } else {
-            throw new AlohaException("Fail to resolve subscriber: channel is empty");
-        }
+    private final Map<Class<? extends Annotation>, ListenerAnnotationResolver> listenerAnnotationResolvers;
+
+    public AnnotatedListenerResolver() {
+        this.listenerAnnotationResolvers = new ConcurrentHashMap<>();
+        this.listenerAnnotationResolvers.put(Consume.class, new ConsumerAnnotationResolver());
+        this.listenerAnnotationResolvers.put(Subscribe.class, new SubscriberAnnotationResolver());
+    }
+
+    public Map<Class<? extends Annotation>, ListenerAnnotationResolver> getListenerAnnotationResolvers() {
+        return listenerAnnotationResolvers;
+    }
+
+    @Override
+    public Set<Listener> resolve(Object container, MessageBus messageBus) {
+        Collection<Class<? extends Annotation>> supportedListenerAnnotationClasses = this.getSupportedListenerAnnotations();
+        Assert.notEmpty(supportedListenerAnnotationClasses, "Fail to resolve listeners: no supported annotation");
+        Set<Listener> listeners = new HashSet<>();
+        supportedListenerAnnotationClasses.forEach(annotationClass -> {
+            listeners.addAll(Arrays.stream(container.getClass().getDeclaredMethods())
+                    .filter(method -> method.isAnnotationPresent(annotationClass))
+                    .map(method -> {
+                        Annotation annotation = method.getAnnotation(annotationClass);
+                        ListenerAnnotationResolver listenerAnnotationResolver = this.listenerAnnotationResolvers.get(annotation);
+                        Assert.notNull(listenerAnnotationResolver, "No listener annotation resolver found for " + annotation);
+                        return listenerAnnotationResolver.resolve(container, annotation, method, messageBus);
+                    }).collect(toSet()));
+        });
+        return listeners;
+    }
+
+    protected Collection<Class<? extends Annotation>> getSupportedListenerAnnotations() {
+        return this.listenerAnnotationResolvers.keySet();
     }
 }

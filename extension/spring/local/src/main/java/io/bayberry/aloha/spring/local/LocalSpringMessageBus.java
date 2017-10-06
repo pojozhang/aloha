@@ -1,8 +1,8 @@
 package io.bayberry.aloha.spring.local;
 
 import io.bayberry.aloha.*;
+import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
-import io.bayberry.aloha.spring.SpringSubscriberResolver;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import io.bayberry.aloha.util.Reflection;
 import org.springframework.context.*;
@@ -44,12 +44,15 @@ public class LocalSpringMessageBus extends LocalMessageBus {
 
     @Override
     protected ListenerResolver initListenerResolver() {
-        return new SpringSubscriberResolver(this.applicationContext);
+        AnnotatedListenerResolver listenerResolver = new AnnotatedListenerResolver();
+        listenerResolver.getListenerAnnotationResolvers().clear();
+        listenerResolver.getListenerAnnotationResolvers().put(Subscribe.class, new SubscriberAnnotationResolver());
+        return listenerResolver;
     }
 
     @Override
-    protected Stream bindStream(Listener listener) {
-        return new LocalSpringEventStream(listener.getChannel(), this);
+    protected Stream bindStream(Channel channel, Listener listener) {
+        return new LocalSpringEventStream(channel, this);
     }
 
     @Override
