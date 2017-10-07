@@ -10,6 +10,7 @@ import io.bayberry.aloha.spring.rabbit.annotation.RabbitListeners;
 import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -47,6 +48,7 @@ public class RabbitMessageBusTest {
         messageBus.stop();
     }
 
+    @Ignore
     @Test
     public void the_consumer_should_be_called_asynchronously_after_single_message_is_post() {
         this.countDownLatch = new CountDownLatch(1);
@@ -54,6 +56,7 @@ public class RabbitMessageBusTest {
         await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
     }
 
+    @Ignore
     @Test
     public void the_consumer_should_be_called_asynchronously_for_n_times_after_n_messages_are_post() {
         final int NUMBER = 6;
@@ -65,6 +68,7 @@ public class RabbitMessageBusTest {
                 .until(() -> this.countDownLatch.getCount() == 0);
     }
 
+    @Ignore
     @Test
     public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
         this.countDownLatch = new CountDownLatch(1);
