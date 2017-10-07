@@ -10,6 +10,7 @@ import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -44,10 +45,7 @@ public class LocalSpringMessageBus extends LocalMessageBus {
 
     @Override
     protected ListenerResolver initListenerResolver() {
-        AnnotatedListenerResolver listenerResolver = new AnnotatedListenerResolver();
-        listenerResolver.getListenerAnnotationResolvers().clear();
-        listenerResolver.getListenerAnnotationResolvers().put(Subscribe.class, new SubscriberAnnotationResolver());
-        return listenerResolver;
+        return new AnnotatedListenerResolver(Collections.singletonMap(Subscribe.class, new SubscriberAnnotationResolver()));
     }
 
     @Override

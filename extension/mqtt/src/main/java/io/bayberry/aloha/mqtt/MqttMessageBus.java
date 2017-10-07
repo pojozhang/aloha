@@ -1,6 +1,7 @@
 package io.bayberry.aloha.mqtt;
 
 import io.bayberry.aloha.*;
+import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.exception.AlohaException;
 import io.bayberry.aloha.exception.UnsupportedListenerException;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
@@ -8,6 +9,8 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+import java.util.Collections;
 
 public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
 
@@ -52,6 +55,11 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
 
         }
         super.onStop();
+    }
+
+    @Override
+    protected ListenerResolver initListenerResolver() {
+        return new AnnotatedListenerResolver(Collections.singletonMap(Subscribe.class, new SubscriberAnnotationResolver()));
     }
 
     @Override

@@ -12,12 +12,23 @@ import static java.util.stream.Collectors.toSet;
 
 public class AnnotatedListenerResolver implements ListenerResolver {
 
+    private static final Map<Class<? extends Annotation>, ListenerAnnotationResolver> DEFAULT_RESOLVERS;
+
+    static {
+        DEFAULT_RESOLVERS = new ConcurrentHashMap<>();
+        DEFAULT_RESOLVERS.put(Consume.class, new ConsumerAnnotationResolver());
+        DEFAULT_RESOLVERS.put(Subscribe.class, new SubscriberAnnotationResolver());
+    }
+
     private final Map<Class<? extends Annotation>, ListenerAnnotationResolver> listenerAnnotationResolvers;
 
     public AnnotatedListenerResolver() {
+        this(DEFAULT_RESOLVERS);
+    }
+
+    public AnnotatedListenerResolver(Map<Class<? extends Annotation>, ListenerAnnotationResolver> listenerAnnotationResolvers) {
         this.listenerAnnotationResolvers = new ConcurrentHashMap<>();
-        this.listenerAnnotationResolvers.put(Consume.class, new ConsumerAnnotationResolver());
-        this.listenerAnnotationResolvers.put(Subscribe.class, new SubscriberAnnotationResolver());
+        this.listenerAnnotationResolvers.putAll(listenerAnnotationResolvers);
     }
 
     public Map<Class<? extends Annotation>, ListenerAnnotationResolver> getListenerAnnotationResolvers() {
@@ -33,9 +44,9 @@ public class AnnotatedListenerResolver implements ListenerResolver {
             listeners.addAll(Arrays.stream(container.getClass().getDeclaredMethods())
                     .filter(method -> method.isAnnotationPresent(annotationClass))
                     .map(method -> {
+                        ListenerAnnotationResolver listenerAnnotationResolver = this.listenerAnnotationResolvers.get(annotationClass);
+                        Assert.notNull(listenerAnnotationResolver, "No listener annotation resolver found for " + annotationClass);
                         Annotation annotation = method.getAnnotation(annotationClass);
-                        ListenerAnnotationResolver listenerAnnotationResolver = this.listenerAnnotationResolvers.get(annotation);
-                        Assert.notNull(listenerAnnotationResolver, "No listener annotation resolver found for " + annotation);
                         return listenerAnnotationResolver.resolve(container, annotation, method, messageBus);
                     }).collect(toSet()));
         });
