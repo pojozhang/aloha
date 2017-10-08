@@ -95,14 +95,14 @@ public class LocalSpringMessageBus extends LocalMessageBus {
             channels.add(this.resolveChannel(messageType));
             channels.addAll(Reflection.getAllInterfaces(messageType).stream().map(this::resolveChannel).collect(toList()));
             Reflection.getAllSuperClasses(messageType).forEach(superClass -> {
-                channels.add(LocalSpringMessageBus.this.resolveChannel(superClass));
+                channels.add(LocalSpringMessageBus.this.resolveOutboundChannel(superClass));
                 channels.addAll(Reflection.getAllInterfaces(superClass).stream().map(this::resolveChannel).collect(toList()));
             });
             return channels;
         }
 
         private Channel resolveChannel(Class messageType) {
-            return LocalSpringMessageBus.this.resolveChannel(messageType);
+            return LocalSpringMessageBus.this.resolveOutboundChannel(messageType);
         }
     }
 

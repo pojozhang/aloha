@@ -99,14 +99,14 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     }
 
     @Override
-    public Channel resolveChannel(Class messageType) {
+    public Channel resolveOutboundChannel(Class messageType) {
         return this.getChannelResolver().resolve(messageType);
     }
 
     protected Channel resolveChannel(Listener listener) {
         io.bayberry.aloha.annotation.Channel channel = listener.getMethod().getAnnotation(io.bayberry.aloha.annotation.Channel.class);
         if (channel != null && !Strings.isNullOrEmpty(channel.value())) return Channel.valueOf(channel.value());
-        return this.resolveChannel(Assert.notNull(listener.getMessageType(), "Fail to resolve channel of listener"));
+        return this.resolveOutboundChannel(Assert.notNull(listener.getMessageType(), "Fail to resolve channel of listener"));
     }
 
     protected ListenerResolver getListenerResolver() {
