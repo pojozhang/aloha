@@ -10,5 +10,4 @@ import java.lang.annotation.*;
 @Inherited
 public @interface RedisListeners {
 
-    String stream() default "";
 }
