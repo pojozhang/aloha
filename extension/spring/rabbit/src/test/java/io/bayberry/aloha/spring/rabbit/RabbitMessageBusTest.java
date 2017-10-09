@@ -1,5 +1,7 @@
 package io.bayberry.aloha.spring.rabbit;
 
+import static org.awaitility.Awaitility.await;
+
 import io.bayberry.aloha.ConsumableMessage;
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.SubscribableMessage;
@@ -7,6 +9,7 @@ import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.rabbit.annotation.RabbitListeners;
+import java.util.concurrent.CountDownLatch;
 import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
@@ -19,11 +22,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.concurrent.CountDownLatch;
-
-import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.*;
 
 @SpringBootTest
 @SpringBootApplication
@@ -84,7 +82,7 @@ public class RabbitMessageBusTest {
             countDownLatch.countDown();
         }
 
-        @Concurrency(maxCount = 3, capacity = 3)
+        @Concurrency(threads = 3, capacity = 3)
         @Consume
         public void onConsume(AsyncRabbitMessage message) throws InterruptedException {
             Thread.sleep(1000);

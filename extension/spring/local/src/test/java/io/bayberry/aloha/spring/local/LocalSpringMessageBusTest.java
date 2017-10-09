@@ -1,10 +1,13 @@
 package io.bayberry.aloha.spring.local;
 
+import static org.junit.Assert.assertEquals;
+
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
+import java.util.concurrent.CountDownLatch;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +17,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.concurrent.CountDownLatch;
-
-import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @SpringBootApplication
@@ -72,7 +71,7 @@ public class LocalSpringMessageBusTest {
             countDownLatch.countDown();
         }
 
-        @Concurrency(maxCount = 3, capacity = 3)
+        @Concurrency(threads = 3, capacity = 3)
         @Subscribe
         public void onReceive(AsyncSpringMessage message) throws InterruptedException {
             Thread.sleep(1000);

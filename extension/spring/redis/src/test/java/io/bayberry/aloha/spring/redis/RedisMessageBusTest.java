@@ -1,26 +1,22 @@
 package io.bayberry.aloha.spring.redis;
 
+import static org.awaitility.Awaitility.await;
+
 import io.bayberry.aloha.ConsumableMessage;
 import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.SubscribableMessage;
-import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Concurrency;
+import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
+import java.util.concurrent.CountDownLatch;
 import org.awaitility.Duration;
-import org.junit.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.concurrent.CountDownLatch;
-
-import static org.awaitility.Awaitility.await;
 
 @SpringBootTest
 @SpringBootApplication
@@ -64,7 +60,7 @@ public class RedisMessageBusTest {
             countDownLatch.countDown();
         }
 
-        @Concurrency(maxCount = 3, capacity = 3)
+        @Concurrency(threads = 3, capacity = 3)
         @Consume
         public void onConsume(AsyncRedisMessage message) throws InterruptedException {
             Thread.sleep(1000);
