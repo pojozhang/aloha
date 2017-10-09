@@ -2,7 +2,7 @@ package io.bayberry.aloha.mqtt;
 
 import io.bayberry.aloha.*;
 import io.bayberry.aloha.annotation.Subscribe;
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UncheckedAlohaException;
 import io.bayberry.aloha.exception.UnsupportedListenerException;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -31,7 +31,7 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
         try {
             this.client = new MqttClient(options.getServerUri(), options.getClientId(), persistence);
         } catch (MqttException e) {
-            throw new AlohaException(e);
+            throw new UncheckedAlohaException(e);
         }
     }
 
@@ -40,7 +40,7 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
         try {
             this.client.connect(this.options.getConnectOptions());
         } catch (MqttException e) {
-            throw new AlohaException(e);
+            throw new UncheckedAlohaException(e);
         }
         super.onStart();
     }
@@ -95,7 +95,7 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
             try {
                 client.publish(channel.getName(), mqttMessage);
             } catch (MqttException e) {
-                throw new AlohaException(e);
+                throw new UncheckedAlohaException(e);
             }
         }
     }

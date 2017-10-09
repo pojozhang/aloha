@@ -1,9 +1,8 @@
 package io.bayberry.aloha.mqtt;
 
 import io.bayberry.aloha.Channel;
-import io.bayberry.aloha.Listener;
 import io.bayberry.aloha.RemoteStream;
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UncheckedAlohaException;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
@@ -26,7 +25,7 @@ public class MqttStream extends RemoteStream implements MqttCallback {
             this.client.connect(((MqttMessageBus) getMessageBus()).getOptions().getConnectOptions());
             this.client.subscribe(getChannel().getName());
         } catch (MqttException e) {
-            throw new AlohaException(e);
+            throw new UncheckedAlohaException(e);
         }
     }
 

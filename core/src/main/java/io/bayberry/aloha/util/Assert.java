@@ -1,7 +1,6 @@
 package io.bayberry.aloha.util;
 
 import io.bayberry.aloha.exception.AlohaAssertionError;
-import io.bayberry.aloha.exception.AlohaException;
 
 import java.text.MessageFormat;
 import java.util.Collection;

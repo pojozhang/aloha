@@ -2,7 +2,7 @@ package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.ExceptionHandler;
 import io.bayberry.aloha.ExceptionHandlerFactory;
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UncheckedAlohaException;
 
 public class DefaultExceptionHandlerFactory implements ExceptionHandlerFactory {
 
@@ -11,7 +11,7 @@ public class DefaultExceptionHandlerFactory implements ExceptionHandlerFactory {
         try {
             return exceptionHandlerType.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new AlohaException(e);
+            throw new UncheckedAlohaException(e);
         }
     }
 }

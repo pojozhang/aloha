@@ -1,7 +1,7 @@
 package io.bayberry.aloha.spring.redis;
 
 import io.bayberry.aloha.*;
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UncheckedAlohaException;
 import io.bayberry.aloha.exception.UnsupportedListenerException;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
@@ -158,7 +158,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> implements
                         try {
                             handleException(exception, null);
                         } catch (Exception error) {
-                            throw new AlohaException(error);
+                            throw new UncheckedAlohaException(error);
                         }
                     });
         }

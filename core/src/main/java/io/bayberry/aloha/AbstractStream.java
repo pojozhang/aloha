@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UncheckedAlohaException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public abstract class AbstractStream extends MessageBusContext implements Stream
                 try {
                     handleException(exception, source);
                 } catch (Exception error) {
-                    throw new AlohaException(error);
+                    throw new UncheckedAlohaException(error);
                 }
             }
         });

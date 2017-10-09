@@ -1,6 +1,6 @@
 package io.bayberry.aloha.util;
 
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UncheckedAlohaException;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -15,7 +15,7 @@ public class BlockingThreadPoolExecutor extends ThreadPoolExecutor {
                 try {
                     executor.getQueue().put(runnable);
                 } catch (InterruptedException e) {
-                    throw new AlohaException(e);
+                    throw new UncheckedAlohaException(e);
                 }
             });
     }

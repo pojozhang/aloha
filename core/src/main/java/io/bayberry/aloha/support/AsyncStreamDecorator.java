@@ -1,7 +1,7 @@
 package io.bayberry.aloha.support;
 
 import io.bayberry.aloha.Stream;
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UncheckedAlohaException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -25,7 +25,7 @@ public class AsyncStreamDecorator extends DelegateStream {
                 try {
                     super.handleException(exception, null);
                 } catch (Exception error) {
-                    throw new AlohaException(error);
+                    throw new UncheckedAlohaException(error);
                 }
             }
         });

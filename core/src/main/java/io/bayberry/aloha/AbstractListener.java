@@ -1,6 +1,6 @@
 package io.bayberry.aloha;
 
-import io.bayberry.aloha.exception.AlohaException;
+import io.bayberry.aloha.exception.UncheckedAlohaException;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -96,7 +96,7 @@ public abstract class AbstractListener implements Listener {
                 try {
                     this.handleException(e, stream, message);
                 } catch (Exception error) {
-                    throw new AlohaException(error);
+                    throw new UncheckedAlohaException(error);
                 }
             }
         });
