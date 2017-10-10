@@ -7,9 +7,12 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> {
+public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> implements ApplicationContextAware, InitializingBean {
 
     private ApplicationContext applicationContext;
     private ConnectionFactory connectionFactory;
@@ -17,10 +20,8 @@ public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> {
     private RabbitAdmin rabbitAdmin;
     private RabbitStreamContainer rabbitStreamContainer;
 
-    public RabbitMessageBus(ApplicationContext applicationContext, ConnectionFactory connectionFactory) {
-        this.applicationContext = applicationContext;
+    public RabbitMessageBus(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
-        this.onCreate();
     }
 
     @Override
@@ -53,12 +54,23 @@ public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> {
 
     @Override
     protected Stream bindStream(Channel channel, Listener listener) {
+
         return null;
     }
 
     @Override
     public void post(Message message) {
 
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.onCreate();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     private class RabbitStreamContainer {
