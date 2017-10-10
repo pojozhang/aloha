@@ -7,7 +7,9 @@ import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
+
 import java.util.concurrent.CountDownLatch;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,19 +27,7 @@ public class LocalSpringMessageBusTest {
 
     private static CountDownLatch countDownLatch;
     @Autowired
-    private ApplicationContext applicationContext;
     private MessageBus messageBus;
-
-    @Before
-    public void setUp() {
-        messageBus = new LocalSpringMessageBus(applicationContext);
-        messageBus.start();
-    }
-
-    @After
-    public void tearDown() {
-        messageBus.stop();
-    }
 
     @Test
     public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {

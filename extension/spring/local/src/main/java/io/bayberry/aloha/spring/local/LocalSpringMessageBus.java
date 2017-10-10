@@ -5,6 +5,8 @@ import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 import io.bayberry.aloha.util.Reflection;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.*;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -16,21 +18,19 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
-public class LocalSpringMessageBus extends LocalMessageBus {
+public class LocalSpringMessageBus extends LocalMessageBus implements ApplicationContextAware, InitializingBean {
 
     private ApplicationContext applicationContext;
     private ApplicationListenerProxy applicationListenerProxy;
     private PublishCommand publishCommand;
 
-    public LocalSpringMessageBus(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-        this.applicationListenerProxy = new ApplicationListenerProxy();
-        this.onCreate();
+    public LocalSpringMessageBus() {
     }
 
     @Override
     protected void onCreate() {
         super.onCreate();
+        this.applicationListenerProxy = new ApplicationListenerProxy();
         this.applicationContext.getBeansWithAnnotation(SpringEventListeners.class).values().forEach(super::register);
         ((ConfigurableApplicationContext) this.applicationContext).addApplicationListener(applicationListenerProxy);
         this.publishCommand = new PublishCommand();
@@ -60,6 +60,16 @@ public class LocalSpringMessageBus extends LocalMessageBus {
             return;
         }
         throw new UnsupportedMessageException(message);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.onCreate();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     public class PublishCommand implements Command {
