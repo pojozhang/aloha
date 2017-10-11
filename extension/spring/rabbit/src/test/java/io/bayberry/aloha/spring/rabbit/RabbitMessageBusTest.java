@@ -9,7 +9,9 @@ import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Subscribe;
 import io.bayberry.aloha.spring.rabbit.annotation.RabbitListeners;
+
 import java.util.concurrent.CountDownLatch;
+
 import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
@@ -30,23 +32,8 @@ public class RabbitMessageBusTest {
 
     private static CountDownLatch countDownLatch;
     @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private ConnectionFactory connectionFactory;
     private MessageBus messageBus;
 
-    @Before
-    public void setUp() {
-        messageBus = new RabbitMessageBus(applicationContext, connectionFactory);
-        messageBus.start();
-    }
-
-    @After
-    public void tearDown() {
-        messageBus.stop();
-    }
-
-    @Ignore
     @Test
     public void the_consumer_should_be_called_asynchronously_after_single_message_is_post() {
         this.countDownLatch = new CountDownLatch(1);
@@ -54,7 +41,6 @@ public class RabbitMessageBusTest {
         await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
     }
 
-    @Ignore
     @Test
     public void the_consumer_should_be_called_asynchronously_for_n_times_after_n_messages_are_post() {
         final int NUMBER = 6;
@@ -66,7 +52,6 @@ public class RabbitMessageBusTest {
                 .until(() -> this.countDownLatch.getCount() == 0);
     }
 
-    @Ignore
     @Test
     public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
         this.countDownLatch = new CountDownLatch(1);

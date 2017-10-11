@@ -28,6 +28,7 @@ public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> implement
     protected void onCreate() {
         super.onCreate();
         this.rabbitTemplate = new RabbitTemplate(this.connectionFactory);
+        this.rabbitTemplate.setMessageConverter(new RabbitMessageConverterBridge(this.getSerializer()));
         this.rabbitTemplate.afterPropertiesSet();
         this.rabbitAdmin = new RabbitAdmin(this.connectionFactory);
         this.rabbitAdmin.setAutoStartup(false);
@@ -60,7 +61,11 @@ public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> implement
 
     @Override
     public void post(Message message) {
-
+        Channel channel = message.getChannel();
+        if (channel == null) {
+            channel = RabbitMessageBus.this.getChannelResolver().resolve(message.getClass());
+        }
+        this.rabbitTemplate.convertAndSend(channel.getName(), message.getPayload());
     }
 
     @Override
