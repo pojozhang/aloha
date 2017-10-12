@@ -1,6 +1,9 @@
 package io.bayberry.aloha.spring.rabbit;
 
 import io.bayberry.aloha.*;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -38,6 +41,11 @@ public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> implement
 
     @Override
     public void onStart() {
+        super.getStreamRegistry().getStreams().forEach(stream -> {
+            Queue queue = new Queue(stream.getChannel().getName());
+            this.rabbitAdmin.declareQueue();
+            this.rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(new TopicExchange("")).with(queue.getName()));
+        });
         this.rabbitStreamContainer.start();
         super.onStart();
     }
