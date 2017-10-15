@@ -6,6 +6,7 @@ import io.bayberry.aloha.MessageBus;
 import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Subscribe;
+import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.local.annotation.SpringEventListeners;
 
 import java.util.concurrent.CountDownLatch;
@@ -30,14 +31,14 @@ public class LocalSpringMessageBusTest {
     private MessageBus messageBus;
 
     @Test
-    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
+    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() throws UnsupportedMessageException {
         this.countDownLatch = new CountDownLatch(1);
         this.messageBus.post(new SubscribableMessage(new SyncSpringMessage()));
         assertEquals(0, this.countDownLatch.getCount());
     }
 
     @Test
-    public void the_subscriber_should_be_called_synchronously_for_n_times_after_n_messages_are_post() {
+    public void the_subscriber_should_be_called_synchronously_for_n_times_after_n_messages_are_post() throws UnsupportedMessageException {
         final int MESSAGE_NUMBER = 5;
         this.countDownLatch = new CountDownLatch(MESSAGE_NUMBER);
         for (int i = 0; i < MESSAGE_NUMBER; i++) {
@@ -47,7 +48,7 @@ public class LocalSpringMessageBusTest {
     }
 
     @Test
-    public void the_subscriber_should_be_called_synchronously_if_target_message_is_base_type_of_source_message() {
+    public void the_subscriber_should_be_called_synchronously_if_target_message_is_base_type_of_source_message() throws UnsupportedMessageException {
         this.countDownLatch = new CountDownLatch(1);
         this.messageBus.post(new SubscribableMessage(new ChildSyncSpringMessage()));
         assertEquals(0, this.countDownLatch.getCount());

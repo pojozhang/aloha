@@ -54,7 +54,7 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Applicatio
     }
 
     @Override
-    public void post(Message message) {
+    public void post(Message message) throws UnsupportedMessageException {
         if (message instanceof SubscribableMessage) {
             this.publishCommand.execute(message.getChannel(), message.getPayload());
             return;

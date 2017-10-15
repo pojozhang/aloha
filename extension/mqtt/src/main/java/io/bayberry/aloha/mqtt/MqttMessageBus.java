@@ -63,7 +63,7 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
     }
 
     @Override
-    protected Stream bindStream(Channel channel, Listener listener) {
+    protected Stream bindStream(Channel channel, Listener listener) throws UnsupportedListenerException {
         if (listener instanceof Subscriber) {
             return new MqttStream(channel, this);
         }
@@ -75,7 +75,7 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
     }
 
     @Override
-    public void post(Message message) {
+    public void post(Message message) throws UnsupportedMessageException {
         if (message instanceof SubscribableMessage) {
             this.mqttCommand.execute(message.getChannel(), message.getPayload());
             return;

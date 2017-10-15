@@ -1,8 +1,10 @@
 package io.bayberry.aloha;
 
+import io.bayberry.aloha.exception.UnsupportedMessageException;
+
 public interface MessageBus extends LifeCycle {
 
-    void post(Message message);
+    void post(Message message) throws UnsupportedMessageException;
 
     void register(Object container);
 

@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 
 public class DefaultLogExceptionHandler implements ExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultLogExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultLogExceptionHandler.class);
 
     @Override
     public void handle(Channel channel, Object value, MessageBus messageBus, Exception exception) {
-        log.error("An error occurs", exception);
+        LOGGER.error("An error occurs", exception);
     }
 }

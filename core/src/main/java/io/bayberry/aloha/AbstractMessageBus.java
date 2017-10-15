@@ -1,13 +1,17 @@
 package io.bayberry.aloha;
 
+import io.bayberry.aloha.exception.UnsupportedListenerException;
 import io.bayberry.aloha.support.*;
 import io.bayberry.aloha.util.Assert;
 import io.bayberry.aloha.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
 public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMessageBus.class);
     private ChannelResolver channelResolver;
     private ListenerResolver listenerResolver;
     private StreamRegistry streamRegistry;
@@ -21,9 +25,13 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         Set<Listener> listeners = this.listenerResolver.resolve(container, this);
         listeners.forEach(listener -> {
             Channel channel = this.resolveChannel(listener);
-            Stream stream = this.bindStream(channel, listener);
-            stream.register(listener);
-            this.getStreamRegistry().register(stream);
+            try {
+                Stream stream = this.bindStream(channel, listener);
+                stream.register(listener);
+                this.getStreamRegistry().register(stream);
+            } catch (UnsupportedListenerException e) {
+                LOGGER.error("Fail to bind stream", e);
+            }
         });
     }
 
@@ -141,5 +149,5 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
 
     protected abstract ExecutionStrategyFactory initExecutionStrategyFactory();
 
-    protected abstract Stream bindStream(Channel channel, Listener listener);
+    protected abstract Stream bindStream(Channel channel, Listener listener) throws UnsupportedListenerException;
 }

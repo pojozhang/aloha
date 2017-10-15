@@ -8,6 +8,7 @@ import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Concurrency;
 import io.bayberry.aloha.annotation.Consume;
 import io.bayberry.aloha.annotation.Subscribe;
+import io.bayberry.aloha.exception.UnsupportedMessageException;
 import io.bayberry.aloha.spring.redis.annotation.RedisListeners;
 import java.util.concurrent.CountDownLatch;
 import org.awaitility.Duration;
@@ -28,14 +29,14 @@ public class RedisMessageBusTest {
     private MessageBus messageBus;
 
     @Test
-    public void the_consumer_should_be_called_asynchronously_after_single_message_is_post() {
+    public void the_consumer_should_be_called_asynchronously_after_single_message_is_post() throws UnsupportedMessageException {
         this.countDownLatch = new CountDownLatch(1);
         this.messageBus.post(new ConsumableMessage(new SyncRedisMessage()));
         await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
     }
 
     @Test
-    public void the_consumer_should_be_called_asynchronously_for_n_times_after_n_messages_are_post() {
+    public void the_consumer_should_be_called_asynchronously_for_n_times_after_n_messages_are_post() throws UnsupportedMessageException {
         final int NUMBER = 6;
         this.countDownLatch = new CountDownLatch(NUMBER);
         for (int i = 0; i < NUMBER; i++) {
@@ -46,7 +47,7 @@ public class RedisMessageBusTest {
     }
 
     @Test
-    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
+    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() throws UnsupportedMessageException {
         this.countDownLatch = new CountDownLatch(1);
         this.messageBus.post(new SubscribableMessage(new SyncRedisMessage()));
         await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);

@@ -77,7 +77,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> implements
     }
 
     @Override
-    protected Stream bindStream(Channel channel, Listener listener) {
+    protected Stream bindStream(Channel channel, Listener listener) throws UnsupportedListenerException {
         channel.setName(this.expressionInterpreter.explain(channel.getName(), String.class));
         if (listener instanceof Consumer) {
             return new AsyncStreamDecorator(
@@ -92,7 +92,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> implements
     }
 
     @Override
-    public void post(Message message) {
+    public void post(Message message) throws UnsupportedMessageException {
         if (message instanceof SubscribableMessage) {
             this.publishCommand.execute(message.getChannel(), message.getPayload());
             return;

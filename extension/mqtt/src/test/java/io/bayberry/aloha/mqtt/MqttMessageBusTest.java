@@ -2,6 +2,7 @@ package io.bayberry.aloha.mqtt;
 
 import io.bayberry.aloha.SubscribableMessage;
 import io.bayberry.aloha.annotation.Subscribe;
+import io.bayberry.aloha.exception.UnsupportedMessageException;
 import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
@@ -38,7 +39,7 @@ public class MqttMessageBusTest {
     }
 
     @Test
-    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() {
+    public void the_subscriber_should_be_called_asynchronously_after_single_message_is_post() throws UnsupportedMessageException {
         this.countDownLatch = new CountDownLatch(1);
         this.mqttMessageBus.post(new SubscribableMessage(new MqttMessage()));
         await().atMost(Duration.TWO_SECONDS).until(() -> this.countDownLatch.getCount() == 0);
