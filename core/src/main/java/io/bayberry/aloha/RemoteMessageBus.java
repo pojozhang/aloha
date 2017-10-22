@@ -8,6 +8,10 @@ public abstract class RemoteMessageBus<S, T> extends AbstractMessageBus {
 
     protected Serializer<S, T> serializer;
 
+    protected RemoteMessageBus(String name, PropertySource propertySource) {
+        super(name, propertySource);
+    }
+
     @Override
     protected void onCreate() {
         this.serializer = this.initSerializer();

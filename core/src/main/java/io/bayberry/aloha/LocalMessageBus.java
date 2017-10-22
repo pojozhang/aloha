@@ -5,6 +5,10 @@ import io.bayberry.aloha.support.DefaultExecutionStrategyFactory;
 
 public abstract class LocalMessageBus extends AbstractMessageBus {
 
+    protected LocalMessageBus(String name, PropertySource propertySource) {
+        super(name, propertySource);
+    }
+
     @Override
     public ExecutionStrategy initDefaultExecutionStrategy() {
         return new DefaultExecutionStrategy();

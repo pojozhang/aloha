@@ -12,6 +12,8 @@ import java.util.Set;
 public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMessageBus.class);
+    private final String name;
+    private final PropertySource propertySource;
     private ChannelResolver channelResolver;
     private ListenerResolver listenerResolver;
     private StreamRegistry streamRegistry;
@@ -19,6 +21,11 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     private ExceptionHandlerFactory exceptionHandlerFactory;
     private ExecutionStrategy defaultExecutionStrategy;
     private ExecutionStrategyFactory executionStrategyFactory;
+
+    protected AbstractMessageBus(String name, PropertySource propertySource) {
+        this.name = name;
+        this.propertySource = propertySource;
+    }
 
     @Override
     public void register(Object container) {
@@ -115,6 +122,10 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
         io.bayberry.aloha.annotation.Channel channel = listener.getMethod().getAnnotation(io.bayberry.aloha.annotation.Channel.class);
         if (channel != null && !Strings.isNullOrEmpty(channel.value())) return Channel.valueOf(channel.value());
         return this.resolveOutboundChannel(Assert.notNull(listener.getMessageType(), "Fail to resolve channel of listener"));
+    }
+
+    public String getName() {
+        return name;
     }
 
     protected ListenerResolver getListenerResolver() {
