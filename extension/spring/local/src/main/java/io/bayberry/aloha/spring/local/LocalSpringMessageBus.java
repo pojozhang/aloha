@@ -24,7 +24,8 @@ public class LocalSpringMessageBus extends LocalMessageBus implements Applicatio
     private ApplicationListenerProxy applicationListenerProxy;
     private PublishCommand publishCommand;
 
-    public LocalSpringMessageBus() {
+    public LocalSpringMessageBus(String name) {
+        super(name, null);
     }
 
     @Override
