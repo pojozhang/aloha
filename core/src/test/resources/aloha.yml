@@ -1,0 +1,14 @@
+aloha:
+  buses:
+    mqtt_1:
+      type: io.bayberry.aloha.mqtt.MqttMessageBus
+      uri: tcp://127.0.0.1:1883
+      username: mqtt1_user
+      password: mqtt1_password
+    mqtt_2:
+      type: io.bayberry.aloha.mqtt.MqttMessageBus
+      uri: tcp://127.0.0.1:1883
+      username: mqtt2_user
+      password: mqtt2_password
+
+
