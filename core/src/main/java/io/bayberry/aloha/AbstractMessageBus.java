@@ -1,7 +1,10 @@
 package io.bayberry.aloha;
 
 import io.bayberry.aloha.exception.UnsupportedListenerException;
-import io.bayberry.aloha.support.*;
+import io.bayberry.aloha.support.DefaultExceptionHandlerFactory;
+import io.bayberry.aloha.support.DefaultLogExceptionHandler;
+import io.bayberry.aloha.support.DefaultStreamRegistry;
+import io.bayberry.aloha.support.SimpleChannelResolver;
 import io.bayberry.aloha.util.Assert;
 import io.bayberry.aloha.util.Strings;
 import org.slf4j.Logger;
@@ -12,8 +15,7 @@ import java.util.Set;
 public abstract class AbstractMessageBus extends LifeCycleContext implements MessageBus {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMessageBus.class);
-    private final String name;
-    private final PropertySource propertySource;
+    private String name;
     private ChannelResolver channelResolver;
     private ListenerResolver listenerResolver;
     private StreamRegistry streamRegistry;
@@ -22,9 +24,8 @@ public abstract class AbstractMessageBus extends LifeCycleContext implements Mes
     private ExecutionStrategy defaultExecutionStrategy;
     private ExecutionStrategyFactory executionStrategyFactory;
 
-    protected AbstractMessageBus(String name, PropertySource propertySource) {
+    protected AbstractMessageBus(String name) {
         this.name = name;
-        this.propertySource = propertySource;
     }
 
     @Override
