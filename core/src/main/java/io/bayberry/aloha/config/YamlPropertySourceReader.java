@@ -4,9 +4,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.reader.UnicodeReader;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class YamlPropertySourceReader implements PropertySourceReader {
 
@@ -29,6 +27,13 @@ public class YamlPropertySourceReader implements PropertySourceReader {
         if (object instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) object;
             map.forEach((key, value) -> flattenedMap.putAll(this.buildFlattenedMap(property + "." + key, value)));
+        } else if (object instanceof Iterable) {
+            Iterable iterable = (Iterable) object;
+            Iterator iterator = iterable.iterator();
+            int index = 0;
+            while (iterator.hasNext()) {
+                flattenedMap.putAll(this.buildFlattenedMap(property + "[" + index++ + "]", iterator.next()));
+            }
         }
         return flattenedMap;
     }
