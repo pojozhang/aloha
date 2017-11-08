@@ -6,10 +6,10 @@ import io.bayberry.aloha.config.YamlPropertySourceReader;
 import java.io.InputStream;
 import java.util.Map;
 
-public class ConfigFactory {
+public class SystemConfigFactory {
 
-    public static Config load(InputStream inputStream) {
-        Config config = new Config();
+    public static SystemConfig load(InputStream inputStream) {
+        SystemConfig systemConfig = new SystemConfig();
         PropertySource propertySource = new YamlPropertySourceReader().read(inputStream);
         Map<String, Map<String, Object>> buses = propertySource.get("aloha.buses");
         buses.forEach((bus, properties) -> {
@@ -17,8 +17,8 @@ public class ConfigFactory {
             messageBusConfig.setName(bus);
             messageBusConfig.setType((String) properties.get("type"));
             messageBusConfig.setProperties(properties);
-            config.add(messageBusConfig);
+            systemConfig.add(messageBusConfig);
         });
-        return config;
+        return systemConfig;
     }
 }

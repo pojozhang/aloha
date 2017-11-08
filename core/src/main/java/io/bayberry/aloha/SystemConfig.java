@@ -3,7 +3,7 @@ package io.bayberry.aloha;
 import java.util.HashMap;
 import java.util.Map;
 
-class Config {
+class SystemConfig {
 
     private Map<String, MessageBusConfig> configs = new HashMap<>();
 
