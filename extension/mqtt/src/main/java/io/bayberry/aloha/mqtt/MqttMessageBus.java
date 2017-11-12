@@ -18,7 +18,8 @@ public class MqttMessageBus extends RemoteMessageBus<Object, byte[]> {
     private MqttClient client;
     private MqttCommand mqttCommand;
 
-    public MqttMessageBus(MqttMessageBusOptions options) {
+    public MqttMessageBus(String name, MqttMessageBusOptions options) {
+        super(name);
         this.options = options;
         this.mqttCommand = new MqttCommand();
         this.onCreate();
