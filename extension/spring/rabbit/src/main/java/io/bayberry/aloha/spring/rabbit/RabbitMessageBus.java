@@ -24,6 +24,7 @@ public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> implement
     private RabbitStreamContainer rabbitStreamContainer;
 
     public RabbitMessageBus(ConnectionFactory connectionFactory) {
+        super(null);
         this.connectionFactory = connectionFactory;
     }
 
@@ -91,7 +92,7 @@ public class RabbitMessageBus extends RemoteMessageBus<Object, byte[]> implement
         private MessageListenerContainer messageListenerContainer;
 
         public RabbitStreamContainer() {
-            this.messageListenerContainer = new SimpleMessageListenerContainer();
+            this.messageListenerContainer = new SimpleMessageListenerContainer(RabbitMessageBus.this.connectionFactory);
         }
 
         public void start() {
