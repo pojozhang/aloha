@@ -1,6 +1,7 @@
 package io.bayberry.aloha;
 
-import io.bayberry.aloha.support.*;
+import io.bayberry.aloha.support.DefaultExecutionStrategy;
+import io.bayberry.aloha.support.DefaultExecutionStrategyFactory;
 import io.bayberry.aloha.support.serializer.JsonSerializer;
 import io.bayberry.aloha.support.serializer.Serializer;
 
@@ -8,8 +9,8 @@ public abstract class RemoteMessageBus<S, T> extends AbstractMessageBus {
 
     protected Serializer<S, T> serializer;
 
-    protected RemoteMessageBus(String name, PropertySource propertySource) {
-        super(name, propertySource);
+    protected RemoteMessageBus(String name) {
+        super(name);
     }
 
     @Override
