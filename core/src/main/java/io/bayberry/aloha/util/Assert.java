@@ -1,6 +1,6 @@
 package io.bayberry.aloha.util;
 
-import io.bayberry.aloha.exception.AlohaAssertionError;
+import io.bayberry.aloha.exception.AssertionError;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -31,7 +31,7 @@ public class Assert {
 
     private static void throwException(String message, Object... args) {
         if (args == null || args.length < 1)
-            throw new AlohaAssertionError(message);
-        throw new AlohaAssertionError(MessageFormat.format(message, args));
+            throw new AssertionError(message);
+        throw new AssertionError(MessageFormat.format(message, args));
     }
 }
