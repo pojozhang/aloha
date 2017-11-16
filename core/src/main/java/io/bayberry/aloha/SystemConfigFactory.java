@@ -8,6 +8,10 @@ import java.util.Map;
 
 public class SystemConfigFactory {
 
+    public static SystemConfig load(String resource) {
+        return load(SystemConfigFactory.class.getClassLoader().getResourceAsStream(resource));
+    }
+
     public static SystemConfig load(InputStream inputStream) {
         SystemConfig systemConfig = new SystemConfig();
         PropertySource propertySource = new YamlPropertySourceReader().read(inputStream);
