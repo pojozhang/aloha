@@ -40,6 +40,7 @@ public class RedisMessageBus extends RemoteMessageBus<Object, byte[]> implements
     }
 
     public RedisMessageBus(RedisConnectionFactory connectionFactory, RedisMessageBusOptions options) {
+        super(null);
         this.redisConnectionFactory = connectionFactory;
         this.options = options;
     }
