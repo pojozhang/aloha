@@ -6,7 +6,8 @@ include ":core",
         ":extension:spring:local",
         ":extension:spring:redis",
         ":extension:spring:rabbit",
-        ":extension:mqtt"
+        ":extension:mqtt",
+        ":extension:redis"
 
 
 

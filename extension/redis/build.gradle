@@ -1,0 +1,16 @@
+apply from: "$rootDir/bintray.gradle"
+
+ext {
+    description = 'An aloha extension module with redis'
+    artifactId = 'aloha-redis'
+}
+
+jar {
+    appendix = "redis"
+}
+
+dependencies {
+    compile(
+            "redis.clients:jedis:$jedisVersion"
+    )
+}
