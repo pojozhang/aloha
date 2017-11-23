@@ -1,3 +1,4 @@
 aloha.buses:
   mqtt:
     type: io.bayberry.aloha.mqtt.MqttMessageBus
+    auto-config: io.bayberry.aloha.mqtt.MqttAutoConfiguration
