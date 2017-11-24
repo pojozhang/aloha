@@ -2,13 +2,13 @@ package io.bayberry.aloha;
 
 import java.util.Map;
 
-class MessageBusConfig {
+public class MessageBusConfig {
 
     private String name;
     private String type;
     private Map<String, Object> properties;
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -16,7 +16,7 @@ class MessageBusConfig {
         this.name = name;
     }
 
-    String getType() {
+    public String getType() {
         return type;
     }
 
@@ -24,7 +24,7 @@ class MessageBusConfig {
         this.type = type;
     }
 
-    Map<String, Object> getProperties() {
+    public Map<String, Object> getProperties() {
         return properties;
     }
 
