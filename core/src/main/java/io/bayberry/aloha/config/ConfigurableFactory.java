@@ -2,7 +2,7 @@ package io.bayberry.aloha.config;
 
 import io.bayberry.aloha.MessageBus;
 
-public interface ConfigurableFactory<T extends MessageBus> {
+public interface ConfigurableFactory<T extends MessageBus, O> {
 
-    T create(PropertySource propertySource);
+    T create(O options, PropertySource propertySource);
 }
