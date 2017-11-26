@@ -1,15 +1,23 @@
 package io.bayberry.aloha.util;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static java.util.stream.Collectors.toSet;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class Reflection {
+
+    private static final ObjectMapper OBJECT_MAPPER;
+
+    static {
+        OBJECT_MAPPER = new ObjectMapper();
+        OBJECT_MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    }
 
     public static Set<Method> getMethodsWithAnnotation(Class targetClass, Class<? extends Annotation> annotationType) {
         Method[] methods = targetClass.getMethods();
@@ -37,12 +45,7 @@ public class Reflection {
         return interfaces;
     }
 
-    public static Optional<Method> getDeclaredMethod(Class targetClass, String name, Class<?>... parameterTypes) {
-        try {
-            return Optional.of(targetClass.getDeclaredMethod(name, parameterTypes));
-        } catch (NoSuchMethodException e) {
-            return Optional.empty();
-        }
+    public static <T> T convertMapToObject(Map map, Class<T> type) {
+        return OBJECT_MAPPER.convertValue(map, type);
     }
-
 }
